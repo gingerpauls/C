@@ -132,6 +132,9 @@
   <ItemGroup>
     <Text Include="imaginarydata.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="complex.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
