@@ -16,21 +16,45 @@ void InteractiveMode(void) {
 }
 void BatchMode(void) {
 	struct Complex num1, num2;
+
 	num1.real = num1.imaginary = 0;
 	num2.real = num2.imaginary = 0;
+
 	FILE* imaginarydata = NULL;
 	FILE* results = NULL;
-	char inputbuffer[100] = { 0 };
+	
 	char operation = NULL;
 
 	//open imaginarydata.txt
 	imaginarydata = fopen("imaginarydata.txt", "r");
-	//fread(inputbuffer, sizeof(char), sizeof(inputbuffer), imaginarydata);
-	//sscanf_s(inputbuffer, "%c %f %f %f %f ", &operation, &num1.real, &num1.imaginary, &num2.real, &num2.imaginary);
 	fscanf(imaginarydata, "%c %f %f %f %f ", &operation, &num1.real, &num1.imaginary, &num2.real, &num2.imaginary);
 
-	
-	
+	//char inputbuffer[100] = { 0 };
+	//fread(inputbuffer, sizeof(char), sizeof(inputbuffer), imaginarydata);
+	//sscanf_s(inputbuffer, "%c %f %f %f %f ", &operation, &num1.real, &num1.imaginary, &num2.real, &num2.imaginary);
+
+	// do the operation
+	switch (operation)
+	{
+	case 'A':
+	case 'a':
+		printf("adding\n");
+		break;
+	case 'S':
+	case 's':
+		printf("subtracting\n");
+		break;
+	case 'M':
+	case 'm':
+		printf("multiplying\n");
+		break;
+	case 'D':
+	case 'd':
+		printf("dividing\n");
+		break;
+	default:
+		break;
+	}
 
 	// open results.txt
 	results = fopen("results.txt", "w");
