@@ -29,6 +29,12 @@
     <Text Include="imaginarydata.txt">
       <Filter>Source Files</Filter>
     </Text>
+    <Text Include="readme.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="results.txt">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="complex.h">
@@ -37,6 +43,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile">
+      <Filter>Build Tools</Filter>
+    </None>
+    <None Include="as1.pdf">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="build.bat">
       <Filter>Build Tools</Filter>
     </None>
   </ItemGroup>
