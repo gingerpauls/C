@@ -17,15 +17,11 @@ void InteractiveMode(void) {
 void BatchMode(void) {
 	struct Complex num1, num2, result;
 
-	num1.real = 0;
-	num1.real = 0;
-	num1.imaginary = 0;
-	num2.imaginary = 0;
-
 	FILE* imaginarydata = NULL;
 	FILE* results = NULL;
 	
 	char operation = NULL;
+	char imaginarySign;
 
 	//open imaginarydata.txt
 	imaginarydata = fopen("imaginarydata.txt", "r");
@@ -70,8 +66,16 @@ void BatchMode(void) {
 			break;
 		}
 
-		
-		fprintf(results, "%.3g j%.3g \n", result.real, result.imaginary);
+		if (result.imaginary < 0) {
+			result.imaginary *= -1;
+			fprintf(results, "%.6g - j%.6g \n", result.real, result.imaginary);
+		}
+		else {
+			fprintf(results, "%.6g + j%.6g \n", result.real, result.imaginary);
+		}
+
+
+		//fprintf(results, "%.3g j%.3g \n", result.real, result.imaginary);
 		//fprintf(results, "%c %.3g j%.3g %.3g j%.3g \n", operation, num1.real, num1.imaginary, num2.real, num2.imaginary);
 		//fprintf(results, "%.3g j%.3g %.3g j%.3g\n", 1.34, -52.0, 134,1);
 	}
@@ -82,24 +86,12 @@ void BatchMode(void) {
 }
 
 struct Complex ComplexAdd(struct Complex num1, struct Complex num2) {
-	//struct Complex result;
-	//result.real = 0;
-	//result.imaginary = 0;
-	//result.real = num1.real + num2.real;
-	//result.imaginary = num1.imaginary + num2.imaginary;
-	//return result;
-
 	num1.real += num2.real;
 	num1.imaginary += num2.imaginary;
 	return num1;
 }
 
 struct Complex ComplexSubtract(struct Complex num1, struct Complex num2) {
-	//struct Complex result;
-	//result.real = num1.real - num2.real;
-	//result.imaginary = num1.imaginary - num2.imaginary;
-	//return result;
-
 	num1.real -= num2.real;
 	num1.imaginary -= num2.imaginary;
 	return num1;
@@ -107,15 +99,9 @@ struct Complex ComplexSubtract(struct Complex num1, struct Complex num2) {
 struct Complex ComplexMultiply(struct Complex num1, struct Complex num2) {
 	struct Complex result;
 
-	//float real1 = num1.real * num2.real;
-	//float real4 = num1.imaginary * num2.imaginary;
-	//float imag2 = num1.real * num2.imaginary;
-	//float imag3 = num2.real * num1.imaginary;
-	//result.real = real1 - real4;
-	//result.imaginary = imag2 + imag3;
-
 	result.real = (num1.real * num2.real) - (num1.imaginary * num2.imaginary);
 	result.imaginary = (num1.real * num2.imaginary) + (num2.real * num1.imaginary);
+
 	return result;
 }
 struct Complex ComplexDivide(struct Complex num1, struct Complex num2) {
