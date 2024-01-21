@@ -68,7 +68,7 @@ void BatchMode(void) {
 		//}
 
 		
-		fprintf(results, "%c %f %f %f %f \n", operation, num1.real, num1.imaginary, num2.real, num2.imaginary);
+		fprintf(results, "%c %.3g j%.3g %.3g j%.3g \n", operation, num1.real, num1.imaginary, num2.real, num2.imaginary);
 		//fprintf(results, "%.3g j%.3g %.3g j%.3g\n", 1.34, -52.0, 134,1);
 	}
 
