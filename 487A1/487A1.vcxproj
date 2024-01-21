@@ -132,11 +132,15 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="imaginarydata.txt" />
+    <Text Include="readme.txt" />
+    <Text Include="results.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="complex.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="as1.pdf" />
+    <None Include="build.bat" />
     <None Include="Makefile" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,8 +1,6 @@
 #include "complex.h"
 #include "stdio.h"
 
-
-
 void InteractiveMode(void) {
 	struct Complex num1, num2;
 
@@ -15,24 +13,33 @@ void InteractiveMode(void) {
 		// fix format: real +/- j imag
 		printf("you entered: %.3g j%.3g, %.3g j%.3g\n", num1.real, num1.imaginary, num2.real, num2.imaginary);
 	}
-
 }
 void BatchMode(void) {
 	struct Complex num1, num2;
+	num1.real = num1.imaginary = 0;
+	num2.real = num2.imaginary = 0;
+	FILE* imaginarydata = NULL;
+	FILE* results = NULL;
+	char inputbuffer[100] = { 0,0,0,0 };
+	char operation = NULL;
 
-	//FILE* imaginarydata = imaginarydata();
-	//fgets(); // read input string
-	//sscanf(); // parse input string
-	//fprintf(); // print the output
+	//open imaginarydata.txt
+	imaginarydata = fopen("imaginarydata.txt", "r");
+	fread(inputbuffer, sizeof(char), sizeof(inputbuffer), imaginarydata);
+	sscanf_s(inputbuffer, "%c %f %f %f %f ", &operation, &num1.real, &num1.imaginary, &num2.real, &num2.imaginary);
+	//fscanf(imaginarydata, "%d %f %f %f %f ", operation, num1.real, num1.imaginary, num2.real, num2.imaginary);
 
-	// fread(); // reads from file
-	// fwrite(); // writes to file
+	
+	
 
-	if (scanf_s("%f %f %f %f", &num1.real, &num1.imaginary, &num2.real, &num2.imaginary) != 4) {
-		fprintf(stderr, "Enter only 4 numbers.\n");
-	}
-	else {
-		// fix format: real +/- j imag 
-		printf("you entered: %.3g j%.3g, %.3g, j%.3g\n", num1.real, num1.imaginary, num2.real, num2.imaginary);
-	}
+	// open results.txt
+	results = fopen("results.txt", "w");
+	fprintf(results, "%c %f %f %f %f \n", operation, num1.real, num1.imaginary, num2.real, num2.imaginary);
+	//fprintf(results, "%.3g j%.3g %.3g j%.3g\n", 1.34, -52.0, 134,1);
+
+
+
+	fclose(imaginarydata);
+	fclose(results);
+
 }
