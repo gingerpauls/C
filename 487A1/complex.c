@@ -58,6 +58,7 @@ void BatchMode(void) {
 			break;
 		case 'D':
 		case 'd':
+			result = ComplexDivide(num1, num2);
 			printf("dividing\n");
 			break;
 		case 'Q':
@@ -106,12 +107,10 @@ struct Complex ComplexSubtract(struct Complex num1, struct Complex num2) {
 struct Complex ComplexMultiply(struct Complex num1, struct Complex num2) {
 	struct Complex result;
 
-	float real1 = num1.real * num2.real;
-	float real4 = num1.imaginary * num2.imaginary;
-	float imag2 = num1.real * num2.imaginary;
-	float imag3 = num2.real * num1.imaginary;
-	
-
+	//float real1 = num1.real * num2.real;
+	//float real4 = num1.imaginary * num2.imaginary;
+	//float imag2 = num1.real * num2.imaginary;
+	//float imag3 = num2.real * num1.imaginary;
 	//result.real = real1 - real4;
 	//result.imaginary = imag2 + imag3;
 
@@ -119,6 +118,18 @@ struct Complex ComplexMultiply(struct Complex num1, struct Complex num2) {
 	result.imaginary = (num1.real * num2.imaginary) + (num2.real * num1.imaginary);
 	return result;
 }
-//struct Complex ComplexDivide(struct Complex num1, struct Complex num2) {
-//
-//}
+struct Complex ComplexDivide(struct Complex num1, struct Complex num2) {
+	struct Complex result;
+	float realNumerator, realDenominator, imaginaryNumerator, imaginaryDenominator;
+
+	realNumerator = (num1.real * num2.real) + (num1.imaginary * num2.imaginary);
+	realDenominator = ((num2.real)*(num2.real)) + ((num2.imaginary)*(num2.imaginary));
+
+	imaginaryNumerator = (num1.imaginary * num2.real) - (num1.real * num2.imaginary);
+	imaginaryDenominator = realDenominator;
+
+	result.real = realNumerator / realDenominator;
+	result.imaginary = imaginaryNumerator / imaginaryDenominator;
+
+	return result;
+}
