@@ -27,41 +27,50 @@ void BatchMode(void) {
 
 	//open imaginarydata.txt
 	imaginarydata = fopen("imaginarydata.txt", "r");
-	fscanf(imaginarydata, "%c %f %f %f %f ", &operation, &num1.real, &num1.imaginary, &num2.real, &num2.imaginary);
-
-	//char inputbuffer[100] = { 0 };
-	//fread(inputbuffer, sizeof(char), sizeof(inputbuffer), imaginarydata);
-	//sscanf_s(inputbuffer, "%c %f %f %f %f ", &operation, &num1.real, &num1.imaginary, &num2.real, &num2.imaginary);
-
-	// do the operation
-	switch (operation)
-	{
-	case 'A':
-	case 'a':
-		printf("adding\n");
-		break;
-	case 'S':
-	case 's':
-		printf("subtracting\n");
-		break;
-	case 'M':
-	case 'm':
-		printf("multiplying\n");
-		break;
-	case 'D':
-	case 'd':
-		printf("dividing\n");
-		break;
-	default:
-		break;
-	}
-
-	// open results.txt
 	results = fopen("results.txt", "w");
-	fprintf(results, "%c %f %f %f %f \n", operation, num1.real, num1.imaginary, num2.real, num2.imaginary);
-	//fprintf(results, "%.3g j%.3g %.3g j%.3g\n", 1.34, -52.0, 134,1);
 
+	while (!feof(imaginarydata)){
+		//if (feof(imaginarydata)) {
+		//	break;
+		//}
 
+		fscanf(imaginarydata, "%c %f %f %f %f ", &operation, &num1.real, &num1.imaginary, &num2.real, &num2.imaginary);
+
+		//char inputbuffer[100] = { 0 };
+		//fread(inputbuffer, sizeof(char), sizeof(inputbuffer), imaginarydata);
+		//sscanf_s(inputbuffer, "%c %f %f %f %f ", &operation, &num1.real, &num1.imaginary, &num2.real, &num2.imaginary);
+
+		//switch (operation)
+		//{
+		//case 'A':
+		//case 'a':
+		//	printf("adding\n");
+		//	break;
+		//case 'S':
+		//case 's':
+		//	printf("subtracting\n");
+		//	break;
+		//case 'M':
+		//case 'm':
+		//	printf("multiplying\n");
+		//	break;
+		//case 'D':
+		//case 'd':
+		//	printf("dividing\n");
+		//	break;
+		//case 'Q':
+		//case 'q':
+		//	printf("Quitting....");
+		//	break;
+		//default:
+		//	printf("Quitting....");
+		//	break;
+		//}
+
+		
+		fprintf(results, "%c %f %f %f %f \n", operation, num1.real, num1.imaginary, num2.real, num2.imaginary);
+		//fprintf(results, "%.3g j%.3g %.3g j%.3g\n", 1.34, -52.0, 134,1);
+	}
 
 	fclose(imaginarydata);
 	fclose(results);
