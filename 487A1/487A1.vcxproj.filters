@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Build Tools">
+      <UniqueIdentifier>{828f4bb7-82cf-42c8-ac76-dcfc6d915f09}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -31,5 +34,10 @@
     <ClInclude Include="complex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Makefile">
+      <Filter>Build Tools</Filter>
+    </None>
   </ItemGroup>
 </Project>
