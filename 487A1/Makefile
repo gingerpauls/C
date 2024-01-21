@@ -1,10 +1,14 @@
-all: main
+#CXX = g++
 
-main: main.o complex.o
-	g++ -o main main.o complex.o
+objects = main.o complex.o
+
+all: complexcalc
+
+complexcalc: $(objects)
+	g++ -o complexcalc $(objects)
 
 complex.o: complex.c complex.h
 	g++ -c complex.c
 
-main.o: main.c
+main.o: main.c complex.h
 	g++ -c main.c
