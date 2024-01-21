@@ -27,7 +27,7 @@ int main(int numArguments, char* arguments[]) {
 
 	if (invalid) {
 		fprintf(stderr, "Unknown or missing arguments.\n\n");
-		fprintf(stderr, "-i\t\tInteractive mode (user input/output).\n");
+		fprintf(stderr, "no arguments(default)\tInteractive mode (user input/output).\n");
 		fprintf(stderr, "-b\t\tBatch mode(inputdata.txt input/output outputdata.txt).\n");
 		fprintf(stderr, "Enter only 4 numbers (Real + Imag).\n\n");
 	}
