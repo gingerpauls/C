@@ -1,4 +1,4 @@
-#CXX = g++
+CXX = g++
 
 objects = main.o complex.o
 
@@ -12,3 +12,6 @@ complex.o: complex.c complex.h
 
 main.o: main.c complex.h
 	g++ -c main.c
+
+clean:
+    rm *.o $(objects)
