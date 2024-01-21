@@ -44,7 +44,7 @@ void InteractiveMode(void) {
 			printf("Quitting....\n");
 			break;
 		default:
-			printf("No operation found.\n");
+			printf("Invalid operation.\n");
 			break;
 		}
 	}
@@ -88,10 +88,10 @@ void BatchMode(void) {
 			break;
 		case 'Q':
 		case 'q':
-			printf("Quitting....");
+			//printf("Quitting....\n");
 			break;
 		default:
-			printf("Quitting....");
+			//printf("Invalid operation..\n");
 			break;
 		}
 	}
