@@ -1,17 +1,17 @@
-CXX = g++
-
+CC = g++
 objects = main.o complex.o
+executable = complexcalc
 
-all: complexcalc
+all: $(executable)
 
-complexcalc: $(objects)
-	g++ -o complexcalc $(objects)
+$(executable): $(objects)
+	$(CC) -o $(executable) $(objects)
 
 complex.o: complex.c complex.h
-	g++ -c complex.c
+	$(CC) -c complex.c
 
 main.o: main.c complex.h
-	g++ -c main.c
+	$(CC) -c main.c
 
 clean:
-    rm *.o $(objects)
+	rm -f $(objects) $(executable)
