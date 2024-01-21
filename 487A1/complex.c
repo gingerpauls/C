@@ -14,6 +14,7 @@ void InteractiveMode(void) {
 		printf("you entered: %.3g j%.3g, %.3g j%.3g\n", num1.real, num1.imaginary, num2.real, num2.imaginary);
 	}
 }
+
 void BatchMode(void) {
 	struct Complex num1, num2, result;
 
@@ -21,9 +22,7 @@ void BatchMode(void) {
 	FILE* results = NULL;
 	
 	char operation = NULL;
-	char imaginarySign;
 
-	//open imaginarydata.txt
 	imaginarydata = fopen("imaginarydata.txt", "r");
 	results = fopen("results.txt", "w");
 
