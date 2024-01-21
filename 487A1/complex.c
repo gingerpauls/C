@@ -20,14 +20,14 @@ void BatchMode(void) {
 	num2.real = num2.imaginary = 0;
 	FILE* imaginarydata = NULL;
 	FILE* results = NULL;
-	char inputbuffer[100] = { 0,0,0,0 };
+	char inputbuffer[100] = { 0 };
 	char operation = NULL;
 
 	//open imaginarydata.txt
 	imaginarydata = fopen("imaginarydata.txt", "r");
-	fread(inputbuffer, sizeof(char), sizeof(inputbuffer), imaginarydata);
-	sscanf_s(inputbuffer, "%c %f %f %f %f ", &operation, &num1.real, &num1.imaginary, &num2.real, &num2.imaginary);
-	//fscanf(imaginarydata, "%d %f %f %f %f ", operation, num1.real, num1.imaginary, num2.real, num2.imaginary);
+	//fread(inputbuffer, sizeof(char), sizeof(inputbuffer), imaginarydata);
+	//sscanf_s(inputbuffer, "%c %f %f %f %f ", &operation, &num1.real, &num1.imaginary, &num2.real, &num2.imaginary);
+	fscanf(imaginarydata, "%c %f %f %f %f ", &operation, &num1.real, &num1.imaginary, &num2.real, &num2.imaginary);
 
 	
 	
