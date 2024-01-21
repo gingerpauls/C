@@ -3,14 +3,14 @@
 void InteractiveMode(void);
 void BatchMode(void);
 
-
 struct Complex {
-	float real = 0.0;
-	float imaginary = 0.0;
+	float real;
+	float imaginary;
 };
 
 struct Complex ComplexAdd(struct Complex, struct Complex);
 struct Complex ComplexSubtract(struct Complex, struct Complex);
 struct Complex ComplexMultiply(struct Complex, struct Complex);
 struct Complex ComplexDivide(struct Complex, struct Complex);
-void PrintResult(FILE *, struct Complex);
+void PrintResultFile(FILE *, struct Complex);
+void PrintResultTerminal(struct Complex);
