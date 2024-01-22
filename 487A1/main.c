@@ -6,7 +6,7 @@ int isStreamTerminal(void);
 
 int main(int numArguments, char* arguments[]) {
 
-	struct Complex num1, num2, result;
+	ComplexNumber num1, num2, result;
 
 	char operation = NULL;
 	char inputbuffer[100];
@@ -30,23 +30,23 @@ int main(int numArguments, char* arguments[]) {
 		{
 		case 'A':
 		case 'a':
-			result = ComplexAdd(num1, num2);
-			PrintComplexNumber(result);
+			result = ComplexNumberAdd(&num1, &num2);
+			PrintComplexNumber(&result);
 			break;
 		case 'S':
 		case 's':
-			result = ComplexSubtract(num1, num2);
-			PrintComplexNumber(result);
+			result = ComplexNumberSubtract(&num1, &num2);
+			PrintComplexNumber(&result);
 			break;
 		case 'M':
 		case 'm':
-			result = ComplexMultiply(num1, num2);
-			PrintComplexNumber(result);
+			result = ComplexNumberMultiply(&num1, &num2);
+			PrintComplexNumber(&result);
 			break;
 		case 'D':
 		case 'd':
-			result = ComplexDivide(num1, num2);
-			PrintComplexNumber(result);
+			result = ComplexNumberDivide(&num1, &num2);
+			PrintComplexNumber(&result);
 			break;
 		case 'Q':
 		case 'q':

@@ -1,13 +1,13 @@
 #include "stdio.h"
 
-struct Complex {
+typedef struct {
 	float real;
 	float imaginary;
-};
+} ComplexNumber;
 
-struct Complex ComplexAdd(struct Complex, struct Complex);
-struct Complex ComplexSubtract(struct Complex, struct Complex);
-struct Complex ComplexMultiply(struct Complex, struct Complex);
-struct Complex ComplexDivide(struct Complex, struct Complex);
+ComplexNumber ComplexNumberAdd(ComplexNumber*, ComplexNumber*);
+ComplexNumber ComplexNumberSubtract(ComplexNumber*, ComplexNumber*);
+ComplexNumber ComplexNumberMultiply(ComplexNumber*, ComplexNumber*);
+ComplexNumber ComplexNumberDivide(ComplexNumber*, ComplexNumber*);
 
-void PrintComplexNumber(struct Complex);
+void PrintComplexNumber(ComplexNumber*);
