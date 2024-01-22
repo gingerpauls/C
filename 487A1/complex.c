@@ -69,22 +69,22 @@ void BatchMode(void) {
 		case 'A':
 		case 'a':
 			result = ComplexAdd(num1, num2);
-			PrintResultFile(results, result);
+			PrintResultTerminal(result);
 			break;
 		case 'S':
 		case 's':
 			result = ComplexSubtract(num1, num2);
-			PrintResultFile(results, result);
+			PrintResultTerminal(result);
 			break;
 		case 'M':
 		case 'm':
 			result = ComplexMultiply(num1, num2);
-			PrintResultFile(results, result);
+			PrintResultTerminal(result);
 			break;
 		case 'D':
 		case 'd':
 			result = ComplexDivide(num1, num2);
-			PrintResultFile(results, result);
+			PrintResultTerminal(result);
 			break;
 		case 'Q':
 		case 'q':
