@@ -1,19 +1,23 @@
 #include "complex.h"
 #include "stdio.h"
+#include "io.h"
 
 void InteractiveMode(void) {
 	struct Complex num1, num2, result;
 
 	char operation = NULL;
 	char inputbuffer[100];
-
-	fprintf(stderr, "Complex calculator\n\n");
-	fprintf(stderr, "Type a letter to specify the arithmetic operator (A, S, M, D)\n");
-	fprintf(stderr, "followed by two complex numbers expressed as pairs of doubles.\n");
-	fprintf(stderr, "Type Q to quit.\n\n");
-
+	if (_isatty(_fileno(stdin))) {
+		fprintf(stderr, "Complex calculator\n\n");
+		fprintf(stderr, "Type a letter to specify the arithmetic operator (A, S, M, D)\n");
+		fprintf(stderr, "followed by two complex numbers expressed as pairs of doubles.\n");
+		fprintf(stderr, "Type Q to quit.\n\n");
+	}
 	while ((operation != 'Q') && (operation != 'q')) {
-		fprintf(stderr, "Enter exp: ");
+		if (_isatty(_fileno(stdin))) {
+			fprintf(stderr, "Enter exp: ");
+		}
+		
 		fgets(inputbuffer, sizeof(inputbuffer), stdin);
 		sscanf(inputbuffer, "%c %f %f %f %f", &operation, &num1.real, &num1.imaginary, &num2.real, &num2.imaginary);
 
