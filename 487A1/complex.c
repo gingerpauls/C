@@ -26,22 +26,22 @@ void InteractiveMode(void) {
 		case 'A':
 		case 'a':
 			result = ComplexAdd(num1, num2);
-			PrintResultTerminal(result);
+			PrintResult(result);
 			break;
 		case 'S':
 		case 's':
 			result = ComplexSubtract(num1, num2);
-			PrintResultTerminal(result);
+			PrintResult(result);
 			break;
 		case 'M':
 		case 'm':
 			result = ComplexMultiply(num1, num2);
-			PrintResultTerminal(result);
+			PrintResult(result);
 			break;
 		case 'D':
 		case 'd':
 			result = ComplexDivide(num1, num2);
-			PrintResultTerminal(result);
+			PrintResult(result);
 			break;
 		case 'Q':
 		case 'q':
@@ -52,57 +52,6 @@ void InteractiveMode(void) {
 			break;
 		}
 	}
-}
-
-void BatchMode(void) {
-	struct Complex num1, num2, result;
-
-	FILE* imaginarydata = NULL;
-	FILE* results = NULL;
-	
-	char operation = NULL;
-
-	imaginarydata = fopen("imaginarydata.txt", "r");
-	results = fopen("results.txt", "w");
-
-	while (!feof(imaginarydata)){
-		fscanf(imaginarydata, "%c %f %f %f %f ", &operation, &num1.real, &num1.imaginary, &num2.real, &num2.imaginary);
-
-		switch (operation)
-		{
-		case 'A':
-		case 'a':
-			result = ComplexAdd(num1, num2);
-			PrintResultTerminal(result);
-			break;
-		case 'S':
-		case 's':
-			result = ComplexSubtract(num1, num2);
-			PrintResultTerminal(result);
-			break;
-		case 'M':
-		case 'm':
-			result = ComplexMultiply(num1, num2);
-			PrintResultTerminal(result);
-			break;
-		case 'D':
-		case 'd':
-			result = ComplexDivide(num1, num2);
-			PrintResultTerminal(result);
-			break;
-		case 'Q':
-		case 'q':
-			//printf("Quitting....\n");
-			break;
-		default:
-			//printf("Invalid operation..\n");
-			break;
-		}
-	}
-
-	fclose(imaginarydata);
-	fclose(results);
-
 }
 
 struct Complex ComplexAdd(struct Complex num1, struct Complex num2) {
@@ -139,17 +88,7 @@ struct Complex ComplexDivide(struct Complex num1, struct Complex num2) {
 	return result;
 }
 
-void PrintResultFile(FILE* results, struct Complex result) {
-	if (result.imaginary < 0) {
-		result.imaginary *= -1;
-		fprintf(results, "%.6g - j %.6g \n", result.real, result.imaginary);
-	}
-	else {
-		fprintf(results, "%.6g + j %.6g \n", result.real, result.imaginary);
-	}
-}
-
-void PrintResultTerminal(struct Complex result) {
+void PrintResult(struct Complex result) {
 	if (result.imaginary < 0) {
 		result.imaginary *= -1;
 		printf("%.6g - j %.6g \n", result.real, result.imaginary);
