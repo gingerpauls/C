@@ -52,7 +52,14 @@ int main(int numArguments, char* arguments[]) {
 		case 'q':
 			break;
 		default:
-			printf("Invalid operation.\n");
+			if (operation == '\n')
+			{
+				fprintf(stdout, "\n");
+				break;
+			}
+			else {
+				fprintf(stdout, "Error: invalid operation.\n");
+			}
 			break;
 		}
 	}
