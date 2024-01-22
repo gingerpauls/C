@@ -7,13 +7,13 @@ void InteractiveMode(void) {
 	char operation = NULL;
 	char inputbuffer[100];
 
-	printf("Complex calculator\n\n");
-	printf("Type a letter to specify the arithmetic operator (A, S, M, D)\n");
-	printf("followed by two complex numbers expressed as pairs of doubles.\n");
-	printf("Type Q to quit.\n\n");
+	fprintf(stderr, "Complex calculator\n\n");
+	fprintf(stderr, "Type a letter to specify the arithmetic operator (A, S, M, D)\n");
+	fprintf(stderr, "followed by two complex numbers expressed as pairs of doubles.\n");
+	fprintf(stderr, "Type Q to quit.\n\n");
 
 	while ((operation != 'Q') && (operation != 'q')) {
-		printf("Enter exp: ");
+		fprintf(stderr, "Enter exp: ");
 		fgets(inputbuffer, sizeof(inputbuffer), stdin);
 		sscanf(inputbuffer, "%c %f %f %f %f", &operation, &num1.real, &num1.imaginary, &num2.real, &num2.imaginary);
 
@@ -41,7 +41,7 @@ void InteractiveMode(void) {
 			break;
 		case 'Q':
 		case 'q':
-			printf("Quitting....\n");
+			//printf("Quitting....\n");
 			break;
 		default:
 			printf("Invalid operation.\n");
