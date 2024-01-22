@@ -1,3 +1,2 @@
 make
-REM running works, but will crash after
-.\complexcalc.exe
+.\complexcalc.exe < imaginarydata.txt > output.txt
