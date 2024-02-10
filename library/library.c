@@ -58,40 +58,36 @@ typedef struct {
     char Email[STRING_SIZE];
 } Account;
 
-int main(int args, char *argv[]) {
+int PopulateAccounts(FILE* accounts, Account* account_list[]);
+
+int main(int num_arguments, char *argument_value[]) {
     FILE* accounts;
     char input_buffer[DATABASE_SIZE]; // change to sizeof(Account) * NUM_ACCOUNTS
     Account account_list[NUM_ACCOUNTS_MAX] = {0, 0, 0};
-    char header_string[16];
+    //Account* account_ptr = &account_list;
     int num_matches;
     int num_accounts;
     //void *malloc(size_t size)
 
     accounts = fopen("accounts.txt", "r+");
 
-    if(args < 2)
+    if(num_arguments < 2)
     {
         printf("Welcome to the library!\n");
         printf("use -c to create an account.\n");
         printf("use -l to login to an existing account.\n");
     }
-    else if (strcmp(argv[1], "-c") == 0)
+    else if (strcmp(argument_value[1], "-c") == 0)
     {
-        
         if (accounts == NULL) {
             fprintf(stderr, "accounts.txt does not exist.\n");
             return 1;
         }
-        //else {
-        //    fseek(accounts, 0, SEEK_END);
-        //    if (ftell(accounts) == 0) {
-        //        printf("No accounts created. Please create an admin account using -c.\n");
-        //        return 1;
-        //    }
-        //}
 
         // populate data
         int i = 0;
+        char header_string[16];
+        rewind(accounts);
         while (!feof(accounts)) {
             num_matches = fscanf(accounts, "%s %s", header_string, account_list[i].Email);
             num_matches = fscanf(accounts, "%s %s", header_string, account_list[i].Name);
@@ -102,7 +98,7 @@ int main(int args, char *argv[]) {
 
         printf("Create account\n");
         printf("Enter your email: \n");
-        scanf("%s", input_buffer);
+        num_matches = scanf("%s", input_buffer);
         for (int i = 0; i < num_accounts; i++)
         {
             if (strcmp(input_buffer, account_list[i].Email) == 0) {
@@ -110,17 +106,29 @@ int main(int args, char *argv[]) {
                 return 1;
             }
         }
-
-        fprintf(accounts, "Email %s\n", input_buffer);
+        fprintf(accounts, "Email \t\t%s\n", input_buffer);
         printf("Enter your name: \n");
-        scanf("%s", input_buffer);
-        fprintf(accounts, "Name %s\n", input_buffer);
+        num_matches = scanf("%s", input_buffer);
+        fprintf(accounts, "Name \t\t%s\n", input_buffer);
         printf("Enter your password: \n");
-        scanf("%s", input_buffer);
-        fprintf(accounts, "Password %s\n", input_buffer);
+        num_matches = scanf("%s", input_buffer);
+        fprintf(accounts, "Password \t%s\n", input_buffer);
         fprintf(accounts, "\n", input_buffer);
 
+        // re-populate data
+//        PopulateAccounts(accounts, &account_ptr);
+        i = 0;
+        rewind(accounts);
+        while (!feof(accounts)) {
+            num_matches = fscanf(accounts, "%s %s", header_string, account_list[i].Email);
+            num_matches = fscanf(accounts, "%s %s", header_string, account_list[i].Name);
+            num_matches = fscanf(accounts, "%s %s", header_string, account_list[i].Password);
+            i++;
+        }
+        num_accounts = i - 1;
 
+        // print accounts
+        printf("Accounts:\n");
         for (int i = 0; i < num_accounts; i++)
         {
             if (account_list[i].Name == 0) {
@@ -128,15 +136,15 @@ int main(int args, char *argv[]) {
             }
             printf("Account[%d].Email = %s\n", i, &account_list[i].Email);
             printf("Account[%d].Name = %s\n", i, &account_list[i].Name);
-            printf("Account[%d].Password = %s\n", i, &account_list[i].Password);
+            printf("Account[%d].Password = %s\n\n", i, &account_list[i].Password);
         }
     }
-    else if (strcmp(argv[1], "-l") == 0) 
+    else if (strcmp(argument_value[1], "-l") == 0) 
     {
         accounts = fopen("accounts.txt", "a+");
-        num_matches = fscanf(accounts, "%s", header_string);
-        if (!(strcmp(header_string, "Email") == 0)) {
-            fprintf(stderr, "No accounts found. Please create an admin account.\n");
+        fseek(accounts, 0, SEEK_END);
+        if (ftell(accounts) == 0) {
+            printf("No accounts created. Please create an admin account using -c.\n");
             return 1;
         }
         printf("Login to your account\n");
@@ -152,3 +160,17 @@ int main(int args, char *argv[]) {
     
     return 0;
 }
+
+//int PopulateAccounts(FILE *accounts, Account* account_list[]) {
+//    int i = 0, num_matches, num_accounts;
+//    char header_string[16];
+//
+//    rewind(accounts);
+//    while (!feof(accounts)) {
+//        num_matches = fscanf(accounts, "%s %s", header_string, &account_list[i]->Email);
+//        num_matches = fscanf(accounts, "%s %s", header_string, &account_list[i]->Name);
+//        num_matches = fscanf(accounts, "%s %s", header_string, &account_list[i]->Password);
+//        i++;
+//    }
+//    return (num_accounts = i - 1);
+//}
