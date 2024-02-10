@@ -96,6 +96,7 @@ int main(int num_arguments, char *argument_value[]) {
         }
         num_accounts = i - 1;
 
+        // create account
         printf("Create account\n");
         printf("Enter your email: \n");
         num_matches = scanf("%s", input_buffer);
@@ -116,7 +117,7 @@ int main(int num_arguments, char *argument_value[]) {
         fprintf(accounts, "\n", input_buffer);
 
         // re-populate data
-//        PopulateAccounts(accounts, &account_ptr);
+        //PopulateAccounts(accounts, &account_ptr);
         i = 0;
         rewind(accounts);
         while (!feof(accounts)) {
@@ -147,8 +148,44 @@ int main(int num_arguments, char *argument_value[]) {
             printf("No accounts created. Please create an admin account using -c.\n");
             return 1;
         }
+
+        // populate devices
+        int i = 0;
+        char header_string[16];
+        rewind(accounts);
+        while (!feof(accounts)) {
+            num_matches = fscanf(accounts, "%s %s", header_string, account_list[i].Email);
+            num_matches = fscanf(accounts, "%s %s", header_string, account_list[i].Name);
+            num_matches = fscanf(accounts, "%s %s", header_string, account_list[i].Password);
+            i++;
+        }
+        num_accounts = i - 1;
+
         printf("Login to your account\n");
-        printf("Enter your name: \n");
+        printf("Enter your email address: ");
+        num_matches = scanf("%s", input_buffer);
+        for (int i = 0; i < num_accounts; i++)
+        {
+            if (strcmp(input_buffer, account_list[i].Email) == 0) {
+                printf("Email address found.\n");
+                for (int i = 0; i < 5; i++)
+                {
+                    printf("Enter your password: ");
+                    num_matches = scanf("%s", input_buffer);
+                    if (strcmp(input_buffer, account_list[i].Password) == 0) {
+                        printf("Logging in...\n");
+                        break;
+                    }
+                    else
+                    {
+                        printf("Incorrect password.\n");
+                    }
+                }
+            }
+            else {
+                printf(stderr, "Email not found.\n");
+            }
+        }
     }
     else 
     {
