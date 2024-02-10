@@ -100,24 +100,26 @@ int main(int args, char *argv[]) {
         }
         num_accounts = i - 1;
 
-        for (size_t i = 0; i < 3; i++)
+        printf("Create account\n");
+        printf("Enter your email: \n");
+        scanf("%s", input_buffer);
+        for (int i = 0; i < num_accounts; i++)
         {
-            printf("Create account\n");
-            printf("Enter your email: \n");
-            scanf("%s", input_buffer);
-            if (strcmp(input_buffer, account_list[0].Email) == 0) {
+            if (strcmp(input_buffer, account_list[i].Email) == 0) {
                 printf("Email address already exists in database. Use -l for login.\n");
-                break;
+                return 1;
             }
-            fprintf(accounts, "Email %s\n", input_buffer);
-            printf("Enter your name: \n");
-            scanf("%s", input_buffer);
-            fprintf(accounts, "Name %s\n", input_buffer);
-            printf("Enter your password: \n");
-            scanf("%s", input_buffer);
-            fprintf(accounts, "Password %s\n", input_buffer);
-            fprintf(accounts, "\n", input_buffer);
         }
+
+        fprintf(accounts, "Email %s\n", input_buffer);
+        printf("Enter your name: \n");
+        scanf("%s", input_buffer);
+        fprintf(accounts, "Name %s\n", input_buffer);
+        printf("Enter your password: \n");
+        scanf("%s", input_buffer);
+        fprintf(accounts, "Password %s\n", input_buffer);
+        fprintf(accounts, "\n", input_buffer);
+
 
         for (int i = 0; i < num_accounts; i++)
         {
