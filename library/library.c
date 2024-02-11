@@ -48,7 +48,7 @@ typedef struct {
     char Name[STRING_SIZE];
     char Password[STRING_SIZE];
     char Email[STRING_SIZE];    
-    bool  isAdmin;
+    bool isAdmin;
 } Account;
 
 int PopulateAccounts(FILE* accounts, Account* account_list);
@@ -79,7 +79,7 @@ int main(int num_arguments, char *argument_value[]) {
             }
         }
         num_accounts = PopulateAccounts(accounts, &account_list);
-        while (CreateAccount(accounts, account_list, num_accounts, 0));
+        while (CreateAccount(accounts, account_list, num_accounts, false));
         num_accounts = PopulateAccounts(accounts, &account_list);
     }
     else if (strcmp(argument_value[1], "-l") == 0) 
@@ -101,11 +101,50 @@ int main(int num_arguments, char *argument_value[]) {
         }
         else if (account_list[account_id].isAdmin == true)
         {
-            PrintAccountList(account_list, num_accounts);
+            char input_buffer[STRING_SIZE];
+
+            printf("Welcome %s!\n", account_list[account_id].Name);
+            while (1) 
+            {
+                printf("Press:  \tv to view your account information.\n");
+                printf("        \ta to view all account information.\n");
+                printf("        \tca to create an admin account.\n");
+                printf("        \tcu to create a user account (no admin privileges.\n");
+                scanf("%s", input_buffer);
+                if (strcmp(input_buffer, "v") == 0) {
+                    PrintAccount(account_list, account_id);
+                }
+                else if (strcmp(input_buffer, "a") == 0)
+                {
+                    PrintAccountList(account_list, num_accounts);
+                }
+                else if (strcmp(input_buffer, "ca") == 0)
+                {
+                    CreateAccount(accounts, account_list, num_accounts, true);
+                }
+                else if (strcmp(input_buffer, "cu") == 0)
+                {
+                    CreateAccount(accounts, account_list, num_accounts, false);
+                }
+                else
+                {
+                    printf("Logging out...\n");
+                }
+            }
         }
         else
         {
-            PrintAccount(account_list, account_id);
+            char input_buffer[STRING_SIZE];
+            printf("Welcome %s!\n", account_list[account_id].Name);
+            printf("Press v to view your account information.\n");
+            scanf("%s", input_buffer);
+            if (strcmp(input_buffer, "v") == 0 || strcmp(input_buffer, "V") == 0) {
+                PrintAccount(account_list, account_id);
+            }
+            else
+            {
+                printf("Logging out...\n");
+            }
         }
     }
     else if (strcmp(argument_value[1], "-i") == 0) 
@@ -166,7 +205,6 @@ int PopulateAccounts(FILE *accounts, Account* account_list) {
 }
 
 void PrintAccount(Account* account_list, int account_id) {
-    printf("\nAccounts:\n\n");
     printf("Account[%d].Email = %s\n", account_id, account_list[account_id].Email);
     printf("Account[%d].Name = %s\n", account_id, account_list[account_id].Name);
     printf("Account[%d].Password = %s\n", account_id, account_list[account_id].Password);
@@ -209,6 +247,7 @@ int CreateAccount(FILE* accounts, Account* account_list, int num_accounts, bool 
     fprintf(accounts, "isAdmin \t%u\n", isAdmin);
     fprintf(accounts, "\n", input_buffer);
     printf("Account creation successful.\n");
+    PopulateAccounts(accounts, &account_list);
     fclose(accounts);
     return 0;
 }
