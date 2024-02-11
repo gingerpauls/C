@@ -24,8 +24,8 @@
             late ? penalty : no penalty
 
     system
-        save library data (books and members) to files
-        load library data from files at startup
+        save books
+        load books
         ensure data persistence
 
     reports
@@ -101,6 +101,7 @@ int main(int num_arguments, char *argument_value[]) {
                 printf("        \ta to view all account information.\n");
                 printf("        \tca to create an admin account.\n");
                 printf("        \tcu to create a user account (no admin privileges).\n");
+                printf("        \ts to search for an account. \n");
                 scanf("%s", input_buffer);
                 if (strcmp(input_buffer, "v") == 0) {
                     PrintAccount(account_list, account_id);
@@ -118,6 +119,20 @@ int main(int num_arguments, char *argument_value[]) {
                 {
                     CreateAccount(accounts, account_list, &num_accounts, false);
                     PopulateAccounts(accounts, &account_list, &num_accounts);
+                }
+                else if (strcmp(input_buffer, "s") == 0)
+                {
+                    printf("Enter the email of the account you're looking for: ");
+                    scanf("%s", input_buffer);
+                    for (int i = 0; i < num_accounts; i++)
+                    {
+                        if (strcmp(input_buffer, account_list[i].Email) == 0) {
+                            printf("Account found.\n");
+                            PrintAccount(account_list, i);
+                            return 0;
+                        }
+                    }
+                    printf("Account not found.\n");
                 }
                 else
                 {
@@ -197,7 +212,6 @@ void PopulateAccounts(FILE *accounts, Account* account_list, int* num_accounts) 
     fclose(accounts);
     *num_accounts = i - 1;
 }
-
 void PrintAccount(Account* account_list, int account_id) {
     printf("Account[%d].Email = %s\n", account_id, account_list[account_id].Email);
     printf("Account[%d].Name = %s\n", account_id, account_list[account_id].Name);
@@ -214,7 +228,6 @@ void PrintAccountList(Account* account_list, int num_accounts) {
         printf("Account[%d].isAdmin = %d\n\n", i, account_list[i].isAdmin);
     }
 }
-
 int CreateAccount(FILE* accounts, Account* account_list, int* num_accounts, bool isAdmin) {
     char input_buffer[STRING_SIZE];
     int num_matches = 0;
@@ -245,7 +258,6 @@ int CreateAccount(FILE* accounts, Account* account_list, int* num_accounts, bool
     fclose(accounts);
     return 0;
 }
-
 int LoginAccount(Account* account_list, int num_accounts) {
     char input_buffer[STRING_SIZE];
     int num_matches;
@@ -279,7 +291,6 @@ int LoginAccount(Account* account_list, int num_accounts) {
     fprintf(stderr, "Email not found.\n");
     return -1;
 }
-
 int CheckForEmptyDatabase(Account* accounts) {
     if (accounts == NULL) {
         {
