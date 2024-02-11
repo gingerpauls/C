@@ -10,14 +10,14 @@
         delete members
 
         issue books to library members
-        view due date 
+        view due date
             late ? penalty : no penalty
 
     user
         search book
         display list of books
         edit self member information
-        
+
         return book to library
         view due date
             late ? penalty : no penalty
@@ -46,7 +46,7 @@
 typedef struct {
     char Name[STRING_SIZE];
     char Password[STRING_SIZE];
-    char Email[STRING_SIZE];    
+    char Email[STRING_SIZE];
     bool isAdmin;
 } Account;
 
@@ -59,12 +59,12 @@ int  CheckForEmptyDatabase(Account* account_list);
 int  SearchAccount(Account* account_list, int num_accounts);
 void UpdateDatabase(FILE* accounts, Account* account_list, int num_accounts);
 
-int main(int num_arguments, char *argument_value[]) {
+int main(int num_arguments, char* argument_value[]) {
     FILE* accounts;
-    Account account_list[NUM_ACCOUNTS_MAX] = {0, 0, 0, 0};
+    Account account_list[NUM_ACCOUNTS_MAX] = { 0, 0, 0, 0 };
     int num_accounts = 0;
 
-    if(num_arguments < 2)
+    if (num_arguments < 2)
     {
         printf("Welcome to the library! \n");
         printf("Use:\t-i to create and initialize the database\n");
@@ -80,7 +80,7 @@ int main(int num_arguments, char *argument_value[]) {
         PopulateAccounts(accounts, &account_list, &num_accounts);
         CreateAccount(accounts, account_list, &num_accounts, false);
     }
-    else if (strcmp(argument_value[1], "-l") == 0) 
+    else if (strcmp(argument_value[1], "-l") == 0)
     {
         accounts = fopen("accounts.txt", "r");
         if (CheckForEmptyDatabase(accounts) != 0) {
@@ -96,7 +96,7 @@ int main(int num_arguments, char *argument_value[]) {
             char input_buffer[STRING_SIZE];
 
             printf("Welcome %s!\n", account_list[account_id].Name);
-            while (1) 
+            while (1)
             {
                 printf("Press:  \tv     \t- view your account information.\n");
                 printf("        \ta     \t- view all account information.\n");
@@ -147,11 +147,11 @@ int main(int num_arguments, char *argument_value[]) {
                             }
                         }
                         if ((num_admins == 1) && (account_id == searched_account_id)) {
-                            printf( "You are the last admin. Cannot have less than 1 admin account. \n"
-                                    "If you want to remove your admin status, elevate privileges for\n"
-                                    "another account. Then edit your admin status.                \n\n");
+                            printf("You are the last admin. Cannot have less than 1 admin account. \n"
+                                "If you want to remove your admin status, elevate privileges for\n"
+                                "another account. Then edit your admin status.                \n\n");
                         }
-                        else 
+                        else
                         {
                             printf("isAdmin?: ");
                             scanf("%s", input_buffer);
@@ -159,6 +159,7 @@ int main(int num_arguments, char *argument_value[]) {
                         }
                         UpdateDatabase(accounts, account_list, num_accounts);
                         if (account_list[account_id].isAdmin == false) {
+                            printf("No longer admin. Logging out... \n");
                             return 0;
                         }
                     }
@@ -174,7 +175,7 @@ int main(int num_arguments, char *argument_value[]) {
         {
             char input_buffer[STRING_SIZE];
             printf("Welcome %s!\n", account_list[account_id].Name);
-            while(1){
+            while (1) {
                 printf("Press:  \tv     \t- view your account information.\n");
                 printf("        \te     \t- edit your account information. \n");
                 printf("        \t      \t- anything else to logout.\n");
@@ -199,7 +200,7 @@ int main(int num_arguments, char *argument_value[]) {
             }
         }
     }
-    else if (strcmp(argument_value[1], "-i") == 0) 
+    else if (strcmp(argument_value[1], "-i") == 0)
     {
         char input_buffer[STRING_SIZE];
         int num_matches;
@@ -220,7 +221,7 @@ int main(int num_arguments, char *argument_value[]) {
                 return -1;
             }
         }
-        else 
+        else
         {
             fseek(accounts, 0, SEEK_END);
             if (ftell(accounts) == 0) {
@@ -231,15 +232,15 @@ int main(int num_arguments, char *argument_value[]) {
             printf("The database (accounts.txt) already exists. Login (-l) or create account (-c).\n");
         }
     }
-    else 
+    else
     {
         printf("Unknown arguments.\n"
-               "Use -c to create an account or -l to login to an existing account.\n");
+            "Use -c to create an account or -l to login to an existing account.\n");
     }
     return 0;
 }
 
-void PopulateAccounts(FILE *accounts, Account* account_list, int* num_accounts) {
+void PopulateAccounts(FILE* accounts, Account* account_list, int* num_accounts) {
     int i = 0, num_matches;
     char header_string[STRING_SIZE];
 

@@ -1,10 +1,10 @@
 Email 		a
-Name 		peter
+Name 		paul
 Password 	ppw
 isAdmin 	1
 
 Email 		b
-Name 		brad
+Name 		bret
 Password 	bpw
 isAdmin 	0
 
