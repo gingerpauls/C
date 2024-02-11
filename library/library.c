@@ -121,14 +121,17 @@ int main(int num_arguments, char *argument_value[]) {
                 else if (strcmp(input_buffer, "ca") == 0)
                 {
                     CreateAccount(accounts, account_list, num_accounts, true);
+                    num_accounts = PopulateAccounts(accounts, &account_list);
                 }
                 else if (strcmp(input_buffer, "cu") == 0)
                 {
                     CreateAccount(accounts, account_list, num_accounts, false);
+                    num_accounts = PopulateAccounts(accounts, &account_list);
                 }
                 else
                 {
                     printf("Logging out...\n");
+                    return 0;
                 }
             }
         }

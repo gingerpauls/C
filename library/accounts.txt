@@ -3,38 +3,18 @@ Name 		a
 Password 	a
 isAdmin 	1
 
-Email 		b
-Name 		b
-Password 	b
+Email 		mymom
+Name 		hername
+Password 	herpw
 isAdmin 	0
 
-Email 		g
-Name 		g
-Password 	g
-isAdmin 	0
-
-Email 		ab
-Name 		ab
-Password 	ab
-isAdmin 	0
-
-Email 		hutchinson9736@gmail.com
-Name 		Paul
-Password 	mylibpw
+Email 		dademail
+Name 		hisname
+Password 	hispw
 isAdmin 	0
 
 Email 		newadmin
-Name 		adminname
-Password 	adminpw
+Name 		theirname
+Password 	theirpw
 isAdmin 	1
-
-Email 		normalemail
-Name 		normalname
-Password 	normalpw
-isAdmin 	0
-
-Email 		n2
-Name 		n2
-Password 	n2
-isAdmin 	0
 
