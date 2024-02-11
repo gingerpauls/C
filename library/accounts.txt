@@ -13,3 +13,28 @@ Name 		g
 Password 	g
 isAdmin 	0
 
+Email 		ab
+Name 		ab
+Password 	ab
+isAdmin 	0
+
+Email 		hutchinson9736@gmail.com
+Name 		Paul
+Password 	mylibpw
+isAdmin 	0
+
+Email 		newadmin
+Name 		adminname
+Password 	adminpw
+isAdmin 	1
+
+Email 		normalemail
+Name 		normalname
+Password 	normalpw
+isAdmin 	0
+
+Email 		n2
+Name 		n2
+Password 	n2
+isAdmin 	0
+
