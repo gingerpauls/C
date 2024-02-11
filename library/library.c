@@ -57,7 +57,8 @@ void PrintAccountList(Account* account_list, int num_accounts);
 int  CreateAccount(FILE* accounts, Account* account_list, int* num_accounts, bool isAdmin);
 int  LoginAccount(Account* account_list, int num_accounts);
 int  CheckForEmptyDatabase(Account* account_list);
-int  SearchAccount();
+int  SearchAccount(Account* account_list, int num_accounts);
+void UpdateDatabase();
 
 int main(int num_arguments, char *argument_value[]) {
     FILE* accounts;
@@ -98,12 +99,13 @@ int main(int num_arguments, char *argument_value[]) {
             printf("Welcome %s!\n", account_list[account_id].Name);
             while (1) 
             {
-                printf("Press:  \tv to view your account information.\n");
-                printf("        \ta to view all account information.\n");
-                printf("        \tca to create an admin account.\n");
-                printf("        \tcu to create a user account (no admin privileges).\n");
-                printf("        \ts to search for an account. \n");
-                printf("        \te to edit an account. \n");
+                printf("Press:  \tv     \t- view your account information.\n");
+                printf("        \ta     \t- view all account information.\n");
+                printf("        \tca    \t- create an admin account.\n");
+                printf("        \tcu    \t- create a user account (no admin privileges).\n");
+                printf("        \ts     \t- search for an account. \n");
+                printf("        \te     \t- edit an account. \n");
+                printf("        \t      \t- anything else to logout.\n");
                 printf("\n");
                 scanf("%s", input_buffer);
                 if (strcmp(input_buffer, "v") == 0) {
@@ -134,8 +136,6 @@ int main(int num_arguments, char *argument_value[]) {
                         printf("New name: ");
                         scanf("%s", input_buffer);
                         strcpy(account_list[account_id].Name, input_buffer);
-                        printf("Edit successful.\n");
-                        // repopulate database
                         accounts = fopen("accounts.txt", "w");
                         for (int i = 0; i < num_accounts; i++)
                         {
@@ -145,8 +145,6 @@ int main(int num_arguments, char *argument_value[]) {
                             fprintf(accounts, "isAdmin \t%u\n", account_list[i].isAdmin);
                             fprintf(accounts, "\n");
                         }
-                        fprintf(accounts, "\n", input_buffer);
-                        printf("Account creation successful. Login with -l.\n");
                         fclose(accounts);
                     }
                 }
@@ -157,18 +155,32 @@ int main(int num_arguments, char *argument_value[]) {
                 }
             }
         }
-        else
+        else if (account_list[account_id].isAdmin == false)
         {
             char input_buffer[STRING_SIZE];
             printf("Welcome %s!\n", account_list[account_id].Name);
-            printf("Press v to view your account information.\n");
-            scanf("%s", input_buffer);
-            if (strcmp(input_buffer, "v") == 0 || strcmp(input_buffer, "V") == 0) {
-                PrintAccount(account_list, account_id);
-            }
-            else
-            {
-                printf("Logging out...\n");
+            while(1){
+                printf("Press:  \tv     \t- view your account information.\n");
+                printf("        \te     \t- edit your account information. \n");
+                printf("        \t      \t- anything else to logout.\n");
+                scanf("%s", input_buffer);
+                if (strcmp(input_buffer, "v") == 0) {
+                    PrintAccount(account_list, account_id);
+                }
+                else if (strcmp(input_buffer, "e") == 0)
+                {
+                    if (account_id >= 0) {
+                        printf("New name: ");
+                        scanf("%s", input_buffer);
+                        strcpy(account_list[account_id].Name, input_buffer);
+                        UpdateDatabase(accounts, account_list, num_accounts);
+                    }
+                }
+                else
+                {
+                    printf("Logging out...\n");
+                    return 0;
+                }
             }
         }
     }
@@ -235,7 +247,6 @@ void PrintAccount(Account* account_list, int account_id) {
     printf("Account[%d].isAdmin = %d\n\n", account_id, account_list[account_id].isAdmin);
 }
 void PrintAccountList(Account* account_list, int num_accounts) {
-    printf("\nAccounts:\n\n");
     for (int i = 0; i < num_accounts; i++)
     {
         printf("Account[%d].Email = %s\n", i, account_list[i].Email);
@@ -268,9 +279,9 @@ int  CreateAccount(FILE* accounts, Account* account_list, int* num_accounts, boo
     fprintf(accounts, "Password \t%s\n", input_buffer);
     fprintf(accounts, "isAdmin \t%u\n", isAdmin);
     fprintf(accounts, "\n", input_buffer);
-    printf("Account creation successful. Login with -l.\n");
     (*num_accounts)++;
     fclose(accounts);
+    printf("Account creation successful. Login with -l.\n");
     return 0;
 }
 int  LoginAccount(Account* account_list, int num_accounts) {
@@ -334,4 +345,16 @@ int  SearchAccount(Account* account_list, int num_accounts) {
     }
     printf("Account not found.\n");
     return -1;
+}
+void UpdateDatabase(FILE* accounts, Account* account_list, int num_accounts) {
+    accounts = fopen("accounts.txt", "w");
+    for (int i = 0; i < num_accounts; i++)
+    {
+        fprintf(accounts, "Email \t\t%s\n", account_list[i].Email);
+        fprintf(accounts, "Name \t\t%s\n", account_list[i].Name);
+        fprintf(accounts, "Password \t%s\n", account_list[i].Password);
+        fprintf(accounts, "isAdmin \t%u\n", account_list[i].isAdmin);
+        fprintf(accounts, "\n");
+    }
+    fclose(accounts);
 }
