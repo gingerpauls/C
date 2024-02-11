@@ -1,15 +1,16 @@
 Email 		a
-Name 		a
+Name 		Paul
 Password 	a
 isAdmin 	1
 
 Email 		b
-Name 		b
+Name 		bill
 Password 	b
-isAdmin 	1
+isAdmin 	0
 
 Email 		c
-Name 		c
+Name 		chloe
 Password 	c
-isAdmin 	0
+isAdmin 	1
+
 
