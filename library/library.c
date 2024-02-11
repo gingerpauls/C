@@ -130,18 +130,43 @@ int main(int num_arguments, char *argument_value[]) {
                 }
                 else if (strcmp(input_buffer, "e") == 0)
                 {
-                    account_id = SearchAccount(account_list, num_accounts);
-                    if (account_id >= 0) {
+                    int searched_account_id = 0;
+                    searched_account_id = SearchAccount(account_list, num_accounts);
+                    if (searched_account_id >= 0) {
                         printf("New name: ");
                         scanf("%s", input_buffer);
-                        strcpy(account_list[account_id].Name, input_buffer);
+                        strcpy(account_list[searched_account_id].Name, input_buffer);
                         printf("New password: ");
                         scanf("%s", input_buffer);
-                        strcpy(account_list[account_id].Password, input_buffer);
-                        printf("isAdmin?: ");
-                        scanf("%s", input_buffer);
-                        account_list[account_id].isAdmin = atoi(input_buffer);
+                        strcpy(account_list[searched_account_id].Password, input_buffer);
+                        int num_admins = 0;
+                        for (int i = 0; i < num_accounts; i++)
+                        {
+                            if (account_list[i].isAdmin == 1) {
+                                num_admins++;
+                            }
+                        }
+                        if ((num_admins == 1) && (account_id == searched_account_id)) {
+                            printf( "You are the last admin. Cannot have less than 1 admin account. \n"
+                                    "If you want to remove your admin status, elevate privileges for\n"
+                                    "another account. Then edit your admin status.                \n\n");
+                        }
+                        //else if ((num_admins > 1) && (account_id == searched_account_id))
+                        //{
+                        //    printf("isAdmin?: ");
+                        //    scanf("%s", input_buffer);
+                        //    account_list[searched_account_id].isAdmin = atoi(input_buffer);
+                        //}
+                        else 
+                        {
+                            printf("isAdmin?: ");
+                            scanf("%s", input_buffer);
+                            account_list[searched_account_id].isAdmin = atoi(input_buffer);
+                        }
                         UpdateDatabase(accounts, account_list, num_accounts);
+                        if (account_list[account_id].isAdmin == false) {
+                            return 0;
+                        }
                     }
                 }
                 else
