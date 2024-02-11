@@ -54,8 +54,9 @@ typedef struct {
 void PopulateAccounts(FILE* accounts, Account* account_list, int* num_accounts);
 void PrintAccount(Account* account_list, int account_id);
 void PrintAccountList(Account* account_list, int num_accounts);
-int CreateAccount(FILE* accounts, Account* account_list, int num_accounts, bool isAdmin);
-int LoginAccount(Account* account_list, int num_accounts);
+int  CreateAccount(FILE* accounts, Account* account_list, int* num_accounts, bool isAdmin);
+int  LoginAccount(Account* account_list, int num_accounts);
+int  CheckForEmptyDatabase(Account* account_list);
 
 int main(int num_arguments, char *argument_value[]) {
     FILE* accounts;
@@ -72,25 +73,16 @@ int main(int num_arguments, char *argument_value[]) {
     else if (strcmp(argument_value[1], "-c") == 0)
     {
         accounts = fopen("accounts.txt", "r");
-        if (accounts == NULL) {
-            {
-                printf("No database created. Create one using -i.\n");
-                return -1;
-            }
+        if (CheckForEmptyDatabase(accounts)) {
+            return -1;
         }
         PopulateAccounts(accounts, &account_list, &num_accounts);
-        while (CreateAccount(accounts, account_list, num_accounts, false));
+        CreateAccount(accounts, account_list, &num_accounts, false);
     }
     else if (strcmp(argument_value[1], "-l") == 0) 
     {
         accounts = fopen("accounts.txt", "r");
-        if (accounts == NULL) {
-            printf("No database (accounts.txt) found. Create one using -i.");
-            return -1;
-        }
-        fseek(accounts, 0, SEEK_END);
-        if (ftell(accounts) == 0) {
-            printf("No accounts created. Please create an admin account using -i.\n\n");
+        if (CheckForEmptyDatabase(accounts) != 0) {
             return -1;
         }
         PopulateAccounts(accounts, &account_list, &num_accounts);
@@ -108,7 +100,7 @@ int main(int num_arguments, char *argument_value[]) {
                 printf("Press:  \tv to view your account information.\n");
                 printf("        \ta to view all account information.\n");
                 printf("        \tca to create an admin account.\n");
-                printf("        \tcu to create a user account (no admin privileges.\n");
+                printf("        \tcu to create a user account (no admin privileges).\n");
                 scanf("%s", input_buffer);
                 if (strcmp(input_buffer, "v") == 0) {
                     PrintAccount(account_list, account_id);
@@ -119,12 +111,12 @@ int main(int num_arguments, char *argument_value[]) {
                 }
                 else if (strcmp(input_buffer, "ca") == 0)
                 {
-                    CreateAccount(accounts, account_list, num_accounts, true);
+                    CreateAccount(accounts, account_list, &num_accounts, true);
                     PopulateAccounts(accounts, &account_list, &num_accounts);
                 }
                 else if (strcmp(input_buffer, "cu") == 0)
                 {
-                    CreateAccount(accounts, account_list, num_accounts, false);
+                    CreateAccount(accounts, account_list, &num_accounts, false);
                     PopulateAccounts(accounts, &account_list, &num_accounts);
                 }
                 else
@@ -162,7 +154,7 @@ int main(int num_arguments, char *argument_value[]) {
             if (strcmp(input_buffer, "y") == 0 || strcmp(input_buffer, "Y") == 0) {
                 accounts = fopen("accounts.txt", "w");
                 fclose(accounts);
-                CreateAccount(accounts, account_list, num_accounts, true);
+                CreateAccount(accounts, account_list, &num_accounts, true);
             }
             else
             {
@@ -175,7 +167,7 @@ int main(int num_arguments, char *argument_value[]) {
             fseek(accounts, 0, SEEK_END);
             if (ftell(accounts) == 0) {
                 printf("No accounts created. Please create an admin account: \n");
-                CreateAccount(accounts, account_list, num_accounts, true);
+                CreateAccount(accounts, account_list, &num_accounts, true);
                 return -1;
             }
             printf("The database (accounts.txt) already exists. Login (-l) or create account (-c).\n");
@@ -223,14 +215,14 @@ void PrintAccountList(Account* account_list, int num_accounts) {
     }
 }
 
-int CreateAccount(FILE* accounts, Account* account_list, int num_accounts, bool isAdmin) {
+int CreateAccount(FILE* accounts, Account* account_list, int* num_accounts, bool isAdmin) {
     char input_buffer[STRING_SIZE];
     int num_matches = 0;
 
     printf("Create account\n");
     printf("Enter your email: ");
     num_matches = scanf("%s", input_buffer);
-    for (int i = 0; i < num_accounts; i++)
+    for (int i = 0; i < *num_accounts; i++)
     {
         if (strcmp(input_buffer, account_list[i].Email) == 0) {
             printf("Email address already exists in database. Use -l for login.\n");
@@ -245,11 +237,11 @@ int CreateAccount(FILE* accounts, Account* account_list, int num_accounts, bool 
     printf("Enter your password: ");
     num_matches = scanf("%s", input_buffer);
     fprintf(accounts, "Password \t%s\n", input_buffer);
-    //num_matches = scanf("%s", input_buffer);
     fprintf(accounts, "isAdmin \t%u\n", isAdmin);
     fprintf(accounts, "\n", input_buffer);
-    printf("Account creation successful.\n");
-    PopulateAccounts(accounts, &account_list, &num_accounts);
+    printf("Account creation successful. Login with -l.\n");
+    //PopulateAccounts(accounts, &account_list, &num_accounts);
+    (*num_accounts)++;
     fclose(accounts);
     return 0;
 }
@@ -286,4 +278,19 @@ int LoginAccount(Account* account_list, int num_accounts) {
     }
     fprintf(stderr, "Email not found.\n");
     return -1;
+}
+
+int CheckForEmptyDatabase(Account* accounts) {
+    if (accounts == NULL) {
+        {
+            printf("No database created. Create one using -i.\n");
+            return -1;
+        }
+    }
+    fseek(accounts, 0, SEEK_END);
+    if (ftell(accounts) == 0) {
+        printf("No accounts created. Please create an admin account using -i.\n\n");
+        return -1;
+    }
+    return 0;
 }
