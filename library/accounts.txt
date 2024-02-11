@@ -1,11 +1,11 @@
 Email 		a
 Name 		Paul
-Password 	a
+Password 	paulpw
 isAdmin 	1
 
 Email 		b
-Name 		billy
-Password 	b
+Name 		Password
+Password 	isAdmin
 isAdmin 	0
 
 Email 		c
@@ -14,7 +14,17 @@ Password 	c
 isAdmin 	1
 
 Email 		d
-Name 		d
+Name 		Doug
 Password 	d
+isAdmin 	0
+
+Email 		e
+Name 		e
+Password 	e
+isAdmin 	1
+
+Email 		f
+Name 		f
+Password 	f
 isAdmin 	0
 
