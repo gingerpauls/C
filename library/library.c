@@ -6,8 +6,7 @@
         search book
         display list of books
 
-        add members to library
-        edit (any) member information
+        edit any member's information
         delete members
 
         issue books to library members
@@ -58,7 +57,7 @@ int  CreateAccount(FILE* accounts, Account* account_list, int* num_accounts, boo
 int  LoginAccount(Account* account_list, int num_accounts);
 int  CheckForEmptyDatabase(Account* account_list);
 int  SearchAccount(Account* account_list, int num_accounts);
-void UpdateDatabase();
+void UpdateDatabase(FILE* accounts, Account* account_list, int num_accounts);
 
 int main(int num_arguments, char *argument_value[]) {
     FILE* accounts;
@@ -136,16 +135,13 @@ int main(int num_arguments, char *argument_value[]) {
                         printf("New name: ");
                         scanf("%s", input_buffer);
                         strcpy(account_list[account_id].Name, input_buffer);
-                        accounts = fopen("accounts.txt", "w");
-                        for (int i = 0; i < num_accounts; i++)
-                        {
-                            fprintf(accounts, "Email \t\t%s\n", account_list[i].Email);
-                            fprintf(accounts, "Name \t\t%s\n", account_list[i].Name);
-                            fprintf(accounts, "Password \t%s\n", account_list[i].Password);
-                            fprintf(accounts, "isAdmin \t%u\n", account_list[i].isAdmin);
-                            fprintf(accounts, "\n");
-                        }
-                        fclose(accounts);
+                        printf("New password: ");
+                        scanf("%s", input_buffer);
+                        strcpy(account_list[account_id].Password, input_buffer);
+                        printf("isAdmin?: ");
+                        scanf("%s", input_buffer);
+                        account_list[account_id].isAdmin = atoi(input_buffer);
+                        UpdateDatabase(accounts, account_list, num_accounts);
                     }
                 }
                 else
