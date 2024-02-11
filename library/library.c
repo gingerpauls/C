@@ -51,7 +51,7 @@ typedef struct {
     bool isAdmin;
 } Account;
 
-int PopulateAccounts(FILE* accounts, Account* account_list);
+void PopulateAccounts(FILE* accounts, Account* account_list, int* num_accounts);
 void PrintAccount(Account* account_list, int account_id);
 void PrintAccountList(Account* account_list, int num_accounts);
 int CreateAccount(FILE* accounts, Account* account_list, int num_accounts, bool isAdmin);
@@ -78,9 +78,8 @@ int main(int num_arguments, char *argument_value[]) {
                 return -1;
             }
         }
-        num_accounts = PopulateAccounts(accounts, &account_list);
+        PopulateAccounts(accounts, &account_list, &num_accounts);
         while (CreateAccount(accounts, account_list, num_accounts, false));
-        num_accounts = PopulateAccounts(accounts, &account_list);
     }
     else if (strcmp(argument_value[1], "-l") == 0) 
     {
@@ -94,7 +93,7 @@ int main(int num_arguments, char *argument_value[]) {
             printf("No accounts created. Please create an admin account using -i.\n\n");
             return -1;
         }
-        num_accounts = PopulateAccounts(accounts, &account_list);
+        PopulateAccounts(accounts, &account_list, &num_accounts);
         int account_id = LoginAccount(account_list, num_accounts);
         if (account_id < 0) {
             return -1;
@@ -121,12 +120,12 @@ int main(int num_arguments, char *argument_value[]) {
                 else if (strcmp(input_buffer, "ca") == 0)
                 {
                     CreateAccount(accounts, account_list, num_accounts, true);
-                    num_accounts = PopulateAccounts(accounts, &account_list);
+                    PopulateAccounts(accounts, &account_list, &num_accounts);
                 }
                 else if (strcmp(input_buffer, "cu") == 0)
                 {
                     CreateAccount(accounts, account_list, num_accounts, false);
-                    num_accounts = PopulateAccounts(accounts, &account_list);
+                    PopulateAccounts(accounts, &account_list, &num_accounts);
                 }
                 else
                 {
@@ -190,9 +189,9 @@ int main(int num_arguments, char *argument_value[]) {
     return 0;
 }
 
-int PopulateAccounts(FILE *accounts, Account* account_list) {
-    int i = 0, num_matches, num_accounts;
-    char header_string[STRING_SIZE], data_string[STRING_SIZE];
+void PopulateAccounts(FILE *accounts, Account* account_list, int* num_accounts) {
+    int i = 0, num_matches;
+    char header_string[STRING_SIZE];
 
     accounts = fopen("accounts.txt", "r");
     rewind(accounts);
@@ -204,7 +203,7 @@ int PopulateAccounts(FILE *accounts, Account* account_list) {
         i++;
     }
     fclose(accounts);
-    return (num_accounts = i - 1);
+    *num_accounts = i - 1;
 }
 
 void PrintAccount(Account* account_list, int account_id) {
@@ -250,7 +249,7 @@ int CreateAccount(FILE* accounts, Account* account_list, int num_accounts, bool 
     fprintf(accounts, "isAdmin \t%u\n", isAdmin);
     fprintf(accounts, "\n", input_buffer);
     printf("Account creation successful.\n");
-    PopulateAccounts(accounts, &account_list);
+    PopulateAccounts(accounts, &account_list, &num_accounts);
     fclose(accounts);
     return 0;
 }
