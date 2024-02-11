@@ -4,13 +4,17 @@ Password 	a
 isAdmin 	1
 
 Email 		b
-Name 		bill
+Name 		billy
 Password 	b
 isAdmin 	0
 
 Email 		c
-Name 		chloe
+Name 		cheryl
 Password 	c
 isAdmin 	1
 
+Email 		d
+Name 		d
+Password 	d
+isAdmin 	0
 
