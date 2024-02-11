@@ -151,12 +151,6 @@ int main(int num_arguments, char *argument_value[]) {
                                     "If you want to remove your admin status, elevate privileges for\n"
                                     "another account. Then edit your admin status.                \n\n");
                         }
-                        //else if ((num_admins > 1) && (account_id == searched_account_id))
-                        //{
-                        //    printf("isAdmin?: ");
-                        //    scanf("%s", input_buffer);
-                        //    account_list[searched_account_id].isAdmin = atoi(input_buffer);
-                        //}
                         else 
                         {
                             printf("isAdmin?: ");
