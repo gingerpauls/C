@@ -63,9 +63,7 @@ void LoginAccount(Account* account_list, int num_accounts);
 
 int main(int num_arguments, char *argument_value[]) {
     FILE* accounts;
-    char input_buffer[STRING_SIZE];
     Account account_list[NUM_ACCOUNTS_MAX] = {0, 0, 0};
-    int num_matches = 0;
     int num_accounts = 0;
 
     accounts = fopen("accounts.txt", "r+");
@@ -89,7 +87,6 @@ int main(int num_arguments, char *argument_value[]) {
     }
     else if (strcmp(argument_value[1], "-l") == 0) 
     {
-        accounts = fopen("accounts.txt", "a+");
         fseek(accounts, 0, SEEK_END);
         if (ftell(accounts) == 0) {
             printf("No accounts created. Please create an admin account using -c.\n");
@@ -163,6 +160,7 @@ void CreateAccount(FILE* accounts, Account* account_list, int num_accounts) {
 void LoginAccount(Account* account_list, int num_accounts) {
     char input_buffer[STRING_SIZE];
     int num_matches;
+
     printf("Login to your account\n");
     printf("Enter your email address: ");
     num_matches = scanf("%s", input_buffer);
