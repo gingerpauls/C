@@ -58,7 +58,7 @@ typedef struct {
 
 int PopulateAccounts(FILE* accounts, Account* account_list);
 void PrintAccountList(Account* account_list, int num_accounts);
-void CreateAccount(FILE* accounts, Account* account_list, int num_accounts);
+int CreateAccount(FILE* accounts, Account* account_list, int num_accounts);
 void LoginAccount(Account* account_list, int num_accounts);
 
 int main(int num_arguments, char *argument_value[]) {
@@ -66,30 +66,47 @@ int main(int num_arguments, char *argument_value[]) {
     Account account_list[NUM_ACCOUNTS_MAX] = {0, 0, 0};
     int num_accounts = 0;
 
-    accounts = fopen("accounts.txt", "r+");
-
     if(num_arguments < 2)
     {
-        printf("Welcome to the library!\n");
-        printf("use -c to create an account.\n");
-        printf("use -l to login to an existing account.\n");
+        printf("Welcome to the library! \n");
+        printf("Use:\t-c to create an account\n");
+        printf("\t-l to login to an existing account\n");
     }
     else if (strcmp(argument_value[1], "-c") == 0)
     {
+        char input_buffer[STRING_SIZE];
+        int num_matches;
+        accounts = fopen("accounts.txt", "r");
         if (accounts == NULL) {
-            fprintf(stderr, "accounts.txt does not exist.\n");
-            return 1;
+            printf("The database (accounts.txt) does not exist.\n");
+            printf("Would you like to create a new database?\n");
+            printf("Enter Y or y: ");
+            num_matches = scanf("%s", input_buffer);
+            if (strcmp(input_buffer, "y") == 0 || strcmp(input_buffer, "Y") == 0) {
+                accounts = fopen("accounts.txt", "w");
+                fclose(accounts);
+            }
+            else 
+            {
+                printf("No database created. Exiting.\n");
+                return 1;
+            }
         }
         num_accounts = PopulateAccounts(accounts, &account_list);
-        CreateAccount(accounts, account_list, num_accounts);
+        while (CreateAccount(accounts, account_list, num_accounts));
         num_accounts = PopulateAccounts(accounts, &account_list);
         PrintAccountList(&account_list, num_accounts);
     }
     else if (strcmp(argument_value[1], "-l") == 0) 
     {
+        accounts = fopen("accounts.txt", "r");
+        if (accounts == NULL) {
+            printf("No database (accounts.txt) found. Create one using -c.");
+            return 1;
+        }
         fseek(accounts, 0, SEEK_END);
         if (ftell(accounts) == 0) {
-            printf("No accounts created. Please create an admin account using -c.\n");
+            printf("No accounts created. Please create an admin account using -c.\n\n");
             return 1;
         }
         num_accounts = PopulateAccounts(accounts, &account_list);
@@ -97,12 +114,9 @@ int main(int num_arguments, char *argument_value[]) {
     }
     else 
     {
-        fprintf(stderr, "Unknown arguments.\n"
-                        "Use -c to create an account or -l to login to an existing account.\n");
+        printf("Unknown arguments.\n"
+               "Use -c to create an account or -l to login to an existing account.\n");
     }
-
-    fclose(accounts);
-    
     return 0;
 }
 
@@ -110,6 +124,7 @@ int PopulateAccounts(FILE *accounts, Account* account_list) {
     int i = 0, num_matches, num_accounts;
     char header_string[STRING_SIZE], data_string[STRING_SIZE];
 
+    accounts = fopen("accounts.txt", "r");
     rewind(accounts);
     while (!feof(accounts)) {
         num_matches = fscanf(accounts, "%s %s", header_string, account_list[i].Email);
@@ -117,11 +132,12 @@ int PopulateAccounts(FILE *accounts, Account* account_list) {
         num_matches = fscanf(accounts, "%s %s", header_string, account_list[i].Password);
         i++;
     }
+    fclose(accounts);
     return (num_accounts = i - 1);
 }
 
 void PrintAccountList(Account* account_list, int num_accounts) {
-    printf("Accounts:\n");
+    printf("\nAccounts:\n\n");
     for (int i = 0; i < num_accounts; i++)
     {
         if (account_list[i].Name == 0) {
@@ -133,12 +149,12 @@ void PrintAccountList(Account* account_list, int num_accounts) {
     }
 }
 
-void CreateAccount(FILE* accounts, Account* account_list, int num_accounts) {
+int CreateAccount(FILE* accounts, Account* account_list, int num_accounts) {
     char input_buffer[STRING_SIZE];
     int num_matches = 0;
 
     printf("Create account\n");
-    printf("Enter your email: \n");
+    printf("Enter your email: ");
     num_matches = scanf("%s", input_buffer);
     for (int i = 0; i < num_accounts; i++)
     {
@@ -147,14 +163,17 @@ void CreateAccount(FILE* accounts, Account* account_list, int num_accounts) {
             return 1;
         }
     }
+    accounts = fopen("accounts.txt", "a");
     fprintf(accounts, "Email \t\t%s\n", input_buffer);
-    printf("Enter your name: \n");
+    printf("Enter your name: ");
     num_matches = scanf("%s", input_buffer);
     fprintf(accounts, "Name \t\t%s\n", input_buffer);
-    printf("Enter your password: \n");
+    printf("Enter your password: ");
     num_matches = scanf("%s", input_buffer);
     fprintf(accounts, "Password \t%s\n", input_buffer);
     fprintf(accounts, "\n", input_buffer);
+    fclose(accounts);
+    return 0;
 }
 
 void LoginAccount(Account* account_list, int num_accounts) {
