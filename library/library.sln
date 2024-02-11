@@ -11,6 +11,8 @@ Global
 		Debug|x86 = Debug|x86
 		Debugc|x64 = Debugc|x64
 		Debugc|x86 = Debugc|x86
+		Debugi|x64 = Debugi|x64
+		Debugi|x86 = Debugi|x86
 		Debugl|x64 = Debugl|x64
 		Debugl|x86 = Debugl|x86
 		Release|x64 = Release|x64
@@ -25,6 +27,10 @@ Global
 		{60847C48-4E72-4CC2-963E-17A7B204586B}.Debugc|x64.Build.0 = Debugc|x64
 		{60847C48-4E72-4CC2-963E-17A7B204586B}.Debugc|x86.ActiveCfg = Debugc|Win32
 		{60847C48-4E72-4CC2-963E-17A7B204586B}.Debugc|x86.Build.0 = Debugc|Win32
+		{60847C48-4E72-4CC2-963E-17A7B204586B}.Debugi|x64.ActiveCfg = Debugi|x64
+		{60847C48-4E72-4CC2-963E-17A7B204586B}.Debugi|x64.Build.0 = Debugi|x64
+		{60847C48-4E72-4CC2-963E-17A7B204586B}.Debugi|x86.ActiveCfg = Debugi|Win32
+		{60847C48-4E72-4CC2-963E-17A7B204586B}.Debugi|x86.Build.0 = Debugi|Win32
 		{60847C48-4E72-4CC2-963E-17A7B204586B}.Debugl|x64.ActiveCfg = Debugl|x64
 		{60847C48-4E72-4CC2-963E-17A7B204586B}.Debugl|x64.Build.0 = Debugl|x64
 		{60847C48-4E72-4CC2-963E-17A7B204586B}.Debugl|x86.ActiveCfg = Debugl|Win32

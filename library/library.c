@@ -6,7 +6,7 @@
         search book
         display list of books
 
-        add members to to library
+        add members to library
         edit (any) member information
         delete members
 
@@ -33,12 +33,6 @@
 
     secure login?
 
-
-    1. I want to be able to create an account.
-        If that account exists already, tell me and take me to create account or login.
-        If account does not exist, create account.
-    2. How do i not overwrite accounts.txt
-
 */
 #define _CRT_SECURE_NO_WARNINGS
 
@@ -54,25 +48,67 @@ typedef struct {
     char Name[STRING_SIZE];
     char Password[STRING_SIZE];
     char Email[STRING_SIZE];    
+    bool  isAdmin;
 } Account;
 
 int PopulateAccounts(FILE* accounts, Account* account_list);
+void PrintAccount(Account* account_list, int account_id);
 void PrintAccountList(Account* account_list, int num_accounts);
-int CreateAccount(FILE* accounts, Account* account_list, int num_accounts);
-void LoginAccount(Account* account_list, int num_accounts);
+int CreateAccount(FILE* accounts, Account* account_list, int num_accounts, bool isAdmin);
+int LoginAccount(Account* account_list, int num_accounts);
 
 int main(int num_arguments, char *argument_value[]) {
     FILE* accounts;
-    Account account_list[NUM_ACCOUNTS_MAX] = {0, 0, 0};
+    Account account_list[NUM_ACCOUNTS_MAX] = {0, 0, 0, 0};
     int num_accounts = 0;
 
     if(num_arguments < 2)
     {
         printf("Welcome to the library! \n");
-        printf("Use:\t-c to create an account\n");
-        printf("\t-l to login to an existing account\n");
+        printf("Use:\t-i to create and initialize the database\n");
+        printf("    \t-c to create an account\n");
+        printf("    \t-l to login to an existing account\n");
     }
     else if (strcmp(argument_value[1], "-c") == 0)
+    {
+        accounts = fopen("accounts.txt", "r");
+        if (accounts == NULL) {
+            {
+                printf("No database created. Create one using -i.\n");
+                return -1;
+            }
+        }
+        num_accounts = PopulateAccounts(accounts, &account_list);
+        while (CreateAccount(accounts, account_list, num_accounts, 0));
+        num_accounts = PopulateAccounts(accounts, &account_list);
+    }
+    else if (strcmp(argument_value[1], "-l") == 0) 
+    {
+        accounts = fopen("accounts.txt", "r");
+        if (accounts == NULL) {
+            printf("No database (accounts.txt) found. Create one using -i.");
+            return -1;
+        }
+        fseek(accounts, 0, SEEK_END);
+        if (ftell(accounts) == 0) {
+            printf("No accounts created. Please create an admin account using -i.\n\n");
+            return -1;
+        }
+        num_accounts = PopulateAccounts(accounts, &account_list);
+        int account_id = LoginAccount(account_list, num_accounts);
+        if (account_id < 0) {
+            return -1;
+        }
+        else if (account_list[account_id].isAdmin == true)
+        {
+            PrintAccountList(account_list, num_accounts);
+        }
+        else
+        {
+            PrintAccount(account_list, account_id);
+        }
+    }
+    else if (strcmp(argument_value[1], "-i") == 0) 
     {
         char input_buffer[STRING_SIZE];
         int num_matches;
@@ -85,32 +121,24 @@ int main(int num_arguments, char *argument_value[]) {
             if (strcmp(input_buffer, "y") == 0 || strcmp(input_buffer, "Y") == 0) {
                 accounts = fopen("accounts.txt", "w");
                 fclose(accounts);
+                CreateAccount(accounts, account_list, num_accounts, true);
             }
-            else 
+            else
             {
                 printf("No database created. Exiting.\n");
-                return 1;
+                return -1;
             }
         }
-        num_accounts = PopulateAccounts(accounts, &account_list);
-        while (CreateAccount(accounts, account_list, num_accounts));
-        num_accounts = PopulateAccounts(accounts, &account_list);
-        PrintAccountList(&account_list, num_accounts);
-    }
-    else if (strcmp(argument_value[1], "-l") == 0) 
-    {
-        accounts = fopen("accounts.txt", "r");
-        if (accounts == NULL) {
-            printf("No database (accounts.txt) found. Create one using -c.");
-            return 1;
+        else 
+        {
+            fseek(accounts, 0, SEEK_END);
+            if (ftell(accounts) == 0) {
+                printf("No accounts created. Please create an admin account: \n");
+                CreateAccount(accounts, account_list, num_accounts, true);
+                return -1;
+            }
+            printf("The database (accounts.txt) already exists. Login (-l) or create account (-c).\n");
         }
-        fseek(accounts, 0, SEEK_END);
-        if (ftell(accounts) == 0) {
-            printf("No accounts created. Please create an admin account using -c.\n\n");
-            return 1;
-        }
-        num_accounts = PopulateAccounts(accounts, &account_list);
-        LoginAccount(account_list, num_accounts);
     }
     else 
     {
@@ -130,26 +158,32 @@ int PopulateAccounts(FILE *accounts, Account* account_list) {
         num_matches = fscanf(accounts, "%s %s", header_string, account_list[i].Email);
         num_matches = fscanf(accounts, "%s %s", header_string, account_list[i].Name);
         num_matches = fscanf(accounts, "%s %s", header_string, account_list[i].Password);
+        num_matches = fscanf(accounts, "%s %d", header_string, &account_list[i].isAdmin);
         i++;
     }
     fclose(accounts);
     return (num_accounts = i - 1);
 }
 
+void PrintAccount(Account* account_list, int account_id) {
+    printf("\nAccounts:\n\n");
+    printf("Account[%d].Email = %s\n", account_id, account_list[account_id].Email);
+    printf("Account[%d].Name = %s\n", account_id, account_list[account_id].Name);
+    printf("Account[%d].Password = %s\n", account_id, account_list[account_id].Password);
+    printf("Account[%d].isAdmin = %d\n\n", account_id, account_list[account_id].isAdmin);
+}
 void PrintAccountList(Account* account_list, int num_accounts) {
     printf("\nAccounts:\n\n");
     for (int i = 0; i < num_accounts; i++)
     {
-        if (account_list[i].Name == 0) {
-            break;
-        }
         printf("Account[%d].Email = %s\n", i, account_list[i].Email);
         printf("Account[%d].Name = %s\n", i, account_list[i].Name);
-        printf("Account[%d].Password = %s\n\n", i, account_list[i].Password);
+        printf("Account[%d].Password = %s\n", i, account_list[i].Password);
+        printf("Account[%d].isAdmin = %d\n\n", i, account_list[i].isAdmin);
     }
 }
 
-int CreateAccount(FILE* accounts, Account* account_list, int num_accounts) {
+int CreateAccount(FILE* accounts, Account* account_list, int num_accounts, bool isAdmin) {
     char input_buffer[STRING_SIZE];
     int num_matches = 0;
 
@@ -160,7 +194,7 @@ int CreateAccount(FILE* accounts, Account* account_list, int num_accounts) {
     {
         if (strcmp(input_buffer, account_list[i].Email) == 0) {
             printf("Email address already exists in database. Use -l for login.\n");
-            return 1;
+            return -1;
         }
     }
     accounts = fopen("accounts.txt", "a");
@@ -171,12 +205,15 @@ int CreateAccount(FILE* accounts, Account* account_list, int num_accounts) {
     printf("Enter your password: ");
     num_matches = scanf("%s", input_buffer);
     fprintf(accounts, "Password \t%s\n", input_buffer);
+    //num_matches = scanf("%s", input_buffer);
+    fprintf(accounts, "isAdmin \t%u\n", isAdmin);
     fprintf(accounts, "\n", input_buffer);
+    printf("Account creation successful.\n");
     fclose(accounts);
     return 0;
 }
 
-void LoginAccount(Account* account_list, int num_accounts) {
+int LoginAccount(Account* account_list, int num_accounts) {
     char input_buffer[STRING_SIZE];
     int num_matches;
 
@@ -193,7 +230,7 @@ void LoginAccount(Account* account_list, int num_accounts) {
                 num_matches = scanf("%s", input_buffer);
                 if (strcmp(input_buffer, account_list[i].Password) == 0) {
                     printf("Logging in...\n");
-                    return;
+                    return i;
                 }
                 else
                 {
@@ -201,10 +238,11 @@ void LoginAccount(Account* account_list, int num_accounts) {
                 }
                 if (j == 4) {
                     fprintf(stderr, "Too many attempts. Exiting program.");
-                    return;
+                    return -1;
                 }
             }
         }
     }
     fprintf(stderr, "Email not found.\n");
+    return -1;
 }
