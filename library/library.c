@@ -57,6 +57,7 @@ void PrintAccountList(Account* account_list, int num_accounts);
 int  CreateAccount(FILE* accounts, Account* account_list, int* num_accounts, bool isAdmin);
 int  LoginAccount(Account* account_list, int num_accounts);
 int  CheckForEmptyDatabase(Account* account_list);
+int  SearchAccount();
 
 int main(int num_arguments, char *argument_value[]) {
     FILE* accounts;
@@ -102,6 +103,8 @@ int main(int num_arguments, char *argument_value[]) {
                 printf("        \tca to create an admin account.\n");
                 printf("        \tcu to create a user account (no admin privileges).\n");
                 printf("        \ts to search for an account. \n");
+                printf("        \te to edit an account. \n");
+                printf("\n");
                 scanf("%s", input_buffer);
                 if (strcmp(input_buffer, "v") == 0) {
                     PrintAccount(account_list, account_id);
@@ -122,17 +125,30 @@ int main(int num_arguments, char *argument_value[]) {
                 }
                 else if (strcmp(input_buffer, "s") == 0)
                 {
-                    printf("Enter the email of the account you're looking for: ");
-                    scanf("%s", input_buffer);
-                    for (int i = 0; i < num_accounts; i++)
-                    {
-                        if (strcmp(input_buffer, account_list[i].Email) == 0) {
-                            printf("Account found.\n");
-                            PrintAccount(account_list, i);
-                            return 0;
+                    SearchAccount(account_list, num_accounts);
+                }
+                else if (strcmp(input_buffer, "e") == 0)
+                {
+                    account_id = SearchAccount(account_list, num_accounts);
+                    if (account_id >= 0) {
+                        printf("New name: ");
+                        scanf("%s", input_buffer);
+                        strcpy(account_list[account_id].Name, input_buffer);
+                        printf("Edit successful.\n");
+                        // repopulate database
+                        accounts = fopen("accounts.txt", "w");
+                        for (int i = 0; i < num_accounts; i++)
+                        {
+                            fprintf(accounts, "Email \t\t%s\n", account_list[i].Email);
+                            fprintf(accounts, "Name \t\t%s\n", account_list[i].Name);
+                            fprintf(accounts, "Password \t%s\n", account_list[i].Password);
+                            fprintf(accounts, "isAdmin \t%u\n", account_list[i].isAdmin);
+                            fprintf(accounts, "\n");
                         }
+                        fprintf(accounts, "\n", input_buffer);
+                        printf("Account creation successful. Login with -l.\n");
+                        fclose(accounts);
                     }
-                    printf("Account not found.\n");
                 }
                 else
                 {
@@ -228,7 +244,7 @@ void PrintAccountList(Account* account_list, int num_accounts) {
         printf("Account[%d].isAdmin = %d\n\n", i, account_list[i].isAdmin);
     }
 }
-int CreateAccount(FILE* accounts, Account* account_list, int* num_accounts, bool isAdmin) {
+int  CreateAccount(FILE* accounts, Account* account_list, int* num_accounts, bool isAdmin) {
     char input_buffer[STRING_SIZE];
     int num_matches = 0;
 
@@ -253,12 +269,11 @@ int CreateAccount(FILE* accounts, Account* account_list, int* num_accounts, bool
     fprintf(accounts, "isAdmin \t%u\n", isAdmin);
     fprintf(accounts, "\n", input_buffer);
     printf("Account creation successful. Login with -l.\n");
-    //PopulateAccounts(accounts, &account_list, &num_accounts);
     (*num_accounts)++;
     fclose(accounts);
     return 0;
 }
-int LoginAccount(Account* account_list, int num_accounts) {
+int  LoginAccount(Account* account_list, int num_accounts) {
     char input_buffer[STRING_SIZE];
     int num_matches;
 
@@ -291,7 +306,7 @@ int LoginAccount(Account* account_list, int num_accounts) {
     fprintf(stderr, "Email not found.\n");
     return -1;
 }
-int CheckForEmptyDatabase(Account* accounts) {
+int  CheckForEmptyDatabase(Account* accounts) {
     if (accounts == NULL) {
         {
             printf("No database created. Create one using -i.\n");
@@ -304,4 +319,19 @@ int CheckForEmptyDatabase(Account* accounts) {
         return -1;
     }
     return 0;
+}
+int  SearchAccount(Account* account_list, int num_accounts) {
+    char input_buffer[STRING_SIZE];
+    printf("Enter the email of the account you're looking for: ");
+    scanf("%s", input_buffer);
+    for (int i = 0; i < num_accounts; i++)
+    {
+        if (strcmp(input_buffer, account_list[i].Email) == 0) {
+            printf("Account found.\n");
+            PrintAccount(account_list, i);
+            return i;
+        }
+    }
+    printf("Account not found.\n");
+    return -1;
 }
