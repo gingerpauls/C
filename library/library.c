@@ -37,7 +37,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "stdio.h"
-#include "stdbool.h"
 #include "string.h"
 #include "assert.h"
 
@@ -49,17 +48,23 @@ typedef struct
     char Name[STRING_SIZE];
     char Password[STRING_SIZE];
     char Email[STRING_SIZE];
-    bool isAdmin;
+    _Bool isAdmin;
 } Account;
 
-void PopulateAccounts(FILE *accounts, Account *account_list, int *num_accounts);
-void PrintAccount(Account *account_list, int account_id);
+typedef struct
+{
+    Account* account_list;
+    int num_accounts;
+}AccountList;
+
 void PrintAccountList(Account *account_list, int num_accounts);
-int  CreateAccount(FILE *accounts, Account *account_list, int *num_accounts, bool isAdmin);
 int  LoginAccount(Account *account_list, int num_accounts);
-int  CheckForEmptyDatabase(Account *account_list);
 int  SearchAccount(Account *account_list, int num_accounts);
+void PopulateAccounts(FILE *accounts, Account *account_list, int *num_accounts);
+int  CreateAccount(FILE *accounts, Account *account_list, int *num_accounts, _Bool isAdmin);
 void UpdateDatabase(FILE *accounts, Account *account_list, int num_accounts);
+void PrintAccount(Account *account_list, int account_id);
+int  CheckForEmptyDatabase(Account *account_list);
 
 int main(int num_arguments, char *argument_value[])
 {
@@ -82,7 +87,7 @@ int main(int num_arguments, char *argument_value[])
             return -1;
         }
         PopulateAccounts(accounts, &account_list, &num_accounts);
-        CreateAccount(accounts, account_list, &num_accounts, false);
+        CreateAccount(accounts, account_list, &num_accounts, 0);
     }
     else if ( strcmp(argument_value[1], "-l") == 0 )
     {
@@ -97,7 +102,7 @@ int main(int num_arguments, char *argument_value[])
         {
             return -1;
         }
-        else if ( account_list[account_id].isAdmin == true )
+        else if ( account_list[account_id].isAdmin == 1 )
         {
             char input_buffer[STRING_SIZE];
 
@@ -124,12 +129,12 @@ int main(int num_arguments, char *argument_value[])
                 }
                 else if ( strcmp(input_buffer, "ca") == 0 )
                 {
-                    CreateAccount(accounts, account_list, &num_accounts, true);
+                    CreateAccount(accounts, account_list, &num_accounts, 1);
                     PopulateAccounts(accounts, &account_list, &num_accounts);
                 }
                 else if ( strcmp(input_buffer, "cu") == 0 )
                 {
-                    CreateAccount(accounts, account_list, &num_accounts, false);
+                    CreateAccount(accounts, account_list, &num_accounts, 0);
                     PopulateAccounts(accounts, &account_list, &num_accounts);
                 }
                 else if ( strcmp(input_buffer, "s") == 0 )
@@ -169,7 +174,7 @@ int main(int num_arguments, char *argument_value[])
                             account_list[searched_account_id].isAdmin = atoi(input_buffer);
                         }
                         UpdateDatabase(accounts, account_list, num_accounts);
-                        if ( account_list[account_id].isAdmin == false )
+                        if ( account_list[account_id].isAdmin == 0 )
                         {
                             printf("No longer admin. Logging out... \n");
                             return 0;
@@ -201,7 +206,7 @@ int main(int num_arguments, char *argument_value[])
                         }
                         UpdateDatabase(accounts, account_list, num_accounts);
                         PopulateAccounts(accounts, account_list, &num_accounts);
-                        if ( account_list[account_id].isAdmin == false )
+                        if ( account_list[account_id].isAdmin == 0 )
                         {
                             printf("No longer admin. Logging out... \n");
                             return 0;
@@ -216,7 +221,7 @@ int main(int num_arguments, char *argument_value[])
                 }
             }
         }
-        else if ( account_list[account_id].isAdmin == false )
+        else if ( account_list[account_id].isAdmin == 0 )
         {
             char input_buffer[STRING_SIZE];
             printf("Welcome %s!\n", account_list[account_id].Name);
@@ -263,7 +268,7 @@ int main(int num_arguments, char *argument_value[])
             {
                 accounts = fopen("accounts.txt", "w");
                 fclose(accounts);
-                CreateAccount(accounts, account_list, &num_accounts, true);
+                CreateAccount(accounts, account_list, &num_accounts, 1);
             }
             else
             {
@@ -277,7 +282,7 @@ int main(int num_arguments, char *argument_value[])
             if ( ftell(accounts) == 0 )
             {
                 printf("No accounts created. Please create an admin account: \n");
-                CreateAccount(accounts, account_list, &num_accounts, true);
+                CreateAccount(accounts, account_list, &num_accounts, 1);
                 return -1;
             }
             printf("The database (accounts.txt) already exists. Login (-l) or create account (-c).\n");
@@ -303,7 +308,7 @@ void PopulateAccounts(FILE *accounts, Account *account_list, int *num_accounts)
         num_matches = fscanf(accounts, "%s %s", header_string, account_list[i].Email);
         num_matches = fscanf(accounts, "%s %s", header_string, account_list[i].Name);
         num_matches = fscanf(accounts, "%s %s", header_string, account_list[i].Password);
-        num_matches = fscanf(accounts, "%s %d", header_string, &account_list[i].isAdmin);
+        num_matches = fscanf(accounts, "%s %c", header_string, &account_list[i].isAdmin);
         i++;
     }
     fclose(accounts);
@@ -326,7 +331,7 @@ void PrintAccountList(Account *account_list, int num_accounts)
         printf("Account[%d].isAdmin = %d\n\n", i, account_list[i].isAdmin);
     }
 }
-int  CreateAccount(FILE *accounts, Account *account_list, int *num_accounts, bool isAdmin)
+int  CreateAccount(FILE *accounts, Account *account_list, int *num_accounts, _Bool isAdmin)
 {
     char input_buffer[STRING_SIZE];
     int num_matches = 0;
