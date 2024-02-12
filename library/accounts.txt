@@ -3,3 +3,18 @@ Name 		a
 Password 	a
 isAdmin 	1
 
+Email 		b
+Name 		b
+Password 	b
+isAdmin 	0
+
+Email 		d
+Name 		doug
+Password 	dougpw
+isAdmin 	0
+
+Email 		c
+Name 		c
+Password 	c
+isAdmin 	1
+
