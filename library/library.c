@@ -39,6 +39,7 @@
 #include "stdio.h"
 #include "string.h"
 #include "assert.h"
+#include "stdbool.h"
 
 #define STRING_SIZE 30
 #define NUM_ACCOUNTS_MAX 100
@@ -48,7 +49,7 @@ typedef struct
     char Name[STRING_SIZE];
     char Password[STRING_SIZE];
     char Email[STRING_SIZE];
-    _Bool isAdmin;
+    bool isAdmin;
 } Account;
 
 //typedef struct
@@ -61,7 +62,7 @@ void PrintAccountList(Account *account_list, int num_accounts);
 int  LoginAccount(Account *account_list, int num_accounts);
 int  SearchAccount(Account *account_list, int num_accounts);
 void PopulateAccounts(FILE *accounts, Account *account_list, int *num_accounts);
-int  CreateAccount(FILE *accounts, Account *account_list, int *num_accounts, _Bool isAdmin);
+int  CreateAccount(FILE *accounts, Account *account_list, int *num_accounts, bool isAdmin);
 void UpdateDatabase(FILE *accounts, Account *account_list, int num_accounts);
 void PrintAccount(Account *account_list, int account_id);
 int  CheckForEmptyDatabase(FILE *Accounts, Account *account_list, int num_accounts);
@@ -87,7 +88,7 @@ int main(int num_arguments, char *argument_value[])
 
     if ( strcmp(input_buffer, "c") == 0 )
     {
-        CreateAccount(accounts, account_list, &num_accounts, 0);
+        CreateAccount(accounts, account_list, &num_accounts, false);
     }
     if ( strcmp(input_buffer, "l") == 0 )
     {
@@ -96,7 +97,7 @@ int main(int num_arguments, char *argument_value[])
         {
             return -1;
         }
-        else if ( account_list[account_id].isAdmin == 1 )
+        else if ( ( account_list[account_id].isAdmin ) == true )
         {
             char input_buffer[STRING_SIZE];
 
@@ -252,17 +253,17 @@ int main(int num_arguments, char *argument_value[])
 
 void PopulateAccounts(FILE *accounts, Account *account_list, int *num_accounts)
 {
-    int i = 0, num_matches;
+    int i = 0;
     char header_string[STRING_SIZE];
 
     accounts = fopen("accounts.txt", "r");
     rewind(accounts);
     while ( !feof(accounts) )
     {
-        num_matches = fscanf(accounts, "%s %s", header_string, account_list[i].Email);
-        num_matches = fscanf(accounts, "%s %s", header_string, account_list[i].Name);
-        num_matches = fscanf(accounts, "%s %s", header_string, account_list[i].Password);
-        num_matches = fscanf(accounts, "%s %c", header_string, &account_list[i].isAdmin);
+        fscanf(accounts, "%s %s", header_string, account_list[i].Email);
+        fscanf(accounts, "%s %s", header_string, account_list[i].Name);
+        fscanf(accounts, "%s %s", header_string, account_list[i].Password);
+        fscanf(accounts, "%s %d", header_string, &account_list[i].isAdmin);
         i++;
     }
     fclose(accounts);
@@ -285,14 +286,13 @@ void PrintAccountList(Account *account_list, int num_accounts)
         printf("Account[%d].isAdmin = %d\n\n", i, account_list[i].isAdmin);
     }
 }
-int  CreateAccount(FILE *accounts, Account *account_list, int *num_accounts, _Bool isAdmin)
+int  CreateAccount(FILE *accounts, Account *account_list, int *num_accounts, bool isAdmin)
 {
     char input_buffer[STRING_SIZE];
-    int num_matches = 0;
 
     ( isAdmin == 1 ) ? printf("Create admin account:\n") : printf("Create user account:\n");
     printf("Enter your email: ");
-    num_matches = scanf("%s", input_buffer);
+    scanf("%s", input_buffer);
     for ( int i = 0; i < *num_accounts; i++ )
     {
         if ( strcmp(input_buffer, account_list[i].Email) == 0 )
@@ -304,10 +304,10 @@ int  CreateAccount(FILE *accounts, Account *account_list, int *num_accounts, _Bo
     accounts = fopen("accounts.txt", "a");
     fprintf(accounts, "Email \t\t%s\n", input_buffer);
     printf("Enter your name: ");
-    num_matches = scanf("%s", input_buffer);
+    scanf("%s", input_buffer);
     fprintf(accounts, "Name \t\t%s\n", input_buffer);
     printf("Enter your password: ");
-    num_matches = scanf("%s", input_buffer);
+    scanf("%s", input_buffer);
     fprintf(accounts, "Password \t%s\n", input_buffer);
     fprintf(accounts, "isAdmin \t%u\n", isAdmin);
     fprintf(accounts, "\n", input_buffer);
@@ -319,11 +319,10 @@ int  CreateAccount(FILE *accounts, Account *account_list, int *num_accounts, _Bo
 int  LoginAccount(Account *account_list, int num_accounts)
 {
     char input_buffer[STRING_SIZE];
-    int num_matches;
 
     printf("Login to your account\n");
     printf("Enter your email address: ");
-    num_matches = scanf("%s", input_buffer);
+    scanf("%s", input_buffer);
     for ( int i = 0; i < num_accounts; i++ )
     {
         if ( strcmp(input_buffer, account_list[i].Email) == 0 )
@@ -332,7 +331,7 @@ int  LoginAccount(Account *account_list, int num_accounts)
             for ( int j = 0; j < 5; j++ )
             {
                 printf("Enter your password: ");
-                num_matches = scanf("%s", input_buffer);
+                scanf("%s", input_buffer);
                 if ( strcmp(input_buffer, account_list[i].Password) == 0 )
                 {
                     printf("Logging in...\n");
@@ -356,14 +355,13 @@ int  LoginAccount(Account *account_list, int num_accounts)
 int  CheckForEmptyDatabase(FILE *accounts, Account *account_list, int num_accounts)
 {
     char input_buffer[STRING_SIZE];
-    int num_matches;
 
     if ( accounts == NULL )
     {
         printf("The database (accounts.txt) does not exist.\n"
-               "Would you like to create a new database? \n"
+               "Would you like to create a new database?\n"
                "Enter Y or y: ");
-        num_matches = scanf("%s", input_buffer);
+        scanf("%s", input_buffer);
         if ( strcmp(input_buffer, "y") == 0 || strcmp(input_buffer, "Y") == 0 )
         {
             accounts = fopen("accounts.txt", "w");
