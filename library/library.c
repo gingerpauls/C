@@ -51,11 +51,11 @@ typedef struct
     _Bool isAdmin;
 } Account;
 
-typedef struct
-{
-    Account* account_list;
-    int num_accounts;
-}AccountList;
+//typedef struct
+//{
+//    Account *account_list;
+//    int num_accounts;
+//}AccountList;
 
 void PrintAccountList(Account *account_list, int num_accounts);
 int  LoginAccount(Account *account_list, int num_accounts);
@@ -64,39 +64,33 @@ void PopulateAccounts(FILE *accounts, Account *account_list, int *num_accounts);
 int  CreateAccount(FILE *accounts, Account *account_list, int *num_accounts, _Bool isAdmin);
 void UpdateDatabase(FILE *accounts, Account *account_list, int num_accounts);
 void PrintAccount(Account *account_list, int account_id);
-int  CheckForEmptyDatabase(Account *account_list);
+int  CheckForEmptyDatabase(FILE *Accounts, Account *account_list, int num_accounts);
 
 int main(int num_arguments, char *argument_value[])
 {
     FILE *accounts;
     Account account_list[NUM_ACCOUNTS_MAX] = { 0, 0, 0, 0 };
     int num_accounts = 0;
+    char input_buffer[STRING_SIZE];
 
-    if ( num_arguments < 2 )
+    printf("Welcome to the library! \n");
+
+    accounts = fopen("accounts.txt", "r");
+    if ( CheckForEmptyDatabase(accounts, account_list, num_accounts) < 0 )
     {
-        printf("Welcome to the library! \n");
-        printf("Use:\t-i to create and initialize the database\n");
-        printf("    \t-c to create an account\n");
-        printf("    \t-l to login to an existing account\n");
-    }
-    else if ( strcmp(argument_value[1], "-c") == 0 )
+        return -1;
+    };
+
+    printf("Would you like to login (l) or create a user account (c)?\n");
+    scanf("%s", input_buffer);
+    PopulateAccounts(accounts, &account_list, &num_accounts);
+
+    if ( strcmp(input_buffer, "c") == 0 )
     {
-        accounts = fopen("accounts.txt", "r");
-        if ( CheckForEmptyDatabase(accounts) )
-        {
-            return -1;
-        }
-        PopulateAccounts(accounts, &account_list, &num_accounts);
         CreateAccount(accounts, account_list, &num_accounts, 0);
     }
-    else if ( strcmp(argument_value[1], "-l") == 0 )
+    if ( strcmp(input_buffer, "l") == 0 )
     {
-        accounts = fopen("accounts.txt", "r");
-        if ( CheckForEmptyDatabase(accounts) != 0 )
-        {
-            return -1;
-        }
-        PopulateAccounts(accounts, &account_list, &num_accounts);
         int account_id = LoginAccount(account_list, num_accounts);
         if ( account_id < 0 )
         {
@@ -253,46 +247,6 @@ int main(int num_arguments, char *argument_value[])
             }
         }
     }
-    else if ( strcmp(argument_value[1], "-i") == 0 )
-    {
-        char input_buffer[STRING_SIZE];
-        int num_matches;
-        accounts = fopen("accounts.txt", "r");
-        if ( accounts == NULL )
-        {
-            printf("The database (accounts.txt) does not exist.\n");
-            printf("Would you like to create a new database?\n");
-            printf("Enter Y or y: ");
-            num_matches = scanf("%s", input_buffer);
-            if ( strcmp(input_buffer, "y") == 0 || strcmp(input_buffer, "Y") == 0 )
-            {
-                accounts = fopen("accounts.txt", "w");
-                fclose(accounts);
-                CreateAccount(accounts, account_list, &num_accounts, 1);
-            }
-            else
-            {
-                printf("No database created. Exiting.\n");
-                return -1;
-            }
-        }
-        else
-        {
-            fseek(accounts, 0, SEEK_END);
-            if ( ftell(accounts) == 0 )
-            {
-                printf("No accounts created. Please create an admin account: \n");
-                CreateAccount(accounts, account_list, &num_accounts, 1);
-                return -1;
-            }
-            printf("The database (accounts.txt) already exists. Login (-l) or create account (-c).\n");
-        }
-    }
-    else
-    {
-        printf("Unknown arguments.\n"
-               "Use -c to create an account or -l to login to an existing account.\n");
-    }
     return 0;
 }
 
@@ -336,14 +290,14 @@ int  CreateAccount(FILE *accounts, Account *account_list, int *num_accounts, _Bo
     char input_buffer[STRING_SIZE];
     int num_matches = 0;
 
-    printf("Create account\n");
+    ( isAdmin == 1 ) ? printf("Create admin account:\n") : printf("Create user account:\n");
     printf("Enter your email: ");
     num_matches = scanf("%s", input_buffer);
     for ( int i = 0; i < *num_accounts; i++ )
     {
         if ( strcmp(input_buffer, account_list[i].Email) == 0 )
         {
-            printf("Email address already exists in database. Use -l for login.\n");
+            printf("Email address already exists in database.\n");
             return -1;
         }
     }
@@ -359,7 +313,7 @@ int  CreateAccount(FILE *accounts, Account *account_list, int *num_accounts, _Bo
     fprintf(accounts, "\n", input_buffer);
     ( *num_accounts )++;
     fclose(accounts);
-    printf("Account creation successful. Login with -l.\n");
+    printf("Account creation successful.\n");
     return 0;
 }
 int  LoginAccount(Account *account_list, int num_accounts)
@@ -399,22 +353,40 @@ int  LoginAccount(Account *account_list, int num_accounts)
     fprintf(stderr, "Email not found.\n");
     return -1;
 }
-int  CheckForEmptyDatabase(Account *accounts)
+int  CheckForEmptyDatabase(FILE *accounts, Account *account_list, int num_accounts)
 {
+    char input_buffer[STRING_SIZE];
+    int num_matches;
+
     if ( accounts == NULL )
     {
+        printf("The database (accounts.txt) does not exist.\n"
+               "Would you like to create a new database? \n"
+               "Enter Y or y: ");
+        num_matches = scanf("%s", input_buffer);
+        if ( strcmp(input_buffer, "y") == 0 || strcmp(input_buffer, "Y") == 0 )
         {
-            printf("No database created. Create one using -i.\n");
+            accounts = fopen("accounts.txt", "w");
+            fclose(accounts);
+            CreateAccount(accounts, account_list, &num_accounts, 1);
+            return 0;
+        }
+        else
+        {
+            printf("No database created. Exiting.\n");
             return -1;
         }
     }
-    fseek(accounts, 0, SEEK_END);
-    if ( ftell(accounts) == 0 )
+    else
     {
-        printf("No accounts created. Please create an admin account using -i.\n\n");
-        return -1;
+        fseek(accounts, 0, SEEK_END);
+        if ( ftell(accounts) == 0 )
+        {
+            printf("Database (accounts.txt) found, but no accounts created.\n");
+            CreateAccount(accounts, account_list, &num_accounts, 1);
+            return 0;
+        }
     }
-    return 0;
 }
 int  SearchAccount(Account *account_list, int num_accounts)
 {
