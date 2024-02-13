@@ -1,4 +1,4 @@
 @echo off
-del .\accounts.txt
+REM del .\accounts.txt
 library < test.txt
 pause
