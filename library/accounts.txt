@@ -1,30 +1,5 @@
-Email 		a
-Name 		a
-Password 	a
-isAdmin 	1
-
 Email 		b
 Name 		b
 Password 	b
-isAdmin 	0
-
-Email 		c
-Name 		c
-Password 	c
-isAdmin 	0
-
-Email 		d
-Name 		d
-Password 	d
-isAdmin 	0
-
-Email 		f
-Name 		f
-Password 	f
-isAdmin 	0
-
-Email 		hg
-Name 		paul
-Password 	pw
-isAdmin 	0
+isAdmin 	1
 
