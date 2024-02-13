@@ -1,25 +1,95 @@
-Email 		a
-Name 		a
-Password 	a
+Email 		john.smith1234@gmail.com
+Name 		John
+Password 	password1
 isAdmin 	1
 
-Email 		b
-Name 		b
-Password 	b
+Email 		emily.johnson5678@hotmail.com
+Name 		Emily
+Password 	password2
 isAdmin 	1
 
-Email 		c
-Name 		c
-Password 	c
+Email 		michael.williams99@gmail.com
+Name 		Michael
+Password 	password3
+isAdmin 	1
+
+Email 		emma.jones_123@hotmail.com
+Name 		Emma
+Password 	password4
 isAdmin 	0
 
-Email 		d
-Name 		d
-Password 	d
+Email 		chris.brown2022@gmail.com
+Name 		Christopher
+Password 	password5
 isAdmin 	0
 
-Email 		e
-Name 		edward
-Password 	eddie
+Email 		olivia_davis99@hotmail.com
+Name 		Olivia
+Password 	password6
+isAdmin 	0
+
+Email 		james_wilson_123@gmail.com
+Name 		James
+Password 	password7
+isAdmin 	1
+
+Email 		ava_taylor_789@hotmail.com
+Name 		Ava
+Password 	password8
+isAdmin 	1
+
+Email 		daniel.anderson@gmail.com
+Name 		Danny
+Password 	dannyspw
+isAdmin 	0
+
+Email 		sophia.martinez_123@hotmail.com
+Name 		Sophia
+Password 	password10
+isAdmin 	0
+
+Email 		david-thomas_456@gmail.com
+Name 		David
+Password 	password11
+isAdmin 	0
+
+Email 		isabella.garcia_789@hotmail.com
+Name 		Isabella
+Password 	password12
+isAdmin 	1
+
+Email 		ethan.hernandez123@gmail.com
+Name 		Ethan
+Password 	password13
+isAdmin 	1
+
+Email 		mia.rodriguez_456@hotmail.com
+Name 		Mia
+Password 	password14
+isAdmin 	0
+
+Email 		alexander_smith_789@gmail.com
+Name 		Alexander
+Password 	password15
+isAdmin 	0
+
+Email 		madison.johnson_123@hotmail.com
+Name 		Madison
+Password 	password16
+isAdmin 	1
+
+Email 		benjamin.williams_789@gmail.com
+Name 		Benjamin
+Password 	password17
+isAdmin 	0
+
+Email 		charlotte.jones_123@hotmail.com
+Name 		Charlotte
+Password 	password18
+isAdmin 	1
+
+Email 		lily.wilson_456@hotmail.com
+Name 		Lily
+Password 	password20
 isAdmin 	0
 

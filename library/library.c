@@ -38,7 +38,7 @@
 #include "stdbool.h"
 #include "malloc.h"
 
-#define STRING_SIZE 30
+#define STRING_SIZE 40
 #define NUM_ACCOUNTS_MAX 100
 #define MAX_ATTEMPTS 5
 
