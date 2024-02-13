@@ -3,8 +3,3 @@ Name 		a
 Password 	a
 isAdmin 	1
 
-Email 		b
-Name 		b
-Password 	b
-isAdmin 	0
-
