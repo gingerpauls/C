@@ -67,7 +67,7 @@ void UpdateDatabase(FILE *account_stream, AccountList *account_list);
 int  CheckForEmptyDatabase(FILE *account_stream, AccountList *account_list);
 void PopulateAccounts(FILE *account_stream, AccountList *account_list);
 int  CreateAccount(FILE *account_stream, AccountList *account_list, bool isAdmin);
-void PrintAccount(Account *account_list, int account_id);
+void PrintAccount(AccountList *account_list, int account_id);
 
 int main(int num_arguments, char *argument_value[])
 {
@@ -77,7 +77,6 @@ int main(int num_arguments, char *argument_value[])
     account_list->account_list = accounts;
     account_list->num_accounts = 0;
     account_list->num_admins = 0;
-    int num_accounts = 0;
     char input_buffer[STRING_SIZE];
 
     printf("Welcome to the library! \n");
@@ -88,11 +87,11 @@ int main(int num_arguments, char *argument_value[])
         return -1;
     };
 
-    printf("Would you like to login (l) or create a user account (c)?\n");
-    scanf("%s", input_buffer);
-    PopulateAccounts(account_stream, account_list);
     while ( 1 )
     {
+        PopulateAccounts(account_stream, account_list);
+        printf("Would you like to login (l) or create a user account (c)?\n");
+        scanf("%s", input_buffer);
         if ( strcmp(input_buffer, "c") == 0 )
         {
             CreateAccount(account_stream, account_list, false);
@@ -133,12 +132,10 @@ int main(int num_arguments, char *argument_value[])
                     else if ( strcmp(input_buffer, "ca") == 0 )
                     {
                         CreateAccount(account_stream, account_list, 1);
-                        PopulateAccounts(account_stream, &account_list);
                     }
                     else if ( strcmp(input_buffer, "cu") == 0 )
                     {
                         CreateAccount(account_stream, account_list, 0);
-                        PopulateAccounts(account_stream, &account_list);
                     }
                     else if ( strcmp(input_buffer, "s") == 0 )
                     {
@@ -157,7 +154,7 @@ int main(int num_arguments, char *argument_value[])
                             scanf("%s", input_buffer);
                             strcpy(account_list->account_list[searched_account_id].Password, input_buffer);
                             int num_admins = 0;
-                            for ( int i = 0; i < num_accounts; i++ )
+                            for ( int i = 0; i < account_list->num_accounts; i++ )
                             {
                                 if ( account_list->account_list[i].isAdmin == 1 )
                                 {
@@ -194,7 +191,7 @@ int main(int num_arguments, char *argument_value[])
                             strcpy(account_list->account_list[searched_account_id].Name, "0");
                             strcpy(account_list->account_list[searched_account_id].Password, "0");
                             int num_admins = 0;
-                            for ( int i = 0; i < num_accounts; i++ )
+                            for ( int i = 0; i < account_list->num_accounts; i++ )
                             {
                                 if ( account_list->account_list[i].isAdmin == 1 )
                                 {
@@ -382,6 +379,10 @@ int  CheckForEmptyDatabase(FILE *account_stream, AccountList *account_list)
             CreateAccount(account_stream, account_list, 1);
             return 0;
         }
+        else
+        {
+            //LoginAccount(account_list);
+        }
     }
 }
 void PopulateAccounts(FILE *account_stream, AccountList *account_list)
@@ -391,13 +392,15 @@ void PopulateAccounts(FILE *account_stream, AccountList *account_list)
 
     account_stream = fopen("accounts.txt", "r");
     rewind(account_stream);
+    account_list->num_admins = 0;
+    account_list->num_accounts = 0;
     while ( !feof(account_stream) )
     {
         fscanf(account_stream, "%s %s", header_string, account_list->account_list[i].Email);
         fscanf(account_stream, "%s %s", header_string, account_list->account_list[i].Name);
         fscanf(account_stream, "%s %s", header_string, account_list->account_list[i].Password);
         fscanf(account_stream, "%s %d", header_string, &account_list->account_list[i].isAdmin);
-        if ( &account_list->account_list[i].isAdmin == true )
+        if ( account_list->account_list[i].isAdmin == true )
         {
             account_list->num_admins++;
         }
@@ -432,19 +435,14 @@ int  CreateAccount(FILE *account_stream, AccountList *account_list, bool isAdmin
     fprintf(account_stream, "isAdmin \t%u\n", isAdmin);
     fprintf(account_stream, "\n", input_buffer);
     fclose(account_stream);
-    // todo: check to see if account was actually written
-    ( account_list->num_accounts )++;
-    if ( isAdmin == true )
-    {
-        account_list->num_admins++;
-    }
+    PopulateAccounts(account_stream, account_list);
     printf("Account creation successful.\n");
     return 0;
 }
-void PrintAccount(Account *account_list, int account_id)
+void PrintAccount(AccountList *account_list, int account_id)
 {
-    printf("Account[%d].Email = %s\n", account_id, account_list[account_id].Email);
-    printf("Account[%d].Name = %s\n", account_id, account_list[account_id].Name);
-    printf("Account[%d].Password = %s\n", account_id, account_list[account_id].Password);
-    printf("Account[%d].isAdmin = %d\n\n", account_id, account_list[account_id].isAdmin);
+    printf("Account[%d].Email = %s\n", account_id, account_list->account_list[account_id].Email);
+    printf("Account[%d].Name = %s\n", account_id, account_list->account_list[account_id].Name);
+    printf("Account[%d].Password = %s\n", account_id, account_list->account_list[account_id].Password);
+    printf("Account[%d].isAdmin = %d\n\n", account_id, account_list->account_list[account_id].isAdmin);
 }
