@@ -56,6 +56,7 @@ typedef struct
 //{
 //    Account *account_list;
 //    int num_accounts;
+//    int num_admins;
 //}AccountList;
 
 void PrintAccountList(Account *account_list, int num_accounts);
@@ -85,172 +86,180 @@ int main(int num_arguments, char *argument_value[])
     printf("Would you like to login (l) or create a user account (c)?\n");
     scanf("%s", input_buffer);
     PopulateAccounts(accounts, &account_list, &num_accounts);
-
-    if ( strcmp(input_buffer, "c") == 0 )
+    while ( 1 )
     {
-        CreateAccount(accounts, account_list, &num_accounts, false);
-    }
-    if ( strcmp(input_buffer, "l") == 0 )
-    {
-        int account_id = LoginAccount(account_list, num_accounts);
-        if ( account_id < 0 )
+        if ( strcmp(input_buffer, "c") == 0 )
         {
-            return -1;
+            CreateAccount(accounts, account_list, &num_accounts, false);
         }
-        else if ( ( account_list[account_id].isAdmin ) == true )
+        else if ( strcmp(input_buffer, "l") == 0 )
         {
-            char input_buffer[STRING_SIZE];
-
-            printf("Welcome %s!\n", account_list[account_id].Name);
-            while ( 1 )
+            int account_id = LoginAccount(account_list, num_accounts);
+            if ( account_id < 0 )
             {
-                printf("v     \t- view your account information.\n");
-                printf("a     \t- view all account information.\n");
-                printf("ca    \t- create an admin account.\n");
-                printf("cu    \t- create a user account (no admin privileges).\n");
-                printf("s     \t- search for an account. \n");
-                printf("e     \t- edit an account. \n");
-                printf("d     \t- delete an account. \n");
-                printf("      \t- anything else to logout.\n");
-                printf("\n");
-                printf("Enter option: ");
-                scanf("%s", input_buffer);
-                if ( strcmp(input_buffer, "v") == 0 )
+                return -1;
+            }
+            else if ( ( account_list[account_id].isAdmin ) == true )
+            {
+                char input_buffer[STRING_SIZE];
+
+                printf("Welcome %s!\n", account_list[account_id].Name);
+                while ( 1 )
                 {
-                    PrintAccount(account_list, account_id);
-                }
-                else if ( strcmp(input_buffer, "a") == 0 )
-                {
-                    PrintAccountList(account_list, num_accounts);
-                }
-                else if ( strcmp(input_buffer, "ca") == 0 )
-                {
-                    CreateAccount(accounts, account_list, &num_accounts, 1);
-                    PopulateAccounts(accounts, &account_list, &num_accounts);
-                }
-                else if ( strcmp(input_buffer, "cu") == 0 )
-                {
-                    CreateAccount(accounts, account_list, &num_accounts, 0);
-                    PopulateAccounts(accounts, &account_list, &num_accounts);
-                }
-                else if ( strcmp(input_buffer, "s") == 0 )
-                {
-                    SearchAccount(account_list, num_accounts);
-                }
-                else if ( strcmp(input_buffer, "e") == 0 )
-                {
-                    int searched_account_id = 0;
-                    searched_account_id = SearchAccount(account_list, num_accounts);
-                    if ( searched_account_id >= 0 )
+                    printf("v     \t view your account information.\n");
+                    printf("a     \t view all account information.\n");
+                    printf("ca    \t create an admin account.\n");
+                    printf("cu    \t create a user account (no admin privileges).\n");
+                    printf("s     \t search for an account. \n");
+                    printf("e     \t edit an account. \n");
+                    printf("d     \t delete an account. \n");
+                    printf("      \t anything else to logout.\n\n");
+                    printf("\n");
+                    printf("Enter option: ");
+                    scanf("%s", input_buffer);
+                    if ( strcmp(input_buffer, "v") == 0 )
                     {
-                        printf("New name: ");
-                        scanf("%s", input_buffer);
-                        strcpy(account_list[searched_account_id].Name, input_buffer);
-                        printf("New password: ");
-                        scanf("%s", input_buffer);
-                        strcpy(account_list[searched_account_id].Password, input_buffer);
-                        int num_admins = 0;
-                        for ( int i = 0; i < num_accounts; i++ )
+                        PrintAccount(account_list, account_id);
+                    }
+                    else if ( strcmp(input_buffer, "a") == 0 )
+                    {
+                        PrintAccountList(account_list, num_accounts);
+                    }
+                    else if ( strcmp(input_buffer, "ca") == 0 )
+                    {
+                        CreateAccount(accounts, account_list, &num_accounts, 1);
+                        PopulateAccounts(accounts, &account_list, &num_accounts);
+                    }
+                    else if ( strcmp(input_buffer, "cu") == 0 )
+                    {
+                        CreateAccount(accounts, account_list, &num_accounts, 0);
+                        PopulateAccounts(accounts, &account_list, &num_accounts);
+                    }
+                    else if ( strcmp(input_buffer, "s") == 0 )
+                    {
+                        SearchAccount(account_list, num_accounts);
+                    }
+                    else if ( strcmp(input_buffer, "e") == 0 )
+                    {
+                        int searched_account_id = 0;
+                        searched_account_id = SearchAccount(account_list, num_accounts);
+                        if ( searched_account_id >= 0 )
                         {
-                            if ( account_list[i].isAdmin == 1 )
-                            {
-                                num_admins++;
-                            }
-                        }
-                        if ( ( num_admins == 1 ) && ( account_id == searched_account_id ) )
-                        {
-                            printf("You are the last admin. Cannot have less than 1 admin account. \n"
-                                   "If you want to remove your admin status, elevate privileges for\n"
-                                   "another account. Then edit your admin status.                \n\n");
-                        }
-                        else
-                        {
-                            printf("isAdmin?: ");
+                            printf("New name: ");
                             scanf("%s", input_buffer);
-                            account_list[searched_account_id].isAdmin = atoi(input_buffer);
-                        }
-                        UpdateDatabase(accounts, account_list, num_accounts);
-                        if ( account_list[account_id].isAdmin == 0 )
-                        {
-                            printf("No longer admin. Logging out... \n");
-                            return 0;
-                        }
-                    }
-                }
-                else if ( strcmp(input_buffer, "d") == 0 )
-                {
-                    int searched_account_id = 0;
-                    searched_account_id = SearchAccount(account_list, num_accounts);
-                    if ( searched_account_id >= 0 )
-                    {
-                        strcpy(account_list[searched_account_id].Email, "0");
-                        strcpy(account_list[searched_account_id].Name, "0");
-                        strcpy(account_list[searched_account_id].Password, "0");
-                        int num_admins = 0;
-                        for ( int i = 0; i < num_accounts; i++ )
-                        {
-                            if ( account_list[i].isAdmin == 1 )
+                            strcpy(account_list[searched_account_id].Name, input_buffer);
+                            printf("New password: ");
+                            scanf("%s", input_buffer);
+                            strcpy(account_list[searched_account_id].Password, input_buffer);
+                            int num_admins = 0;
+                            for ( int i = 0; i < num_accounts; i++ )
                             {
-                                num_admins++;
+                                if ( account_list[i].isAdmin == 1 )
+                                {
+                                    num_admins++;
+                                }
+                            }
+                            if ( ( num_admins == 1 ) && ( account_id == searched_account_id ) )
+                            {
+                                printf("You are the last admin. Cannot have less than 1 admin account. \n"
+                                       "If you want to remove your admin status, elevate privileges for\n"
+                                       "another account. Then edit your admin status.                \n\n");
+                            }
+                            else
+                            {
+                                printf("isAdmin? (0 or 1): ");
+                                scanf("%s", input_buffer);
+                                account_list[searched_account_id].isAdmin = atoi(input_buffer);
+                            }
+                            UpdateDatabase(accounts, account_list, num_accounts);
+                            if ( account_list[account_id].isAdmin == 0 )
+                            {
+                                printf("No longer admin. Logging out... \n");
+                                return 0;
                             }
                         }
-                        if ( ( num_admins == 1 ) && ( account_id == searched_account_id ) )
+                    }
+                    else if ( strcmp(input_buffer, "d") == 0 )
+                    {
+                        int searched_account_id = 0;
+                        searched_account_id = SearchAccount(account_list, num_accounts);
+                        if ( searched_account_id >= 0 )
                         {
-                            printf("You are the last admin. Cannot have less than 1 admin account.  \n"
-                                   "If you want to remove your admin account, elevate privileges for\n"
-                                   "another account.                                              \n\n");
-                        }
-                        UpdateDatabase(accounts, account_list, num_accounts);
-                        PopulateAccounts(accounts, account_list, &num_accounts);
-                        if ( account_list[account_id].isAdmin == 0 )
-                        {
-                            printf("No longer admin. Logging out... \n");
-                            return 0;
+                            strcpy(account_list[searched_account_id].Email, "0");
+                            strcpy(account_list[searched_account_id].Name, "0");
+                            strcpy(account_list[searched_account_id].Password, "0");
+                            int num_admins = 0;
+                            for ( int i = 0; i < num_accounts; i++ )
+                            {
+                                if ( account_list[i].isAdmin == 1 )
+                                {
+                                    num_admins++;
+                                }
+                            }
+                            if ( ( num_admins == 1 ) && ( account_id == searched_account_id ) )
+                            {
+                                printf("\nYou are the last admin. Cannot have less than 1 admin account.\n"
+                                       "If you want to remove your admin account, elevate privileges for\n"
+                                       "another account.                                              \n\n");
+                            }
+                            UpdateDatabase(accounts, account_list, num_accounts);
+                            PopulateAccounts(accounts, account_list, &num_accounts);
+                            if ( account_list[account_id].isAdmin == 0 )
+                            {
+                                printf("No longer admin. Logging out... \n");
+                                return 0;
+                            }
                         }
                     }
+                    else
+                    {
+                        printf("Logging out...\n\n");
+                        //return 0;
+                        break;
+                    }
                 }
-                else
+            }
+            else if ( account_list[account_id].isAdmin == false )
+            {
+                char input_buffer[STRING_SIZE];
+                printf("Welcome %s!\n", account_list[account_id].Name);
+                while ( 1 )
                 {
-                    printf("%s", input_buffer);
-                    printf("Logging out...\n");
-                    return 0;
+                    printf("v     \t view your account information.\n");
+                    printf("e     \t edit your account information. \n");
+                    printf("      \t anything else to logout.\n\n");
+                    printf("Enter option: ");
+                    scanf("%s", input_buffer);
+                    if ( strcmp(input_buffer, "v") == 0 )
+                    {
+                        PrintAccount(account_list, account_id);
+                    }
+                    else if ( strcmp(input_buffer, "e") == 0 )
+                    {
+                        if ( account_id >= 0 )
+                        {
+                            printf("New name: ");
+                            scanf("%s", input_buffer);
+                            strcpy(account_list[account_id].Name, input_buffer);
+                            printf("New password: ");
+                            scanf("%s", input_buffer);
+                            strcpy(account_list[account_id].Password, input_buffer);
+                            UpdateDatabase(accounts, account_list, num_accounts);
+                        }
+                    }
+                    else
+                    {
+                        printf("Logging out...\n\n");
+                        //return 0;
+                        break;
+                    }
                 }
             }
         }
-        else if ( account_list[account_id].isAdmin == false )
+        else
         {
-            char input_buffer[STRING_SIZE];
-            printf("Welcome %s!\n", account_list[account_id].Name);
-            while ( 1 )
-            {
-                printf("v     \t- view your account information.\n");
-                printf("e     \t- edit your account information. \n");
-                printf("      \t- anything else to logout.\n");
-                printf("Enter option: ");
-                scanf("%s", input_buffer);
-                if ( strcmp(input_buffer, "v") == 0 )
-                {
-                    PrintAccount(account_list, account_id);
-                }
-                else if ( strcmp(input_buffer, "e") == 0 )
-                {
-                    if ( account_id >= 0 )
-                    {
-                        printf("New name: ");
-                        scanf("%s", input_buffer);
-                        strcpy(account_list[account_id].Name, input_buffer);
-                        printf("New password: ");
-                        scanf("%s", input_buffer);
-                        strcpy(account_list[account_id].Password, input_buffer);
-                        UpdateDatabase(accounts, account_list, num_accounts);
-                    }
-                }
-                else
-                {
-                    printf("Logging out...\n");
-                    return 0;
-                }
-            }
+            printf("Quitting library.\n");
+            return 0;
         }
     }
     return 0;
@@ -339,12 +348,12 @@ int  LoginAccount(Account *account_list, int num_accounts)
                 scanf("%s", input_buffer);
                 if ( strcmp(input_buffer, account_list[i].Password) == 0 )
                 {
-                    printf("Logging in...\n");
+                    printf("Logging in...\n\n");
                     return i;
                 }
                 else
                 {
-                    printf("Incorrect password.\n");
+                    printf("Incorrect password.\n\n");
                 }
                 if ( j == 4 )
                 {
