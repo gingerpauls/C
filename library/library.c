@@ -104,15 +104,16 @@ int main(int num_arguments, char *argument_value[])
             printf("Welcome %s!\n", account_list[account_id].Name);
             while ( 1 )
             {
-                printf("Press:  \tv     \t- view your account information.\n");
-                printf("        \ta     \t- view all account information.\n");
-                printf("        \tca    \t- create an admin account.\n");
-                printf("        \tcu    \t- create a user account (no admin privileges).\n");
-                printf("        \ts     \t- search for an account. \n");
-                printf("        \te     \t- edit an account. \n");
-                printf("        \td     \t- delete an account. \n");
-                printf("        \t      \t- anything else to logout.\n");
+                printf("v     \t- view your account information.\n");
+                printf("a     \t- view all account information.\n");
+                printf("ca    \t- create an admin account.\n");
+                printf("cu    \t- create a user account (no admin privileges).\n");
+                printf("s     \t- search for an account. \n");
+                printf("e     \t- edit an account. \n");
+                printf("d     \t- delete an account. \n");
+                printf("      \t- anything else to logout.\n");
                 printf("\n");
+                printf("Enter option: ");
                 scanf("%s", input_buffer);
                 if ( strcmp(input_buffer, "v") == 0 )
                 {
@@ -216,15 +217,16 @@ int main(int num_arguments, char *argument_value[])
                 }
             }
         }
-        else if ( account_list[account_id].isAdmin == 0 )
+        else if ( account_list[account_id].isAdmin == false )
         {
             char input_buffer[STRING_SIZE];
             printf("Welcome %s!\n", account_list[account_id].Name);
             while ( 1 )
             {
-                printf("Press:  \tv     \t- view your account information.\n");
-                printf("        \te     \t- edit your account information. \n");
-                printf("        \t      \t- anything else to logout.\n");
+                printf("v     \t- view your account information.\n");
+                printf("e     \t- edit your account information. \n");
+                printf("      \t- anything else to logout.\n");
+                printf("Enter option: ");
                 scanf("%s", input_buffer);
                 if ( strcmp(input_buffer, "v") == 0 )
                 {
@@ -237,6 +239,9 @@ int main(int num_arguments, char *argument_value[])
                         printf("New name: ");
                         scanf("%s", input_buffer);
                         strcpy(account_list[account_id].Name, input_buffer);
+                        printf("New password: ");
+                        scanf("%s", input_buffer);
+                        strcpy(account_list[account_id].Password, input_buffer);
                         UpdateDatabase(accounts, account_list, num_accounts);
                     }
                 }
