@@ -6,8 +6,6 @@
         search book
         display list of books
 
-        delete members
-
         issue books to library members
         view due date
             late ? penalty : no penalty
@@ -15,8 +13,6 @@
     user
         search book
         display list of books
-        edit self member information
-
         return book to library
         view due date
             late ? penalty : no penalty
@@ -153,8 +149,7 @@ int main ( int num_arguments, char *argument_value[] )
                     }
                     else if ( strcmp ( input_buffer, "e" ) == 0 )
                     {
-                        int searched_account_id = 0;
-                        searched_account_id = SearchAccount ( account_list );
+                        int searched_account_id = SearchAccount ( account_list );
                         if ( searched_account_id >= 0 )
                         {
                             {
@@ -189,8 +184,7 @@ int main ( int num_arguments, char *argument_value[] )
                     }
                     else if ( strcmp ( input_buffer, "d" ) == 0 )
                     {
-                        int searched_account_id = 0;
-                        searched_account_id = SearchAccount ( account_list );
+                        int searched_account_id = SearchAccount ( account_list );
                         if ( searched_account_id >= 0 )
                         {
                             if ( ( account_list->num_admins == 1 ) && ( logged_in_id == searched_account_id ) )
@@ -213,7 +207,6 @@ int main ( int num_arguments, char *argument_value[] )
                                     account_list->account_list[searched_account_id].isAdmin = false;
                                     UpdateDatabase ( account_stream, account_list );
                                     PopulateAccounts ( account_stream, account_list );
-                                    //break;
                                 }
                                 else
                                 {
@@ -260,7 +253,6 @@ int main ( int num_arguments, char *argument_value[] )
                     else
                     {
                         printf ( "Logging out...\n\n" );
-                        //return 0;
                         break;
                     }
                 }
@@ -292,7 +284,7 @@ int  LoginAccount ( AccountList *account_list )
     char input_buffer[STRING_SIZE];
 
     printf ( "Login to your account\n" );
-    printf ( "Enter your email address: " );
+    printf ( "Enter email address: " );
     scanf ( "%s", input_buffer );
     for ( int i = 0; i < account_list->num_accounts; i++ )
     {
@@ -301,7 +293,7 @@ int  LoginAccount ( AccountList *account_list )
             printf ( "Email address found.\n" );
             for ( int j = 0; j < MAX_ATTEMPTS; j++ )
             {
-                printf ( "Enter your password: " );
+                printf ( "Enter password: " );
                 scanf ( "%s", input_buffer );
                 if ( strcmp ( input_buffer, account_list->account_list[i].Password ) == 0 )
                 {
@@ -390,7 +382,7 @@ int  CheckForEmptyDatabase ( FILE *account_stream, AccountList *account_list )
         }
         else
         {
-            //LoginAccount(account_list);
+            // check for valid data?
         }
     }
 }
@@ -423,7 +415,7 @@ int  CreateAccount ( FILE *account_stream, AccountList *account_list, bool isAdm
     char input_buffer[STRING_SIZE];
 
     ( isAdmin == 1 ) ? printf ( "\nCreate admin account:\n" ) : printf ( "\nCreate user account:\n" );
-    printf ( "Enter your email: " );
+    printf ( "Enter email: " );
     scanf ( "%s", input_buffer );
     for ( int i = 0; i < account_list->num_accounts; i++ )
     {
@@ -436,10 +428,10 @@ int  CreateAccount ( FILE *account_stream, AccountList *account_list, bool isAdm
     }
     account_stream = fopen ( "accounts.txt", "a" );
     fprintf ( account_stream, "Email \t\t%s\n", input_buffer );
-    printf ( "Enter your name: " );
+    printf ( "Enter name: " );
     scanf ( "%s", input_buffer );
     fprintf ( account_stream, "Name \t\t%s\n", input_buffer );
-    printf ( "Enter your password: " );
+    printf ( "Enter password: " );
     scanf ( "%s", input_buffer );
     fprintf ( account_stream, "Password \t%s\n", input_buffer );
     fprintf ( account_stream, "isAdmin \t%u\n", isAdmin );
