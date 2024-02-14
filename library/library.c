@@ -67,6 +67,9 @@ int  CheckForEmptyDatabase ( FILE *account_stream, AccountListProperties *accoun
 void PopulateAccounts ( FILE *account_stream, AccountListProperties *account_list_properties );
 int  CreateAccount ( FILE *account_stream, AccountListProperties *account_list_properties, bool isAdmin );
 void PrintAccount ( AccountListProperties *account_list_properties, int account_id );
+void PrintSystemInfo ( void );
+void PrintProcessMemoryInfo ( void );
+
 
 int main ( int num_arguments, char *argument_value[] )
 {
@@ -77,27 +80,9 @@ int main ( int num_arguments, char *argument_value[] )
     account_list_properties->num_accounts = 0;
     account_list_properties->num_admins = 0;
     char input_buffer[STRING_SIZE];
-    //int *ip = malloc ( 1 << 30 );
-    //if ( ip == NULL )
-    //    exit ( -1 );
-    //memset ( ip, 1, 1 << 30 );
 
-    //HANDLE hProcHandle = GetModuleHandle ( NULL );  // get the current process handle
-    //DWORD dword = GetLastError ( );
-    //PROCESS_MEMORY_COUNTERS_EX memory; // output will go here.
-    //
-    //BOOL result = GetProcessMemoryInfo ( GetCurrentProcess ( ),
-    //                                     &memory,
-    //                                     sizeof ( memory ) );
-    //dword = GetLastError ( );
-
-    //SYSTEM_INFO sysinfo;
-    //GetSystemInfo ( &sysinfo );
-    //printf ( "memory.WorkingSetSize %u\n", memory.WorkingSetSize );
-    //printf ( "memory.PeakWorkingSetSize %u\n", memory.PeakWorkingSetSize );
-    //printf ( "memory.PeakWorkingSetSize %u\n", memory.PeakWorkingSetSize );
-
-
+    PrintSystemInfo ();
+    PrintProcessMemoryInfo ();
 
     printf ( "Welcome to the library!\n\n" );
 
@@ -476,4 +461,32 @@ void PrintAccount ( AccountListProperties *account_list_properties, int account_
     printf ( "Name \t\t%s\n", account_list_properties->account_list[account_id].Name );
     printf ( "Password \t%s\n", account_list_properties->account_list[account_id].Password );
     printf ( "isAdmin \t%d\n\n", account_list_properties->account_list[account_id].isAdmin );
+}
+void PrintSystemInfo ( void )
+{
+    SYSTEM_INFO sysinfo;
+    GetSystemInfo ( &sysinfo );
+    printf ( "GetSystemInfo\n" );
+    printf ( "dwPageSize \t\t\t%u\n\n", sysinfo.dwPageSize );
+}
+void PrintProcessMemoryInfo ( void )
+{
+    HANDLE hProcHandle = GetModuleHandle ( NULL );
+    DWORD last_error = GetLastError ( );
+    PROCESS_MEMORY_COUNTERS_EX memory;
+
+    BOOL result = GetProcessMemoryInfo ( GetCurrentProcess ( ), &memory, sizeof ( memory ) );
+    last_error = GetLastError ( );
+    printf ( "ProcessMemoryInfo\n" );
+    printf ( "cb \t\t\t\t%u\n", memory.cb );
+    printf ( "PageFaultCountr \t\t%u\n", memory.PageFaultCount );
+    printf ( "PeakWorkingSetSize \t\t%u\n", memory.PeakWorkingSetSize );
+    printf ( "WorkingSetSize \t\t\t%u\n", memory.WorkingSetSize );
+    printf ( "QuotaPeakPagedPoolUsage \t%u\n", memory.QuotaPeakPagedPoolUsage );
+    printf ( "QuotaPagedPoolUsage \t\t%u\n", memory.QuotaPagedPoolUsage );
+    printf ( "QuotaPeakNonPagedPoolUsage \t%u\n", memory.QuotaPeakNonPagedPoolUsage );
+    printf ( "QuotaNonPagedPoolUsage \t\t%u\n", memory.QuotaNonPagedPoolUsage );
+    printf ( "PagefileUsage \t\t\t%u\n", memory.PagefileUsage );
+    printf ( "PeakPagefileUsage \t\t%u\n", memory.PeakPagefileUsage );
+    printf ( "PrivateUsage \t\t\t%u\n\n", memory.PrivateUsage );
 }
