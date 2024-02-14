@@ -37,6 +37,8 @@
 #include "assert.h"
 #include "stdbool.h"
 #include "malloc.h"
+#include <windows.h> // these header gives you access to the Windows API -
+#include <psapi.h> // include at the top of your code
 
 #define STRING_SIZE 40
 #define NUM_ACCOUNTS_MAX 100
@@ -75,6 +77,27 @@ int main ( int num_arguments, char *argument_value[] )
     account_list_properties->num_accounts = 0;
     account_list_properties->num_admins = 0;
     char input_buffer[STRING_SIZE];
+    //int *ip = malloc ( 1 << 30 );
+    //if ( ip == NULL )
+    //    exit ( -1 );
+    //memset ( ip, 1, 1 << 30 );
+
+    //HANDLE hProcHandle = GetModuleHandle ( NULL );  // get the current process handle
+    //DWORD dword = GetLastError ( );
+    //PROCESS_MEMORY_COUNTERS_EX memory; // output will go here.
+    //
+    //BOOL result = GetProcessMemoryInfo ( GetCurrentProcess ( ),
+    //                                     &memory,
+    //                                     sizeof ( memory ) );
+    //dword = GetLastError ( );
+
+    //SYSTEM_INFO sysinfo;
+    //GetSystemInfo ( &sysinfo );
+    //printf ( "memory.WorkingSetSize %u\n", memory.WorkingSetSize );
+    //printf ( "memory.PeakWorkingSetSize %u\n", memory.PeakWorkingSetSize );
+    //printf ( "memory.PeakWorkingSetSize %u\n", memory.PeakWorkingSetSize );
+
+
 
     printf ( "Welcome to the library!\n\n" );
 
@@ -261,10 +284,15 @@ int main ( int num_arguments, char *argument_value[] )
         else
         {
             printf ( "\nQuitting library.\n" );
+            
+            //free ( account_list_properties );
+            //GetProcessMemoryInfo ( hProcHandle, &memory, sizeof ( memory ) );
+            //printf ( "memory.WorkingSetSize %u\n", memory.WorkingSetSize );
+            //printf ( "memory.PeakWorkingSetSize %u\n", memory.PeakWorkingSetSize );
+            //free ( ip );
             return 0;
         }
     }
-    free ( account_list_properties );
     return 0;
 }
 
