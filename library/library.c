@@ -1,34 +1,28 @@
 /*
-    admin
-        add new books to library
-        edit book
-        delete book
-        search book
-        display list of books
-
-        issue books to library members
-        view due date
-            late ? penalty : no penalty
-
-    user
-        search book
-        display list of books
-        return book to library
-        view due date
-            late ? penalty : no penalty
-
-    system
-        save books
-        load books
-        ensure data persistence
-
-    save database as binary file instead of text
-
-    reports
-        list of issued books, overdue books
-
-    secure login?
-
+    Program Requirements:
+        admin
+            add new books to library
+            edit book
+            delete book
+            search book
+            display list of books
+            issue books to library members
+            view due date
+                late ? penalty : no penalty
+        user
+            search book
+            display list of books
+            return book to library
+            view due date
+                late ? penalty : no penalty
+        system
+            save books
+            load books
+            ensure data persistence
+        save database as binary file instead of text
+        reports
+            list of issued books, overdue books
+        secure login?
 */
 #define _CRT_SECURE_NO_WARNINGS
 
@@ -69,7 +63,6 @@ int  CreateAccount ( FILE *account_stream, AccountListProperties *account_list_p
 void PrintAccount ( AccountListProperties *account_list_properties, int account_id );
 void PrintSystemInfo ( void );
 void PrintProcessMemoryInfo ( void );
-
 
 int main ( int num_arguments, char *argument_value[] )
 {
@@ -269,12 +262,13 @@ int main ( int num_arguments, char *argument_value[] )
         else
         {
             printf ( "\nQuitting library.\n" );
-            
-            //free ( account_list_properties );
-            //GetProcessMemoryInfo ( hProcHandle, &memory, sizeof ( memory ) );
-            //printf ( "memory.WorkingSetSize %u\n", memory.WorkingSetSize );
-            //printf ( "memory.PeakWorkingSetSize %u\n", memory.PeakWorkingSetSize );
-            //free ( ip );
+            int *ip = malloc ( 1 << 30 );
+            PrintSystemInfo ( );
+            PrintProcessMemoryInfo ( );
+            free ( account_list_properties );
+            free ( ip );
+            PrintSystemInfo ( );
+            PrintProcessMemoryInfo ( );
             return 0;
         }
     }
@@ -479,14 +473,14 @@ void PrintProcessMemoryInfo ( void )
     last_error = GetLastError ( );
     printf ( "ProcessMemoryInfo\n" );
     printf ( "cb \t\t\t\t%u\n", memory.cb );
-    printf ( "PageFaultCountr \t\t%u\n", memory.PageFaultCount );
-    printf ( "PeakWorkingSetSize \t\t%u\n", memory.PeakWorkingSetSize );
-    printf ( "WorkingSetSize \t\t\t%u\n", memory.WorkingSetSize );
-    printf ( "QuotaPeakPagedPoolUsage \t%u\n", memory.QuotaPeakPagedPoolUsage );
-    printf ( "QuotaPagedPoolUsage \t\t%u\n", memory.QuotaPagedPoolUsage );
-    printf ( "QuotaPeakNonPagedPoolUsage \t%u\n", memory.QuotaPeakNonPagedPoolUsage );
-    printf ( "QuotaNonPagedPoolUsage \t\t%u\n", memory.QuotaNonPagedPoolUsage );
-    printf ( "PagefileUsage \t\t\t%u\n", memory.PagefileUsage );
-    printf ( "PeakPagefileUsage \t\t%u\n", memory.PeakPagefileUsage );
-    printf ( "PrivateUsage \t\t\t%u\n\n", memory.PrivateUsage );
+    printf ( "PageFaultCount \t\t\t%u\n",           memory.PageFaultCount );
+    printf ( "PeakWorkingSetSize \t\t%u\n",         memory.PeakWorkingSetSize );
+    printf ( "WorkingSetSize \t\t\t%u\n",           memory.WorkingSetSize );
+    printf ( "QuotaPeakPagedPoolUsage \t%u\n",      memory.QuotaPeakPagedPoolUsage );
+    printf ( "QuotaPagedPoolUsage \t\t%u\n",        memory.QuotaPagedPoolUsage );
+    printf ( "QuotaPeakNonPagedPoolUsage \t%u\n",   memory.QuotaPeakNonPagedPoolUsage );
+    printf ( "QuotaNonPagedPoolUsage \t\t%u\n",     memory.QuotaNonPagedPoolUsage );
+    printf ( "PagefileUsage \t\t\t%u\n",            memory.PagefileUsage );
+    printf ( "PeakPagefileUsage \t\t%u\n",          memory.PeakPagefileUsage );
+    printf ( "PrivateUsage \t\t\t%u\n\n",           memory.PrivateUsage );
 }
