@@ -31,8 +31,8 @@
 #include "assert.h"
 #include "stdbool.h"
 #include "malloc.h"
-#include <windows.h> // these header gives you access to the Windows API -
-#include <psapi.h> // include at the top of your code
+#include "windows.h"
+#include "psapi.h" 
 
 #define STRING_SIZE 40
 #define NUM_ACCOUNTS_MAX 100
@@ -74,8 +74,8 @@ int main ( int num_arguments, char *argument_value[] )
     account_list_properties->num_admins = 0;
     char input_buffer[STRING_SIZE];
 
-    PrintSystemInfo ();
-    PrintProcessMemoryInfo ();
+    //PrintSystemInfo ();
+    //PrintProcessMemoryInfo ();
 
     printf ( "Welcome to the library!\n\n" );
 
@@ -175,7 +175,7 @@ int main ( int num_arguments, char *argument_value[] )
                                 account_list_properties->account_list[searched_account_id].isAdmin = atoi ( input_buffer );
                             }
                             UpdateDatabase ( account_stream, account_list_properties );
-                            PopulateAccounts ( account_stream, account_list_properties );
+                            //PopulateAccounts ( account_stream, account_list_properties );
                             if ( account_list_properties->account_list[logged_in_id].isAdmin == 0 )
                             {
                                 printf ( "No longer admin. Logging out... \n\n" );
