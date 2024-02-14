@@ -175,7 +175,6 @@ int main ( int num_arguments, char *argument_value[] )
                                 account_list_properties->account_list[searched_account_id].isAdmin = atoi ( input_buffer );
                             }
                             UpdateDatabase ( account_stream, account_list_properties );
-                            //PopulateAccounts ( account_stream, account_list_properties );
                             if ( account_list_properties->account_list[logged_in_id].isAdmin == 0 )
                             {
                                 printf ( "No longer admin. Logging out... \n\n" );
@@ -262,11 +261,11 @@ int main ( int num_arguments, char *argument_value[] )
         else
         {
             printf ( "\nQuitting library.\n" );
-            int *ip = malloc ( 1 << 30 );
+            //int *ip = malloc ( 1 << 30 );
             PrintSystemInfo ( );
             PrintProcessMemoryInfo ( );
             free ( account_list_properties );
-            free ( ip );
+            //free ( ip );
             PrintSystemInfo ( );
             PrintProcessMemoryInfo ( );
             return 0;
