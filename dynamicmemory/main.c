@@ -19,6 +19,11 @@ typedef struct
     int y;
 } Map;
 
+typedef struct
+{
+    char d1, d2, d3, d4, d5;
+    int i1;
+} Data;
 void PrintAccount ( Account *account_list, int num_accounts )
 {
     size_t memblocksize;
@@ -38,6 +43,7 @@ int main ( void )
     char input_buffer[STRING_SIZE];
     int num_accounts = 0;
     Account *account_list = NULL;
+
 
     printf ( "Enter number of accounts: " );
     scanf ( "%d", &num_accounts );
@@ -77,15 +83,19 @@ int main ( void )
     }
     free ( account_list );
 
-    Map map1;
+
+
+    //Map map1;
     //map1.x = malloc ( sizeof ( map1.x ) );
     //map1.y = malloc ( sizeof ( map1.y ) );
-    map1.x = 10;
-    map1.y = 20;
+    //map1.x = 10;
+    //map1.y = 20;
 
-    printf ( "x: %d, &x: %d\n", map1.x, &map1.x );
-    printf ( "y: %d, &y: %d\n", map1.y, &map1.y );
+    //printf ( "x: %d, &x: %d\n", map1.x, &map1.x );
+    //printf ( "y: %d, &y: %d\n", map1.y, &map1.y );
 
+    // Data dataset1;
+    // sizeof ( dataset1 );
 
     return 0;
 }
