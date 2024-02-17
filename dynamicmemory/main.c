@@ -5,72 +5,47 @@
 #include <string.h>
 
 #define STRING_SIZE 100
+#define MAX_EMAIL_LENGTH 254
+#define MAX_NAME_LENGTH 254
 
 typedef struct
 {
     char *email;
+    char *email_next;
     char *name;
-    int isAdmin;
+    char *name_next;
 } Account;
 
-void PrintAccount ( Account *account_list, int num_accounts )
-{
-    size_t memblocksize;
-    printf ( "\nPrinting Accounts\n\n" );
-    printf ( "account_list: %p \t&: %p\n", account_list, &account_list );
-    printf ( "_msize %d\n", _msize ( account_list ) );
-    for ( size_t i = 0; i < num_accounts; i++ )
-    {
-        printf ( "account_list[%d]->email: %s \t&: %p\n", i, account_list[i].email, &account_list[i].email );
-        printf ( "account_list[%d]->name: %s \t&: %p\n", i, account_list[i].name, &account_list[i].name );
-        printf ( "account_list[%d]->isAdmin: %d \t&: %p\n", i, account_list[i].isAdmin, &account_list[i].isAdmin );
-    }
-}
 
-int main ( void )
+int main(void)
 {
     char input_buffer[STRING_SIZE];
-    int num_accounts = 0;
-    Account *account_list = NULL;
+    unsigned int email_size, name_size = 0;
+    unsigned int total_num_accounts = 10;
+    void *memory_start;
+    Account account_list;
 
+    email_size = (MAX_EMAIL_LENGTH + 1) * total_num_accounts;
+    name_size = (MAX_NAME_LENGTH + 1) * total_num_accounts;
 
-    printf ( "Enter number of accounts: " );
-    scanf ( "%d", &num_accounts );
-    account_list = malloc ( sizeof ( *account_list ) * num_accounts );
+    memory_start = malloc(email_size + name_size);
+    account_list.email = (char *) memory_start;
+    account_list.email_next = account_list.email;
+    account_list.name = (char*)(account_list.email + email_size);
+    account_list.name_next = account_list.name;
 
-    for ( size_t i = 0; i < num_accounts; i++ )
+    while(1)
     {
-        {
-            printf ( "Enter acct[%d].email: ", i );
-            scanf ( "%s", input_buffer );
-            account_list[i].email = malloc ( sizeof ( *account_list->email ) *
-                                             ( strlen ( input_buffer ) + 1 ) );
-            strcpy ( account_list[i].email, input_buffer );
-        }
+        printf("email: ");
+        scanf("%s", input_buffer);
+        strcpy(account_list.email_next, input_buffer);
+        account_list.email_next = account_list.email_next + strlen(input_buffer);
 
-        {
-            printf ( "Enter acct[%d].name: ", i );
-            scanf ( "%s", input_buffer );
-            account_list[i].name = malloc ( sizeof ( *account_list->name ) *
-                                            ( strlen ( input_buffer ) + 1 ) );
-            strcpy ( account_list[i].name, input_buffer );
-        }
-
-        {
-            printf ( "Enter acct[%d].isAdmin: ", i );
-            scanf ( "%s", input_buffer );
-            account_list[i].isAdmin = malloc ( sizeof ( account_list->isAdmin ) );
-            account_list[i].isAdmin = atoi ( input_buffer );
-        }
+        printf("name: ");
+        scanf("%s", input_buffer);
+        strcpy(account_list.name_next, input_buffer);
+        account_list.name_next = account_list.name_next + strlen(input_buffer);
     }
-    PrintAccount ( account_list, num_accounts );
-    for ( size_t i = 0; i < num_accounts; i++ )
-    {
-        free ( account_list[i].email );
-        free ( account_list[i].name );
-        //free ( account_list[i].isAdmin );
-    }
-    free ( account_list );
 
     return 0;
 }
