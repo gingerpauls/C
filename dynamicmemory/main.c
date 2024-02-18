@@ -17,13 +17,14 @@ typedef struct
 int main(void)
 {
     char input_buffer[STRING_SIZE];
-    unsigned int total_num_accounts = 1;
+    unsigned int total_num_accounts = 3;
     unsigned int account_list_size =
         (total_num_accounts * sizeof(Account)) +
         (total_num_accounts * (MAX_EMAIL_LENGTH + 1) * sizeof(char)) +
         (total_num_accounts * (MAX_NAME_LENGTH + 1) * sizeof(char));
     Account *account_list = malloc(account_list_size);
     char *current_ptr = (char *) account_list + (total_num_accounts * sizeof(Account));
+    char *mem_block_end = (char *) (account_list + (account_list_size>>4));
     for(size_t i = 0; i < total_num_accounts; i++)
     {
         printf_s("email: ");
@@ -34,6 +35,11 @@ int main(void)
         }
         account_list[i].email = current_ptr;
         current_ptr += (strlen(input_buffer) + 1) * sizeof(char);
+        if(current_ptr > (char *) account_list + account_list_size)
+        {
+            printf("you are out of your memory boundary.\n\n");
+            exit(EXIT_FAILURE);
+        }
         if(strcpy_s(account_list[i].email, sizeof(input_buffer), input_buffer))
         {
             printf("Error copying data. Data possibly too long.\n\n");
@@ -53,6 +59,7 @@ int main(void)
         printf("email[%d]: %s\n", i, account_list[i].email);
         printf("name[%d]: %s\n", i, account_list[i].name);
     }
+
     free(account_list);
     return 0;
 }
