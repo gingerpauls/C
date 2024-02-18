@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,8 +17,7 @@ typedef struct
 int main(void)
 {
     char input_buffer[STRING_SIZE];
-    rsize_t input_buffer_size;
-    unsigned int total_num_accounts = 2;
+    unsigned int total_num_accounts = 1;
     unsigned int account_list_size =
         (total_num_accounts * sizeof(Account)) +
         (total_num_accounts * (MAX_EMAIL_LENGTH + 1) * sizeof(char)) +
@@ -26,16 +27,25 @@ int main(void)
     for(size_t i = 0; i < total_num_accounts; i++)
     {
         printf_s("email: ");
-        scanf_s("%s", input_buffer, sizeof(input_buffer));
+        if(scanf_s("%s", input_buffer, sizeof(input_buffer)) == 0)
+        {
+            printf("Error reading input. Input possibly too long.\n\n");
+            exit(EXIT_FAILURE);
+        }
         account_list[i].email = current_ptr;
         current_ptr += (strlen(input_buffer) + 1) * sizeof(char);
-        input_buffer_size = strlen(input_buffer);
-        strcpy_s(account_list[i].email, sizeof(input_buffer), input_buffer);
+        if(strcpy_s(account_list[i].email, sizeof(input_buffer), input_buffer))
+        {
+            printf("Error copying data. Data possibly too long.\n\n");
+        }
         printf_s("name: ");
-        scanf_s("%s", input_buffer, sizeof(input_buffer));
+        if(scanf_s("%s", input_buffer, sizeof(input_buffer)) == 0)
+        {
+            printf("Error reading input. Input possibly too long.\n\n");
+            exit(EXIT_FAILURE);
+        }
         account_list[i].name = current_ptr;
         current_ptr += (strlen(input_buffer) + 1) * sizeof(char);
-        input_buffer_size = strlen(input_buffer);
         strcpy_s(account_list[i].name, sizeof(input_buffer), input_buffer);
     }
     for(size_t i = 0; i < total_num_accounts; i++)
