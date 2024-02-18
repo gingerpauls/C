@@ -4,7 +4,7 @@
 
 #define STRING_SIZE (254 + 1)
 #define MAX_EMAIL_LENGTH (254 + 1)
-#define MAX_NAME_LENGTH (253 + 1)
+#define MAX_NAME_LENGTH (254 + 1)
 
 typedef struct
 {
@@ -32,11 +32,10 @@ void GetInput(char *input_buffer, size_t size)
 int main(void)
 {
     char input_buffer[STRING_SIZE];
-    unsigned int total_num_accounts = 2;
-    size_t account_list_size =
-        (total_num_accounts * sizeof(Account)) +
-        (total_num_accounts * (MAX_EMAIL_LENGTH) * sizeof(char)) +
-        (total_num_accounts * (MAX_NAME_LENGTH) * sizeof(char));
+    unsigned int total_num_accounts = 5;
+    size_t account_list_size =  (total_num_accounts * sizeof(Account)) +
+                                (total_num_accounts * (MAX_EMAIL_LENGTH) * sizeof(char)) +
+                                (total_num_accounts * (MAX_NAME_LENGTH) * sizeof(char));
     Account *account_list = malloc(account_list_size);
     char *current_ptr = (char *) account_list + (total_num_accounts * sizeof(Account));
     for(size_t i = 0; i < total_num_accounts; i++)
