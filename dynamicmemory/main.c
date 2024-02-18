@@ -18,13 +18,14 @@ int main(void)
 {
     char input_buffer[STRING_SIZE];
     unsigned int total_num_accounts = 3;
-    unsigned int account_list_size =
+    size_t account_list_size =
         (total_num_accounts * sizeof(Account)) +
         (total_num_accounts * (MAX_EMAIL_LENGTH + 1) * sizeof(char)) +
         (total_num_accounts * (MAX_NAME_LENGTH + 1) * sizeof(char));
     Account *account_list = malloc(account_list_size);
+    account_list_size = _msize(account_list);
     char *current_ptr = (char *) account_list + (total_num_accounts * sizeof(Account));
-    char *mem_block_end = (char *) (account_list + (account_list_size>>4));
+    char *mem_block_end = (char *) (account_list + (account_list_size>>4)); // this >> 4 is weird.. 
     for(size_t i = 0; i < total_num_accounts; i++)
     {
         printf_s("email: ");
