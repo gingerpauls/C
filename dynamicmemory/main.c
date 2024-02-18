@@ -32,15 +32,6 @@ void GetInput(char *input_buffer, size_t size)
     }
 }
 
-void CopyData(Account *account_list, size_t size, char *input_buffer)
-{
-    if(strcpy_s(account_list[i].email, sizeof(input_buffer), input_buffer))
-    {
-        printf("Error: Data too long.\n\n");
-        exit(EXIT_FAILURE);
-    }
-}
-
 int main(void)
 {
     char input_buffer[STRING_SIZE + 1];
@@ -59,12 +50,11 @@ int main(void)
         account_list[i].email = current_ptr;
         current_ptr += (strlen(input_buffer) + 1) * sizeof(char);
         BoundaryCheck(current_ptr, account_list, account_list_size);
-        CopyData(account_list, sizeof(input_buffer), input_buffer);
-        /*if(strcpy_s(account_list[i].email, sizeof(input_buffer), input_buffer))
+        if(strcpy_s(account_list[i].email, sizeof(input_buffer), input_buffer))
         {
             printf("Error: Data too long.\n\n");
             exit(EXIT_FAILURE);
-        }*/
+        }
         printf_s("name: ");
         GetInput(input_buffer, sizeof(input_buffer));
         account_list[i].name = current_ptr;
