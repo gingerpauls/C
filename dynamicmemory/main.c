@@ -12,6 +12,12 @@ typedef struct
     char *name;
 } Account;
 
+typedef struct
+{
+    char buffer[STRING_SIZE];
+    unsigned int size;
+} Input;
+
 void BoundaryCheck(char *current_ptr, Account *account_list, size_t account_list_size)
 {
     if(current_ptr > (char *) account_list + account_list_size)
@@ -20,9 +26,9 @@ void BoundaryCheck(char *current_ptr, Account *account_list, size_t account_list
         exit(EXIT_FAILURE);
     }
 }
-void GetInput(char *input_buffer, size_t size)
+void GetInput(Input *input)
 {
-    if(scanf_s("%s", input_buffer, size) == 0)
+    if(scanf_s("%s", input->buffer, input->size) == 0)
     {
         printf("Error: Input too long.\n\n");
         exit(EXIT_FAILURE);
@@ -31,8 +37,8 @@ void GetInput(char *input_buffer, size_t size)
 
 int main(void)
 {
-    char input_buffer[STRING_SIZE];
-    unsigned int total_num_accounts = 5;
+    Input input = { .buffer = NULL, .size = STRING_SIZE};
+    unsigned int total_num_accounts = 3;
     size_t account_list_size =  (total_num_accounts * sizeof(Account)) +
                                 (total_num_accounts * (MAX_EMAIL_LENGTH) * sizeof(char)) +
                                 (total_num_accounts * (MAX_NAME_LENGTH) * sizeof(char));
@@ -41,21 +47,21 @@ int main(void)
     for(size_t i = 0; i < total_num_accounts; i++)
     {
         printf_s("email: ");
-        GetInput(input_buffer, sizeof(input_buffer));
+        GetInput(&input);
         account_list[i].email = current_ptr;
-        current_ptr += (strlen(input_buffer) + 1) * sizeof(char);
+        current_ptr += (strlen(input.buffer) + 1) * sizeof(char);
         BoundaryCheck(current_ptr, account_list, account_list_size);
-        if(strcpy_s(account_list[i].email, (strlen(input_buffer) + 1), input_buffer))
+        if(strcpy_s(account_list[i].email, (strlen(input.buffer) + 1), input.buffer))
         {
             printf("Error: Data too long.\n\n");
             exit(EXIT_FAILURE);
         }
         printf_s("name: ");
-        GetInput(input_buffer, sizeof(input_buffer));
+        GetInput(&input);
         account_list[i].name = current_ptr;
-        current_ptr += (strlen(input_buffer) + 1) * sizeof(char);
+        current_ptr += (strlen(input.buffer) + 1) * sizeof(char);
         BoundaryCheck(current_ptr, account_list, account_list_size);
-        if(strcpy_s(account_list[i].name, (strlen(input_buffer) + 1), input_buffer))
+        if(strcpy_s(account_list[i].name, (strlen(input.buffer) + 1), input.buffer))
         {
             printf("Error: Data too long.\n\n");
             exit(EXIT_FAILURE);
