@@ -44,7 +44,7 @@ void GetInput(Input *input)
 
 void BoundaryCheck(AccountList *account_list)
 {
-    if((char*)account_list->heap_ptr > (char *) account_list->account + account_list->memory_size)
+    if((char *) account_list->heap_ptr > (char *) account_list->account + account_list->memory_size)
     {
         printf("Error: Not enough heap memory.\n\n");
         exit(EXIT_FAILURE);
@@ -53,7 +53,7 @@ void BoundaryCheck(AccountList *account_list)
 
 int main(void)
 {
-    AccountList account_list = {.account = NULL, .memory_size = 0, .num_accounts = 1, .num_admins = 0, .heap_ptr = NULL};
+    AccountList account_list = {.account = NULL, .memory_size = 0, .num_accounts = 2, .num_admins = 0, .heap_ptr = NULL};
     //account_list.account = {.email = NULL, .name = NULL, .pw = NULL, .isAdmin = NULL}
     account_list.memory_size =
         (account_list.num_accounts * sizeof(Account)) +
@@ -67,9 +67,10 @@ int main(void)
 
     for(size_t i = 0; i < account_list.num_accounts; i++)
     {
-        printf_s("email: ");
+        (char *) account_list.heap_ptr = (char *) account_list.heap_ptr + sizeof(Account);
+        printf_s("email[%d]: ", (int) i);
         GetInput(&input);
-        account_list.account[i].email = account_list.heap_ptr;
+        account_list.account[i].email = (char *) account_list.heap_ptr; // causes fuckyness
         (char *) account_list.heap_ptr += (strlen(input.buffer) + 1) * sizeof(char);
         BoundaryCheck(&account_list);
         if(strcpy_s(account_list.account[i].email, (strlen(input.buffer) + 1), input.buffer))
@@ -78,7 +79,7 @@ int main(void)
             exit(EXIT_FAILURE);
         }
 
-        printf_s("name: ");
+        printf_s("name[%d]: ", (int) i);
         GetInput(&input);
         account_list.account[i].name = account_list.heap_ptr;
         (char *) account_list.heap_ptr += (strlen(input.buffer) + 1) * sizeof(char);
@@ -89,7 +90,7 @@ int main(void)
             exit(EXIT_FAILURE);
         }
 
-        printf_s("pw: ");
+        printf_s("pw[%d]: ", (int) i);
         GetInput(&input);
         account_list.account[i].pw = account_list.heap_ptr;
         (char *) account_list.heap_ptr += (strlen(input.buffer) + 1) * sizeof(char);
@@ -100,24 +101,23 @@ int main(void)
             exit(EXIT_FAILURE);
         }
 
-        printf_s("isAdmin: ");
+        printf_s("isAdmin[%d]: ", (int) i);
         GetInput(&input);
-        account_list.account[i].isAdmin = account_list.heap_ptr;
-        (_Bool*) account_list.heap_ptr += (strlen(input.buffer) + 1) * sizeof(char);
+        account_list.account[i].isAdmin = (_Bool *) account_list.heap_ptr;
+        (_Bool *) account_list.heap_ptr += (strlen(input.buffer) + 1) * sizeof(_Bool);
         BoundaryCheck(&account_list);
         if(strcpy_s(account_list.account[i].isAdmin, (strlen(input.buffer) + 1), input.buffer))
         {
             printf("Error: Data too long.\n\n");
             exit(EXIT_FAILURE);
         }
-        //account_list.account[i].isAdmin = false;
     }
     for(size_t i = 0; i < account_list.num_accounts; i++)
     {
-        printf("email[%d]: %s\n", i, account_list.account[i].email);
-        printf("name[%d]: %s\n", i, account_list.account[i].name);
-        printf("name[%d]: %s\n", i, account_list.account[i].pw);
-        printf("name[%d]: %c\n", i, *(account_list.account[i].isAdmin));
+        printf("email[%d]: %s\n", (int) i, account_list.account[i].email);
+        printf("name[%d]: %s\n", (int) i, account_list.account[i].name);
+        printf("name[%d]: %s\n", (int) i, account_list.account[i].pw);
+        printf("name[%d]: %c\n", (int) i, *(account_list.account[i].isAdmin));
     }
     free(account_list.account);
     return 0;
