@@ -266,8 +266,8 @@ int main ( int num_arguments, char *argument_value[] )
             PrintProcessMemoryInfo ( );
             free ( account_list_properties );
             //free ( ip );
-            PrintSystemInfo ( );
-            PrintProcessMemoryInfo ( );
+            //PrintSystemInfo ( );
+            //PrintProcessMemoryInfo ( );
             return 0;
         }
     }
