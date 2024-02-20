@@ -17,6 +17,14 @@
 #define MAX_PW_LENGTH (254 + 1)
 #define MAX_ISADMIN_LENGTH (1 + 1)
 
+enum ACCOUNT_PROPERTY {
+    ID, 
+    email,
+    name,
+    pw,
+    isAdmin,
+};
+
 typedef struct {
     char buffer[STRING_SIZE];
     unsigned int size;
@@ -54,6 +62,38 @@ void BoundaryCheck(AccountList *account_list) {
         printf("Error: Not enough heap memory.\n\n");
         exit(EXIT_FAILURE);
     }
+}
+void CopyString(AccountList account_list, Input *input, int i, int ACCOUNT_PROPERTY ) {
+    switch(ACCOUNT_PROPERTY) {
+        case email:
+            if(strcpy_s(account_list.account[i].email, (strlen(input->buffer) + 1), input->buffer)) {
+                printf("Error: Data too long.\n\n");
+                exit(EXIT_FAILURE);
+            }
+            break;
+        case name:
+            if(strcpy_s(account_list.account[i].name, (strlen(input->buffer) + 1), input->buffer)) {
+                printf("Error: Data too long.\n\n");
+                exit(EXIT_FAILURE);
+            }
+            break;
+        case pw:
+            if(strcpy_s(account_list.account[i].pw, (strlen(input->buffer) + 1), input->buffer)) {
+                printf("Error: Data too long.\n\n");
+                exit(EXIT_FAILURE);
+            }
+            break;
+        case isAdmin:
+            if(strcpy_s(account_list.account[i].isAdmin, (strlen(input->buffer) + 1), input->buffer)) {
+                printf("Error: Data too long.\n\n");
+                exit(EXIT_FAILURE);
+            }
+            break;
+        default:
+            printf_s("Could not copy account data.\n");
+            break;
+    }
+
 }
 int main(void) {
     FILE *account_stream = NULL;
@@ -100,41 +140,28 @@ int main(void) {
         account_list.account[i].email = (char *) account_list.heap_ptr;
         (char *) account_list.heap_ptr += (strlen(input.buffer) + 1) * sizeof(char);
         BoundaryCheck(&account_list);
-        if(strcpy_s(account_list.account[i].email, (strlen(input.buffer) + 1), input.buffer)) {
-            printf("Error: Data too long.\n\n");
-            exit(EXIT_FAILURE);
-        }
+        CopyString(account_list, &input, i, email);
 
         GetInputFile(account_stream, &input);
         account_list.account[i].name = (char *) account_list.heap_ptr;
         (char *) account_list.heap_ptr += (strlen(input.buffer) + 1) * sizeof(char);
         BoundaryCheck(&account_list);
-        if(strcpy_s(account_list.account[i].name, (strlen(input.buffer) + 1), input.buffer)) {
-            printf("Error: Data too long.\n\n");
-            exit(EXIT_FAILURE);
-        }
+        CopyString(account_list, &input, i, name);
 
         GetInputFile(account_stream, &input);
         account_list.account[i].pw = (char *) account_list.heap_ptr;
         (char *) account_list.heap_ptr += (strlen(input.buffer) + 1) * sizeof(char);
         BoundaryCheck(&account_list);
-        if(strcpy_s(account_list.account[i].pw, (strlen(input.buffer) + 1), input.buffer)) {
-            printf("Error: Data too long.\n\n");
-            exit(EXIT_FAILURE);
-        }
+        CopyString(account_list, &input, i, pw);
 
         GetInputFile(account_stream, &input);
         account_list.account[i].isAdmin = (char *) account_list.heap_ptr;
         (char *) account_list.heap_ptr += (strlen(input.buffer) + 1) * sizeof(char);
         BoundaryCheck(&account_list);
-        if(strcpy_s(account_list.account[i].isAdmin, (strlen(input.buffer) + 1), input.buffer)) {
-            printf("Error: Data too long.\n\n");
-            exit(EXIT_FAILURE);
-        }
+        CopyString(account_list, &input, i, isAdmin);
     }
 
     for(size_t i = 0; i < account_list.num_accounts; i++) {
-
        printf_s("\nID \t\t%d\n", i);
        printf_s("Email \t\t%s\n", account_list.account[i].email);
        printf_s("Name \t\t%s\n", account_list.account[i].name);
@@ -142,75 +169,7 @@ int main(void) {
        printf_s("isAdmin \t%d\n", atoi(account_list.account[i].isAdmin));
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //for(size_t i = 0; i < account_list.num_accounts; i++) {
-    //    printf_s("email[%d]: ", (int) i);
-    //    GetInputStdIn(&input);
-    //    account_list.account[i].email = (char *) account_list.heap_ptr;
-    //    (char *) account_list.heap_ptr += (strlen(input.buffer) + 1) * sizeof(char);
-    //    BoundaryCheck(&account_list);
-    //    if(strcpy_s(account_list.account[i].email, (strlen(input.buffer) + 1), input.buffer)) {
-    //        printf("Error: Data too long.\n\n");
-    //        exit(EXIT_FAILURE);
-    //    }
-    //    printf_s("name[%d]: ", (int) i);
-    //    GetInputStdIn(&input);
-    //    account_list.account[i].name = account_list.heap_ptr;
-    //    (char *) account_list.heap_ptr += (strlen(input.buffer) + 1) * sizeof(char);
-    //    BoundaryCheck(&account_list);
-    //    if(strcpy_s(account_list.account[i].name, (strlen(input.buffer) + 1), input.buffer)) {
-    //        printf("Error: Data too long.\n\n");
-    //        exit(EXIT_FAILURE);
-    //    }
-    //    printf_s("pw[%d]: ", (int) i);
-    //    GetInputStdIn(&input);
-    //    account_list.account[i].pw = account_list.heap_ptr;
-    //    (char *) account_list.heap_ptr += (strlen(input.buffer) + 1) * sizeof(char);
-    //    BoundaryCheck(&account_list);
-    //    if(strcpy_s(account_list.account[i].pw, (strlen(input.buffer) + 1), input.buffer)) {
-    //        printf("Error: Data too long.\n\n");
-    //        exit(EXIT_FAILURE);
-    //    }
-    //    printf_s("isAdmin[%d]: ", (int) i);
-    //    GetInputStdIn(&input);
-    //    account_list.account[i].isAdmin = (_Bool *) account_list.heap_ptr;
-    //    (_Bool *) account_list.heap_ptr += (strlen(input.buffer) + 1) * sizeof(_Bool);
-    //    BoundaryCheck(&account_list);
-    //    if(strcpy_s(account_list.account[i].isAdmin, (strlen(input.buffer) + 1), input.buffer)) {
-    //        printf("Error: Data too long.\n\n");
-    //        exit(EXIT_FAILURE);
-    //    }
-    //}
-    //for(size_t i = 0; i < account_list.num_accounts; i++) {
-    //    printf("email[%d]: %s\n", (int) i, account_list.account[i].email);
-    //    printf("name[%d]: %s\n", (int) i, account_list.account[i].name);
-    //    printf("name[%d]: %s\n", (int) i, account_list.account[i].pw);
-    //    printf("name[%d]: %c\n", (int) i, *(account_list.account[i].isAdmin));
-    //}
-    //free(account_list.account);
+    free(account_list.account);
     fclose(account_stream);
     return 0;
 }
