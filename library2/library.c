@@ -93,7 +93,6 @@ void CopyString(AccountList account_list, Input *input, int i, int ACCOUNT_PROPE
             printf_s("Could not copy account data.\n");
             break;
     }
-
 }
 int main(void) {
     FILE *account_stream = NULL;
@@ -161,13 +160,22 @@ int main(void) {
         CopyString(account_list, &input, i, isAdmin);
     }
 
+    //for(size_t i = 0; i < account_list.num_accounts; i++) {
+    //   printf_s("\nID \t\t%d\n", i);
+    //   printf_s("Email \t\t%s\n", account_list.account[i].email);
+    //   printf_s("Name \t\t%s\n", account_list.account[i].name);
+    //   printf_s("Password \t%s\n", account_list.account[i].pw);
+    //   printf_s("isAdmin \t%d\n", atoi(account_list.account[i].isAdmin));
+    //}
+
     for(size_t i = 0; i < account_list.num_accounts; i++) {
-       printf_s("\nID \t\t%d\n", i);
-       printf_s("Email \t\t%s\n", account_list.account[i].email);
-       printf_s("Name \t\t%s\n", account_list.account[i].name);
-       printf_s("Password \t%s\n", account_list.account[i].pw);
-       printf_s("isAdmin \t%d\n", atoi(account_list.account[i].isAdmin));
+        printf_s("\nID \t\t%d\n", i);
+        printf_s("Email \t\t%p\n", &account_list.account[i].email);
+        printf_s("Name \t\t%p\n", &account_list.account[i].name);
+        printf_s("Password \t%p\n", &account_list.account[i].pw);
+        printf_s("isAdmin \t%p", &account_list.account[i].isAdmin);
     }
+
 
     free(account_list.account);
     fclose(account_stream);
