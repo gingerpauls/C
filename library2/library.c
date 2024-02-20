@@ -20,7 +20,6 @@ typedef struct
     char *email;
     char *name;
     char *pw;
-    //bool *isAdmin;
     _Bool *isAdmin;
 } Account;
 
@@ -53,24 +52,23 @@ void BoundaryCheck(AccountList *account_list)
 
 int main(void)
 {
-    AccountList account_list = {.account = NULL, .memory_size = 0, .num_accounts = 2, .num_admins = 0, .heap_ptr = NULL};
+    AccountList account_list = {.account = NULL, .memory_size = 0, .num_accounts = 3, .num_admins = 0, .heap_ptr = NULL};
     //account_list.account = {.email = NULL, .name = NULL, .pw = NULL, .isAdmin = NULL}
     account_list.memory_size =
         (account_list.num_accounts * sizeof(Account)) +
         (account_list.num_accounts * (MAX_EMAIL_LENGTH) * sizeof(char)) +
         (account_list.num_accounts * (MAX_NAME_LENGTH) * sizeof(char)) +
         (account_list.num_accounts * (MAX_PW_LENGTH) * sizeof(char)) +
-        (account_list.num_accounts * (MAX_ISADMIN_LENGTH) * sizeof(char)); // sizeof (bool) ?
+        (account_list.num_accounts * (MAX_ISADMIN_LENGTH) * sizeof(_Bool)); // sizeof (bool) ?
     account_list.account = malloc(account_list.memory_size);
-    (char *) account_list.heap_ptr = (char *) account_list.account + sizeof(Account);
     Input input = {.buffer = NULL, .size = STRING_SIZE};
 
+    (char *) account_list.heap_ptr = (char *) account_list.account + (account_list.num_accounts * sizeof(Account));
     for(size_t i = 0; i < account_list.num_accounts; i++)
     {
-        (char *) account_list.heap_ptr = (char *) account_list.heap_ptr + sizeof(Account);
         printf_s("email[%d]: ", (int) i);
         GetInput(&input);
-        account_list.account[i].email = (char *) account_list.heap_ptr; // causes fuckyness
+        account_list.account[i].email = (char *) account_list.heap_ptr;
         (char *) account_list.heap_ptr += (strlen(input.buffer) + 1) * sizeof(char);
         BoundaryCheck(&account_list);
         if(strcpy_s(account_list.account[i].email, (strlen(input.buffer) + 1), input.buffer))

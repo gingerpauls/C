@@ -38,7 +38,7 @@ void GetInput(Input *input)
 int main(void)
 {
     Input input = { .buffer = NULL, .size = STRING_SIZE};
-    unsigned int total_num_accounts = 3;
+    unsigned int total_num_accounts = 2;
     size_t account_list_size =  (total_num_accounts * sizeof(Account)) +
                                 (total_num_accounts * (MAX_EMAIL_LENGTH) * sizeof(char)) +
                                 (total_num_accounts * (MAX_NAME_LENGTH) * sizeof(char));
