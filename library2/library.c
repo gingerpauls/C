@@ -1,3 +1,11 @@
+/*
+    I want:
+        to be able to load account data from a file
+        add an account
+        delete an account
+*/
+
+//#define _CRT_SECURE_NO_WARNINGS
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
