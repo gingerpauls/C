@@ -78,32 +78,27 @@ int GetInputFile(FILE *account_stream, Input *input) {
         printf("fget error\n");
     }
     strcpy_s(trash, STRING_SIZE, input->buffer);
+    if(strcmp(trash, "\n") == 0) {
+        fgets(trash, STRING_SIZE, account_stream);
+        strcpy_s(input->buffer, STRING_SIZE, trash);
+    }
     while(strstr(trash, "\n") == NULL) {
         fgets(trash, STRING_SIZE, account_stream);
     }
-    if(strcmp(trash, "\n") == 0) {
-        fgets(trash, STRING_SIZE, account_stream);
-    }
 
-    err = sscanf_s(input->buffer, "%s", trash, STRING_SIZE);
-    if(err == 0) {
-        printf("sscanf error: match failure before recieving first argument.\n");
-    }
-    else if(err == EOF) {
-        printf("sscanf error: input failure before first received argument was assigned.\n");
-    }
-    else {
-
-    }
     err = sscanf_s(input->buffer, "%*s %s", trash, STRING_SIZE);
     if(err == 0) {
         printf("sscanf error: match failure before recieving first argument.\n");
     }
     else if(err == EOF) {
         printf("sscanf error: input failure before first received argument was assigned.\n");
+        strcpy_s(input->buffer, STRING_SIZE, "\0");
+    }
+    else if (err == 1){
+        strcpy_s(input->buffer, STRING_SIZE, trash);
     }
     else {
-        strcpy_s(input->buffer, STRING_SIZE, trash);
+        printf("sscanf error: no matches found.\n");
     }
 }
 int main(void) {
