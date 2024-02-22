@@ -1,703 +1,361 @@
 Database (accounts.txt) was opened.
 
-ID 		0
+ID 			0
 Email 		a
-Name 		aname
-Password 	apw
+Name 		01234567890123456789012
+Password 	
 isAdmin 	1
 
 
-ID 		1
+ID 			1
 Email 		0123456789012345678901
-Name 		234
+Name 		bname
+Password 	bpw
+isAdmin 	1
 
-Password 	bname
-isAdmin 	0
-
-
-ID 		2
-Email 		1
-Name 		michael99@gmail.com
-Password 	Michael
-isAdmin 	0
-
-
-ID 		3
-Email 		1
-Name 		emma123@hotmail.com
-Password 	Emma
-isAdmin 	0
-
-
-ID 		4
-Email 		0
-Name 		chris2022@gmail.com
-Password 	Chris
-isAdmin 	0
-
-
-ID 		5
-Email 		0
-Name 		olivia99@hotmail.com
-Password 	Olivia
-isAdmin 	0
-
-
-ID 		6
-Email 		0
-Name 		james123@gmail.com
-Password 	James
-isAdmin 	0
-
-
-ID 		7
-Email 		1
-Name 		ava789@hotmail.com
-Password 	Ava
-isAdmin 	0
-
-
-ID 		8
-Email 		1
-Name 		daniel@gmail.com
-Password 	Daniel
-isAdmin 	0
-
-
-ID 		9
-Email 		0
-Name 		sophia123@hotmail.com
-Password 	Sophia
-isAdmin 	0
-
-
-ID 		10
-Email 		0
-Name 		david456@gmail.com
-Password 	David
-isAdmin 	0
-
-
-ID 		11
-Email 		0
-Name 		isabella789@hotmail.co
-Password 	m
-
-isAdmin 	0
-
-
-ID 		12
-Email 		password12
-Name 		1
-Password 	ethan123@gmail.com
-isAdmin 	0
-
-
-ID 		13
-Email 		password13
-Name 		1
-Password 	mia456@hotmail.com
-isAdmin 	0
-
-
-ID 		14
-Email 		password14
-Name 		0
-Password 	alexander789@gmail.com
-isAdmin 	0
-
-
-ID 		15
-Email 		password15
-Name 		0
-Password 	madison123@hotmail.com
-isAdmin 	0
-
-
-ID 		16
-Email 		password16
-Name 		1
-Password 	benjamin789@gmail.com
-isAdmin 	0
-
-
-ID 		17
-Email 		password17
-Name 		0
-Password 	charlotte123@hotmail.c
-isAdmin 	0
-
-
-ID 		18
-Email 		Charlotte
-Name 		password18
-Password 	1
-isAdmin 	0
-
-
-ID 		19
-Email 		Lily
-Name 		password20
-Password 	0
-isAdmin 	0
-
-
-ID 		20
-Email 		A1
-Name 		password21
-Password 	0
-isAdmin 	0
-
-
-ID 		21
-Email 		B2
-Name 		password22
-Password 	1
-isAdmin 	0
-
-
-ID 		22
-Email 		C3
-Name 		password23
-Password 	0
-isAdmin 	0
-
-
-ID 		23
-Email 		D4
-Name 		password24
-Password 	1
-isAdmin 	0
-
-
-ID 		24
-Email 		E5
-Name 		password25
-Password 	0
-isAdmin 	0
-
-
-ID 		25
-Email 		F6
-Name 		password26
-Password 	1
-isAdmin 	0
-
-
-ID 		26
-Email 		G7
-Name 		password27
-Password 	0
-isAdmin 	0
-
-
-ID 		27
-Email 		H8
-Name 		password28
-Password 	1
-isAdmin 	0
-
-
-ID 		28
-Email 		I9
-Name 		password29
-Password 	0
-isAdmin 	0
-
-
-ID 		29
-Email 		J10
-Name 		password30
-Password 	1
-isAdmin 	0
 
+ID 			2
+Email 		michael99@gmail.com
+Name 		Michael
+Password 	password3
+isAdmin 	1
 
-ID 		30
-Email 		K11
-Name 		password31
-Password 	0
-isAdmin 	0
-
-
-ID 		31
-Email 		L12
-Name 		password32
-Password 	1
-isAdmin 	0
-
-
-ID 		32
-Email 		M13
-Name 		password33
-Password 	0
-isAdmin 	0
-
-
-ID 		33
-Email 		N14
-Name 		password34
-Password 	1
-isAdmin 	0
-
-
-ID 		34
-Email 		O15
-Name 		password35
-Password 	0
-isAdmin 	0
-
-
-ID 		35
-Email 		P16
-Name 		password36
-Password 	1
-isAdmin 	0
-
-
-ID 		36
-Email 		Q17
-Name 		password37
-Password 	0
-isAdmin 	0
-
-
-ID 		37
-Email 		R18
-Name 		password38
-Password 	1
-isAdmin 	0
-
-
-ID 		38
-Email 		S19
-Name 		password39
-Password 	0
-isAdmin 	0
-
-
-ID 		39
-Email 		T20
-Name 		password40
-Password 	1
-isAdmin 	0
-
-
-ID 		40
-Email 		U21
-Name 		password41
-Password 	0
-isAdmin 	0
-
-
-ID 		41
-Email 		V22
-Name 		password42
-Password 	1
-isAdmin 	0
-
-
-ID 		42
-Email 		W23
-Name 		password43
-Password 	0
-isAdmin 	0
-
-
-ID 		43
-Email 		X24
-Name 		password44
-Password 	1
-isAdmin 	0
-
-
-ID 		44
-Email 		Y25
-Name 		password45
-Password 	0
-isAdmin 	0
 
-
-ID 		45
-Email 		Z26
-Name 		password46
-Password 	1
-isAdmin 	0
-
-
-ID 		46
-Email 		AA27
-Name 		password47
-Password 	0
-isAdmin 	0
-
-
-ID 		47
-Email 		BB28
-Name 		password48
-Password 	1
-isAdmin 	0
-
-
-ID 		48
-Email 		CC29
-Name 		password49
-Password 	0
+ID 			3
+Email 		emma123@hotmail.com
+Name 		Emma
+Password 	password4
 isAdmin 	0
 
 
-ID 		49
-Email 		DD30
-Name 		password50
-Password 	1
+ID 			4
+Email 		chris2022@gmail.com
+Name 		Chris
+Password 	password5
 isAdmin 	0
 
 
-ID 		50
-Email 		EE31
-Name 		password51
-Password 	0
+ID 			5
+Email 		olivia99@hotmail.com
+Name 		Olivia
+Password 	password6
 isAdmin 	0
 
 
-ID 		51
-Email 		FF32
-Name 		password52
-Password 	1
-isAdmin 	0
-
-
-ID 		52
-Email 		GG33
-Name 		password53
-Password 	0
-isAdmin 	0
-
+ID 			6
+Email 		james123@gmail.com
+Name 		James
+Password 	password7
+isAdmin 	1
 
-ID 		53
-Email 		HH34
-Name 		password54
-Password 	1
-isAdmin 	0
-
-
-ID 		54
-Email 		II35
-Name 		password55
-Password 	0
-isAdmin 	0
 
-
-ID 		55
-Email 		JJ36
-Name 		password56
-Password 	1
-isAdmin 	0
+ID 			7
+Email 		ava789@hotmail.com
+Name 		Ava
+Password 	password8
+isAdmin 	1
 
 
-ID 		56
-Email 		KK37
-Name 		password57
-Password 	0
+ID 			8
+Email 		daniel@gmail.com
+Name 		Daniel
+Password 	dannyspw
 isAdmin 	0
 
 
-ID 		57
-Email 		LL38
-Name 		password58
-Password 	1
+ID 			9
+Email 		sophia123@hotmail.com
+Name 		Sophia
+Password 	password10
 isAdmin 	0
 
 
-ID 		58
-Email 		MM39
-Name 		password59
-Password 	0
+ID 			10
+Email 		david456@gmail.com
+Name 		David
+Password 	password11
 isAdmin 	0
 
 
-ID 		59
-Email 		NN40
-Name 		password60
-Password 	1
-isAdmin 	0
+ID 			11
+Email 		isabella789@hotmail.co
+Name 		Isabella
+Password 	password12
+isAdmin 	1
 
 
-ID 		60
-Email 		OO41
-Name 		password61
-Password 	0
-isAdmin 	0
+ID 			12
+Email 		ethan123@gmail.com
+Name 		Ethan
+Password 	password13
+isAdmin 	1
 
 
-ID 		61
-Email 		PP42
-Name 		password62
-Password 	1
+ID 			13
+Email 		mia456@hotmail.com
+Name 		Mia
+Password 	password14
 isAdmin 	0
 
 
-ID 		62
-Email 		QQ43
-Name 		password63
-Password 	0
+ID 			14
+Email 		alexander789@gmail.com
+Name 		Alexander
+Password 	password15
 isAdmin 	0
 
 
-ID 		63
-Email 		RR44
-Name 		password64
-Password 	1
-isAdmin 	0
+ID 			15
+Email 		madison123@hotmail.com
+Name 		Madison
+Password 	password16
+isAdmin 	1
 
 
-ID 		64
-Email 		SS45
-Name 		password65
-Password 	0
+ID 			16
+Email 		benjamin789@gmail.com
+Name 		Benjamin
+Password 	password17
 isAdmin 	0
 
 
-ID 		65
-Email 		TT46
-Name 		password66
-Password 	1
-isAdmin 	0
+ID 			17
+Email 		charlotte123@hotmail.c
+Name 		Charlotte
+Password 	password18
+isAdmin 	1
 
 
-ID 		66
-Email 		UU47
-Name 		password67
-Password 	0
+ID 			18
+Email 		lily456@hotmail.com
+Name 		Lily
+Password 	password20
 isAdmin 	0
 
 
-ID 		67
-Email 		VV48
-Name 		password68
-Password 	1
+ID 			19
+Email 		a1@hotmail.com
+Name 		A1
+Password 	password21
 isAdmin 	0
 
 
-ID 		68
-Email 		WW49
-Name 		password69
-Password 	0
-isAdmin 	0
+ID 			20
+Email 		b2@gmail.com
+Name 		B2
+Password 	password22
+isAdmin 	1
 
 
-ID 		69
-Email 		XX50
-Name 		password70
-Password 	1
+ID 			21
+Email 		c3@hotmail.com
+Name 		C3
+Password 	password23
 isAdmin 	0
 
 
-ID 		70
-Email 		YY51
-Name 		password71
-Password 	0
-isAdmin 	0
+ID 			22
+Email 		d4@gmail.com
+Name 		D4
+Password 	password24
+isAdmin 	1
 
 
-ID 		71
-Email 		ZZ52
-Name 		password72
-Password 	1
+ID 			23
+Email 		e5@hotmail.com
+Name 		E5
+Password 	password25
 isAdmin 	0
 
 
-ID 		72
-Email 		AAA53
-Name 		password73
-Password 	0
-isAdmin 	0
+ID 			24
+Email 		f6@gmail.com
+Name 		F6
+Password 	password26
+isAdmin 	1
 
 
-ID 		73
-Email 		BBB54
-Name 		password74
-Password 	1
+ID 			25
+Email 		g7@hotmail.com
+Name 		G7
+Password 	password27
 isAdmin 	0
 
 
-ID 		74
-Email 		CCC55
-Name 		password75
-Password 	0
-isAdmin 	0
+ID 			26
+Email 		h8@gmail.com
+Name 		H8
+Password 	password28
+isAdmin 	1
 
 
-ID 		75
-Email 		DDD56
-Name 		password76
-Password 	1
+ID 			27
+Email 		i9@hotmail.com
+Name 		I9
+Password 	password29
 isAdmin 	0
 
 
-ID 		76
-Email 		EEE57
-Name 		password77
-Password 	0
-isAdmin 	0
+ID 			28
+Email 		j10@gmail.com
+Name 		J10
+Password 	password30
+isAdmin 	1
 
 
-ID 		77
-Email 		FFF58
-Name 		password78
-Password 	1
+ID 			29
+Email 		k11@hotmail.com
+Name 		K11
+Password 	password31
 isAdmin 	0
 
 
-ID 		78
-Email 		GGG59
-Name 		password79
-Password 	0
-isAdmin 	0
+ID 			30
+Email 		l12@gmail.com
+Name 		L12
+Password 	password32
+isAdmin 	1
 
 
-ID 		79
-Email 		HHH60
-Name 		password80
-Password 	1
+ID 			31
+Email 		m13@hotmail.com
+Name 		M13
+Password 	password33
 isAdmin 	0
 
 
-ID 		80
-Email 		III61
-Name 		password81
-Password 	0
-isAdmin 	0
+ID 			32
+Email 		n14@gmail.com
+Name 		N14
+Password 	password34
+isAdmin 	1
 
 
-ID 		81
-Email 		JJJ62
-Name 		password82
-Password 	1
+ID 			33
+Email 		o15@hotmail.com
+Name 		O15
+Password 	password35
 isAdmin 	0
 
 
-ID 		82
-Email 		KKK63
-Name 		password83
-Password 	0
-isAdmin 	0
+ID 			34
+Email 		p16@gmail.com
+Name 		P16
+Password 	password36
+isAdmin 	1
 
 
-ID 		83
-Email 		LLL64
-Name 		password84
-Password 	1
+ID 			35
+Email 		q17@hotmail.com
+Name 		Q17
+Password 	password37
 isAdmin 	0
 
 
-ID 		84
-Email 		MMM65
-Name 		password85
-Password 	0
-isAdmin 	0
+ID 			36
+Email 		r18@gmail.com
+Name 		R18
+Password 	password38
+isAdmin 	1
 
 
-ID 		85
-Email 		NNN66
-Name 		password86
-Password 	1
+ID 			37
+Email 		s19@hotmail.com
+Name 		S19
+Password 	password39
 isAdmin 	0
 
 
-ID 		86
-Email 		OOO67
-Name 		password87
-Password 	0
-isAdmin 	0
+ID 			38
+Email 		t20@gmail.com
+Name 		T20
+Password 	password40
+isAdmin 	1
 
 
-ID 		87
-Email 		PPP68
-Name 		password88
-Password 	1
+ID 			39
+Email 		u21@hotmail.com
+Name 		U21
+Password 	password41
 isAdmin 	0
 
 
-ID 		88
-Email 		QQQ69
-Name 		password89
-Password 	0
-isAdmin 	0
+ID 			40
+Email 		v22@gmail.com
+Name 		V22
+Password 	password42
+isAdmin 	1
 
 
-ID 		89
-Email 		RRR70
-Name 		password90
-Password 	1
+ID 			41
+Email 		w23@hotmail.com
+Name 		W23
+Password 	password43
 isAdmin 	0
 
 
-ID 		90
-Email 		SSS71
-Name 		password91
-Password 	0
-isAdmin 	0
+ID 			42
+Email 		x24@gmail.com
+Name 		X24
+Password 	password44
+isAdmin 	1
 
 
-ID 		91
-Email 		TTT72
-Name 		password92
-Password 	1
+ID 			43
+Email 		y25@hotmail.com
+Name 		Y25
+Password 	password45
 isAdmin 	0
 
 
-ID 		92
-Email 		UUU73
-Name 		password93
-Password 	0
-isAdmin 	0
+ID 			44
+Email 		z26@gmail.com
+Name 		Z26
+Password 	password46
+isAdmin 	1
 
 
-ID 		93
-Email 		VVV74
-Name 		password94
-Password 	1
+ID 			45
+Email 		aa27@hotmail.com
+Name 		AA27
+Password 	password47
 isAdmin 	0
 
 
-ID 		94
-Email 		WWW75
-Name 		password95
-Password 	0
-isAdmin 	0
+ID 			46
+Email 		bb28@gmail.com
+Name 		BB28
+Password 	password48
+isAdmin 	1
 
 
-ID 		95
-Email 		XXX76
-Name 		password96
-Password 	1
+ID 			47
+Email 		cc29@hotmail.com
+Name 		CC29
+Password 	password49
 isAdmin 	0
 
 
-ID 		96
-Email 		YYY77
-Name 		password97
-Password 	0
-isAdmin 	0
+ID 			48
+Email 		dd30@gmail.com
+Name 		DD30
+Password 	password50
+isAdmin 	1
 
 
-ID 		97
-Email 		ZZZ78
-Name 		password98
-Password 	1
+ID 			49
+Email 		ee31@hotmail.com
+Name 		EE31
+Password 	password51
 isAdmin 	0
 
 
-ID 		98
-Email 		AAAA79
-Name 		password99
-Password 	0
-isAdmin 	0
+ID 			50
+Email 		ff32@gmail.com
+Name 		FF32
+Password 	password52
+isAdmin 	1
 
-
-ID 		99
-Email 		BBBB80
-Name 		password100
-Password 	1
-isAdmin 	0
 
+ID 			51
+Emai

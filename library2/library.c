@@ -79,8 +79,13 @@ int GetInputFile(FILE *account_stream, Input *input) {
     }
     strcpy_s(trash, STRING_SIZE, input->buffer);
     if(strcmp(trash, "\n") == 0) {
-        fgets(trash, STRING_SIZE, account_stream);
-        strcpy_s(input->buffer, STRING_SIZE, trash);
+        //fgets(trash, STRING_SIZE, account_stream);
+        //strcpy_s(input->buffer, STRING_SIZE, trash);
+        fgets(input->buffer, STRING_SIZE, account_stream);
+        strcpy_s(trash, STRING_SIZE, input->buffer);
+        while(strstr(trash, "\n") == NULL) {
+            fgets(trash, STRING_SIZE, account_stream);
+        }
     }
     while(strstr(trash, "\n") == NULL) {
         fgets(trash, STRING_SIZE, account_stream);
@@ -91,7 +96,7 @@ int GetInputFile(FILE *account_stream, Input *input) {
         printf("sscanf error: match failure before recieving first argument.\n");
     }
     else if(err == EOF) {
-        printf("sscanf error: input failure before first received argument was assigned.\n");
+        //printf("sscanf error: input failure before first received argument was assigned.\n");
         strcpy_s(input->buffer, STRING_SIZE, "\0");
     }
     else if (err == 1){
@@ -142,7 +147,7 @@ int main(void) {
     account_list.account = malloc(account_list.memory_size);
     (char *) account_list.heap_ptr = (char *) account_list.account + (account_list.num_accounts * sizeof(Account));
     for(size_t i = 0; i < account_list.num_accounts; i++) {
-        printf_s("\nID \t\t%d\n", i);
+        printf_s("\nID \t\t\t%d\n", i);
         // email
         GetInputFile(account_stream, &input);
         account_list.account[i].email = (char *) account_list.heap_ptr;
