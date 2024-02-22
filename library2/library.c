@@ -74,7 +74,7 @@ int GetInputFile(FILE *account_stream, Input *input) {
     char temp[STRING_SIZE];
     int err = 0;
     if(fgets(input->buffer, input->size, account_stream) == NULL) {
-        fprintf(stderr, "fget error\n");
+        fprintf(stderr, "fget error = NULL\n");
     }
     strcpy_s(temp, STRING_SIZE, input->buffer);
     if(strcmp(temp, "\n") == 0) {
@@ -89,7 +89,7 @@ int GetInputFile(FILE *account_stream, Input *input) {
     }
     err = sscanf_s(input->buffer, "%*s %s", temp, STRING_SIZE);
     if(err == 0) {
-        fprintf(stderr, "sscanf error: match failure before recieving first argument.\n");
+        fprintf(stderr, "sscanf error: match failure before receiving first argument.\n");
     }
     else if(err == EOF) {
         fprintf(stderr, "sscanf error: input failure before first received argument was assigned.\n");
@@ -108,15 +108,15 @@ int main(void) {
     errno_t err;
     err = fopen_s(&account_stream, "accounts.txt", "r");
     if(err == 0) {
-        fprintf(stderr, "Database (accounts.txt) was opened.\n");
+        fprintf(stderr, "Database was opened.\n");
     }
     else {
-        fprintf(stderr, "Database (accounts.txt) was not opened.\n");
+        fprintf(stderr, "Database was not opened.\n");
         return 1;
     }
     fseek(account_stream, 0, SEEK_END);
     if(ftell(account_stream) == 0) {
-        fprintf(stderr, "Database (accounts.txt) found, but no accounts created.\n");
+        fprintf(stderr, "Database found, but no accounts created.\n");
         fclose(account_stream);
         return 1;
     }
@@ -144,7 +144,6 @@ int main(void) {
     account_list.account = malloc(account_list.memory_size);
     (char *) account_list.heap_ptr = (char *) account_list.account + (account_list.num_accounts * sizeof(Account));
     for(size_t i = 0; i < account_list.num_accounts; i++) {
-        printf_s("\nID \t\t\t%d\n", i);
         // email
         GetInputFile(account_stream, &input);
         account_list.account[i].email = (char *) account_list.heap_ptr;
@@ -175,23 +174,23 @@ int main(void) {
         (char *) account_list.heap_ptr += (strlen(input.buffer) + 1) * sizeof(char);
         BoundaryCheck(&account_list);
         CopyString(account_list, &input, i, isAdmin);
-        printf_s("isAdmin \t%d\n", atoi(account_list.account[i].isAdmin));
+        printf_s("isAdmin \t%d\n\n", atoi(account_list.account[i].isAdmin));
     }
 
     //for(size_t i = 0; i < account_list.num_accounts; i++) {
-    //   printf_s("\nID \t\t\t%d\n", i);
-    //   printf_s("Email \t\t%s\n", account_list.account[i].email);
-    //   printf_s("Name \t\t%s\n", account_list.account[i].name);
-    //   printf_s("Password \t%s\n", account_list.account[i].pw);
-    //   printf_s("isAdmin \t%d\n", atoi(account_list.account[i].isAdmin));
+    //   fprintf(stderr, "\nID \t\t\t%d\n", i);
+    //   fprintf(stderr, "Email \t\t%s\n", account_list.account[i].email);
+    //   fprintf(stderr, "Name \t\t%s\n", account_list.account[i].name);
+    //   fprintf(stderr, "Password \t%s\n", account_list.account[i].pw);
+    //   fprintf(stderr, "isAdmin \t%d\n", atoi(account_list.account[i].isAdmin));
     //}
 
     for(size_t i = 0; i < account_list.num_accounts; i++) {
-        printf_s("\nID \t\t\t%d\n", i);
-        printf_s("Email \t\t%p\n", &account_list.account[i].email);
-        printf_s("Name \t\t%p\n", &account_list.account[i].name);
-        printf_s("Password \t%p\n", &account_list.account[i].pw);
-        printf_s("isAdmin \t%p", &account_list.account[i].isAdmin);
+        fprintf(stderr, "\nID \t\t\t%d\n", i);
+        fprintf(stderr, "Email \t\t%p\n", &account_list.account[i].email);
+        fprintf(stderr, "Name \t\t%p\n", &account_list.account[i].name);
+        fprintf(stderr, "Password \t%p\n", &account_list.account[i].pw);
+        fprintf(stderr, "isAdmin \t%p", &account_list.account[i].isAdmin);
     }
 
     free(account_list.account);
