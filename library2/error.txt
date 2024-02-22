@@ -1,0 +1,5 @@
+Database (accounts.txt) was opened.
+sscanf error: input failure before first received argument was assigned.
+sscanf error: input failure before first received argument was assigned.
+sscanf error: input failure before first received argument was assigned.
+sscanf error: input failure before first received argument was assigned.
