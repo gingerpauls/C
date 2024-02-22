@@ -3,24 +3,24 @@ Name 		012345678901234567890123456789012345678901234567890123456789
 Password 	
 isAdmin 	1
 
-Email 		012345678901234567890123456789012345678901234567890123456789
+Email 		
 Name 		bname
-Password 	bpw
-isAdmin 	1
+Password 	012345678901234567890123456789012345678901234567890123456789
+isAdmin 	0
 
 Email 		michael99@gmail.com
 Name 		Michael
 Password 	password3
-isAdmin 	1
+isAdmin 	D
 
-Email 		emma123@hotmail.com
+
 Name 		Emma
 Password 	password4
 isAdmin 	0
 
 Email 		chris2022@gmail.com
-Name 		Chris
-Password 	password5
+
+
 isAdmin 	0
 
 Email 		olivia99@hotmail.com
