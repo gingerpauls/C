@@ -22,5 +22,6 @@
   <ItemGroup>
     <Text Include="address.txt" />
     <Text Include="out.txt" />
+    <Text Include="error.txt" />
   </ItemGroup>
 </Project>
