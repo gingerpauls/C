@@ -24,7 +24,7 @@ typedef struct {
 typedef struct {
     int SubChunk2ID;
     int SubChunk2Size;
-    int *Data;
+    float *Data;
 } data;
 
 typedef struct {
@@ -77,11 +77,28 @@ int main(void) {
     fread(&wavefile1.BitsPerSample, 1, sizeof(wavefile1.BitsPerSample), wav);
     printf("BitsPerSample %u\n", wavefile1.BitsPerSample);
 
-    wavefile1.Data = malloc(sizeof(wavefile1.file_size - WAV_HEADER_SIZE));
-    fread(&wavefile1.Data, 1, wavefile1.file_size - WAV_HEADER_SIZE, wav);
-    printf("Data %u\n", &wavefile1.Data);
-
     fclose(wav);
+
+    wav = fopen("swoosh.raw", "r+");
+    fseek(wav, 0, SEEK_END);
+    wavefile1.file_size = ftell(wav);
+    rewind(wav);
+
+    wavefile1.Data = malloc(wavefile1.file_size);
+    if(wavefile1.Data == NULL) {
+        printf("wave1.data malloc failed\n");
+    }
+
+    int count = 0;
+    float data[10000];
+    count = fread_s(data, wavefile1.file_size, sizeof(*wavefile1.Data), (wavefile1.file_size / sizeof(*wavefile1.Data)), wav);
+
+    for(size_t i = 0; i < wavefile1.file_size / sizeof(*wavefile1.Data); i++) 
+    {
+        //printf("Data %f\n", &wavefile1.Data[i]);
+        printf("Data %f\n", data[i]);
+    }
+
     printf("program success\n");
     return 0;
 }
