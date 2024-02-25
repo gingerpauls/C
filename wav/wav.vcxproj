@@ -129,6 +129,9 @@
   <ItemGroup>
     <ClCompile Include="wav.c" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="swoosh.wav" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
