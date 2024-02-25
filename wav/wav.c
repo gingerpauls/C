@@ -2,6 +2,7 @@
 #include "stdio.h"
 #include "assert.h"
 #include "string.h"
+#include "stdlib.h"
 #define WAV_HEADER_SIZE 44
 
 typedef struct {
@@ -90,13 +91,10 @@ int main(void) {
     }
 
     int count = 0;
-    float data[10000];
-    count = fread_s(data, wavefile1.file_size, sizeof(*wavefile1.Data), (wavefile1.file_size / sizeof(*wavefile1.Data)), wav);
-
+    count = fread_s(wavefile1.Data, wavefile1.file_size, sizeof(*wavefile1.Data), (wavefile1.file_size / sizeof(*wavefile1.Data)), wav);
     for(size_t i = 0; i < wavefile1.file_size / sizeof(*wavefile1.Data); i++) 
     {
-        //printf("Data %f\n", &wavefile1.Data[i]);
-        printf("Data %f\n", data[i]);
+        printf("Data %f\n", wavefile1.Data[i]);
     }
 
     printf("program success\n");
