@@ -24,4 +24,9 @@
       <Filter>Source Files</Filter>
     </Media>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="swoosh.raw">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>
