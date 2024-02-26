@@ -1,18 +1,18 @@
-#define _CRT_SECURE_NO_WARNINGS
+//#define _CRT_SECURE_NO_WARNINGS
 #include "stdio.h"
 #include "assert.h"
 #include "string.h"
 #include "stdlib.h"
-#define WAV_HEADER_SIZE 44
+#define CHUNK_ID_SIZE 4
 
 typedef struct {
-    unsigned char RIFFID[4];
+    unsigned char RIFFID[CHUNK_ID_SIZE];
     unsigned int RIFFSize;
-    unsigned char RIFFFormat[4];
+    unsigned char RIFFFormat[CHUNK_ID_SIZE];
 } RIFF;
 
 typedef struct {
-    unsigned char fmtID[4];
+    unsigned char fmtID[CHUNK_ID_SIZE];
     unsigned int fmtSize;
     unsigned short AudioFormat;
     unsigned short NumChannels;
@@ -23,22 +23,22 @@ typedef struct {
 } fmt;
 
 typedef struct {
-    unsigned char dataID[4];
-    unsigned int dataSize;
-    float *Data;
-} data;
+    unsigned char listID[CHUNK_ID_SIZE];
+    unsigned int listSize;
+    char *listString;
+} list;
 
 typedef struct {
-    unsigned char junkID[4];
+    unsigned char junkID[CHUNK_ID_SIZE];
     unsigned int junkSize;
     char *junkString;
 } junk;
 
 typedef struct {
-    unsigned char listID[4];
-    unsigned int listSize;
-    char *listString;
-} list;
+    unsigned char dataID[CHUNK_ID_SIZE];
+    unsigned int dataSize;
+    float *Data;
+} data;
 
 typedef struct {
     RIFF;
@@ -51,79 +51,60 @@ typedef struct {
 
 int main(void) {
     FILE *wav = NULL;
-    wav = fopen("swoosh.wav", "r+");
+    errno_t err;
+    err = fopen_s(&wav, "swoosh.wav", "r+");
     WAVE wavefile1 = {0};
     wavefile1.Data = NULL;
+    unsigned char chunk_id[CHUNK_ID_SIZE];
+    int compare = 0;
 
     fseek(wav, 0, SEEK_END);
     wavefile1.file_size = ftell(wav);
     rewind(wav);
 
-    fread(&wavefile1.RIFFID, 1, sizeof(wavefile1.RIFFID), wav);
-    printf("RIFFID %s\n", &wavefile1.RIFFID);
-    fread(&wavefile1.RIFFSize, 1, sizeof(wavefile1.RIFFSize), wav);
-    printf("RIFFSize %u\n", wavefile1.RIFFSize);
-    fread(&wavefile1.RIFFFormat, 1, sizeof(wavefile1.RIFFFormat), wav);
-    printf("RIFFFormat %s\n", &wavefile1.RIFFFormat);
+    while(!feof(wav)) {
+        fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav);
+        if(strncmp(chunk_id, "RIFF", CHUNK_ID_SIZE) == 0) 
+        {
+            fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
+            fread_s(&wavefile1.RIFFID, sizeof(wavefile1.RIFFID) * CHUNK_ID_SIZE, 1, sizeof(wavefile1.RIFFID), wav);
+            fread_s(&wavefile1.RIFFSize, sizeof(wavefile1.RIFFSize) * CHUNK_ID_SIZE, 1, sizeof(wavefile1.RIFFSize), wav);
+            fread_s(&wavefile1.RIFFFormat, sizeof(wavefile1.RIFFFormat) * CHUNK_ID_SIZE, 1, sizeof(wavefile1.RIFFFormat), wav);
+        }
+        if(strncmp(chunk_id, "fmt ", CHUNK_ID_SIZE) == 0) {
+            fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
+            fread_s(&wavefile1.fmtID, sizeof(wavefile1.fmtID), 1, sizeof(wavefile1.fmtID), wav);
+            fread_s(&wavefile1.fmtSize, sizeof(wavefile1.fmtSize), 1, sizeof(wavefile1.fmtSize), wav);
+            fread_s(&wavefile1.AudioFormat, sizeof(wavefile1.AudioFormat), 1, sizeof(wavefile1.AudioFormat), wav);
+            fread_s(&wavefile1.NumChannels, sizeof(wavefile1.NumChannels), 1, sizeof(wavefile1.NumChannels), wav);
+            fread_s(&wavefile1.SampleRate, sizeof(wavefile1.SampleRate), 1, sizeof(wavefile1.SampleRate), wav);
+            fread_s(&wavefile1.ByteRate, sizeof(wavefile1.ByteRate), 1, sizeof(wavefile1.ByteRate), wav);
+            fread_s(&wavefile1.BlockAlign, sizeof(wavefile1.BlockAlign), 1, sizeof(wavefile1.BlockAlign), wav);
+            fread_s(&wavefile1.BitsPerSample, sizeof(wavefile1.BitsPerSample), 1, sizeof(wavefile1.BitsPerSample), wav);
+        }
+        if(strncmp(chunk_id, "LIST", CHUNK_ID_SIZE) == 0) {
+            fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
+            fread_s(&wavefile1.listID,sizeof(wavefile1.listID),  1, sizeof(wavefile1.listID), wav);
+            fread_s(&wavefile1.listSize,sizeof(wavefile1.listSize),  1, sizeof(wavefile1.listSize), wav);
+            wavefile1.listString = malloc(wavefile1.listSize);
+            fread_s(&wavefile1.listString, wavefile1.listSize, 1, wavefile1.listSize, wav);
+        }
+        if(strncmp(chunk_id, "INFO", CHUNK_ID_SIZE) == 0) {
+            fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
+            fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav);
+            if(strncmp(chunk_id, "IART", CHUNK_ID_SIZE) == 0) {
+                fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
 
-    fread(&wavefile1.fmtID, 1, sizeof(wavefile1.fmtID), wav);
-    printf("fmtID %s\n", &wavefile1.fmtID);
-    fread(&wavefile1.fmtSize, 1, sizeof(wavefile1.fmtSize), wav);
-    printf("fmtSize %u\n", wavefile1.fmtSize);
-    fread(&wavefile1.AudioFormat, 1, sizeof(wavefile1.AudioFormat), wav);
-    printf("AudioFormat %u\n", wavefile1.AudioFormat);
-    fread(&wavefile1.NumChannels, 1, sizeof(wavefile1.NumChannels), wav);
-    printf("NumChannels %u\n", wavefile1.NumChannels);
-    fread(&wavefile1.SampleRate, 1, sizeof(wavefile1.SampleRate), wav);
-    printf("SampleRate %u\n", wavefile1.SampleRate);
-    fread(&wavefile1.ByteRate, 1, sizeof(wavefile1.ByteRate), wav);
-    printf("ByteRate %u\n", wavefile1.ByteRate);
-    fread(&wavefile1.BlockAlign, 1, sizeof(wavefile1.BlockAlign), wav);
-    printf("BlockAlign %u\n", wavefile1.BlockAlign);
-    fread(&wavefile1.BitsPerSample, 1, sizeof(wavefile1.BitsPerSample), wav);
-    printf("BitsPerSample %u\n", wavefile1.BitsPerSample);
+            }
+        }
+        else if(strncmp(chunk_id, "data", 4) == 0) {
+            fseek(wav, -4, SEEK_CUR);
 
-    fread(&wavefile1.listID, 1, sizeof(wavefile1.listID), wav);
-    printf("listID %s\n", &wavefile1.listID);
-    fread(&wavefile1.listSize, 1, sizeof(wavefile1.listSize), wav);
-    printf("listSize %u\n", wavefile1.listSize);
-    wavefile1.listString = malloc(wavefile1.listSize);
-    fread(wavefile1.listString, 1, wavefile1.listSize, wav);
-    printf("%s\n", wavefile1.listString);
-
-    fread(&wavefile1.dataID, 1, sizeof(wavefile1.dataID), wav);
-    printf("dataID %s\n", &wavefile1.dataID);
-    fread(&wavefile1.dataSize, 1, sizeof(wavefile1.dataSize), wav);
-    printf("dataSize %u\n", wavefile1.dataSize);
-    fread(&wavefile1.dataSize, 1, sizeof(wavefile1.dataSize), wav);
-    printf("dataSize %u\n", wavefile1.dataSize);
-
-    char trash[100];
-    fread(&trash, 1, 100, wav);
-
-
-    //fseek(wav, wavefile1.SubChunk2Size, SEEK_CUR);
-
-    fread(&wavefile1.junkID, 1, sizeof(wavefile1.junkID), wav);
-    printf("junkID %s\n", &wavefile1.junkID);
-
-    fread(&wavefile1.junkSize, 1, sizeof(wavefile1.junkSize), wav);
-    printf("junkSize %u\n", wavefile1.junkSize);
-
-    fseek(wav, 14, SEEK_CUR);
-
-    wavefile1.Data = malloc(wavefile1.file_size);
-    if(wavefile1.Data == NULL) {
-        printf("wave1.data malloc failed\n");
-    }
-    int count = 0;
-    count = fread_s(wavefile1.Data, wavefile1.file_size, sizeof(*wavefile1.Data), (wavefile1.junkSize / sizeof(*wavefile1.Data)), wav);
-    for(size_t i = 0; i < wavefile1.file_size / sizeof(*wavefile1.Data); i++) 
-    {
-        printf("Data %f\n", wavefile1.Data[i]);
+        }
     }
 
 
+    free(wavefile1.listSize);
     printf("program success\n");
     return 0;
 }
