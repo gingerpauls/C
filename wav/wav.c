@@ -3,16 +3,17 @@
 #include "assert.h"
 #include "string.h"
 #include "stdlib.h"
+
 #define CHUNK_ID_SIZE 4
 
 typedef struct {
-    unsigned char RIFFID[CHUNK_ID_SIZE];
+    char RIFFID[CHUNK_ID_SIZE];
     unsigned int RIFFSize;
-    unsigned char RIFFFormType[CHUNK_ID_SIZE];
+    char RIFFFormType[CHUNK_ID_SIZE];
 } RIFF;
 
 typedef struct {
-    unsigned char fmtID[CHUNK_ID_SIZE];
+    char fmtID[CHUNK_ID_SIZE];
     unsigned int fmtSize;
     unsigned short AudioFormat;
     unsigned short NumChannels;
@@ -23,26 +24,27 @@ typedef struct {
 } fmt;
 
 typedef struct {
-    unsigned char listID[CHUNK_ID_SIZE];
+    char listID[CHUNK_ID_SIZE];
     unsigned int listSize;
-    unsigned char listType[CHUNK_ID_SIZE];
-    unsigned char *listString;
+    char listType[CHUNK_ID_SIZE];
+    char *listString;
+    unsigned int numInfo;
 } list;
 
 typedef struct {
-    unsigned char infoID[CHUNK_ID_SIZE];
+    char infoID[CHUNK_ID_SIZE];
     unsigned int infoSize;
-    unsigned char *infoString;
+    char *infoString;
 } info;
 
 typedef struct {
-    unsigned char junkID[CHUNK_ID_SIZE];
+    char junkID[CHUNK_ID_SIZE];
     unsigned int junkSize;
-    unsigned char *junkString;
+    char *junkString;
 } junk;
 
 typedef struct {
-    unsigned char dataID[CHUNK_ID_SIZE];
+    char dataID[CHUNK_ID_SIZE];
     unsigned int dataSize;
     float *Data;
 } data;
@@ -57,13 +59,18 @@ typedef struct {
     unsigned long file_size;
 } WAVE;
 
+void PrintFilePos(FILE *wav) {
+    int file_pos = ftell(wav);
+    printf("file_pos: \t%i\n", file_pos);
+}
+
 int main(void) {
     FILE *wav = NULL;
     errno_t err;
-    err = fopen_s(&wav, "swoosh.wav", "r+");
+    err = fopen_s(&wav, "swoosh.wav", "r");
     WAVE wavefile1 = {0};
     wavefile1.Data = NULL;
-    unsigned char chunk_id[CHUNK_ID_SIZE];
+    char chunk_id[CHUNK_ID_SIZE];
     int count = 0;
 
     fseek(wav, 0, SEEK_END);
@@ -71,15 +78,16 @@ int main(void) {
     rewind(wav);
 
     while(!feof(wav)) {
+        PrintFilePos(wav);
         count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav);
+        fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
         if(strncmp(chunk_id, "RIFF", CHUNK_ID_SIZE) == 0) {
-            fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
             count = fread_s(&wavefile1.RIFFID, sizeof(wavefile1.RIFFID), 1, sizeof(wavefile1.RIFFID), wav);
             count = fread_s(&wavefile1.RIFFSize, sizeof(wavefile1.RIFFSize), 1, sizeof(wavefile1.RIFFSize), wav);
             count = fread_s(&wavefile1.RIFFFormType, sizeof(wavefile1.RIFFFormType), 1, sizeof(wavefile1.RIFFFormType), wav);
+            PrintFilePos(wav);
         }
         if(strncmp(chunk_id, "fmt ", CHUNK_ID_SIZE) == 0) {
-            fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
             count = fread_s(&wavefile1.fmtID, sizeof(wavefile1.fmtID), 1, sizeof(wavefile1.fmtID), wav);
             count = fread_s(&wavefile1.fmtSize, sizeof(wavefile1.fmtSize), 1, sizeof(wavefile1.fmtSize), wav);
             count = fread_s(&wavefile1.AudioFormat, sizeof(wavefile1.AudioFormat), 1, sizeof(wavefile1.AudioFormat), wav);
@@ -88,18 +96,38 @@ int main(void) {
             count = fread_s(&wavefile1.ByteRate, sizeof(wavefile1.ByteRate), 1, sizeof(wavefile1.ByteRate), wav);
             count = fread_s(&wavefile1.BlockAlign, sizeof(wavefile1.BlockAlign), 1, sizeof(wavefile1.BlockAlign), wav);
             count = fread_s(&wavefile1.BitsPerSample, sizeof(wavefile1.BitsPerSample), 1, sizeof(wavefile1.BitsPerSample), wav);
+            PrintFilePos(wav);
         }
         if(strncmp(chunk_id, "LIST", CHUNK_ID_SIZE) == 0) {
-            fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
             count = fread_s(&wavefile1.listID, sizeof(wavefile1.listID), 1, sizeof(wavefile1.listID), wav);
             count = fread_s(&wavefile1.listSize, sizeof(wavefile1.listSize), 1, sizeof(wavefile1.listSize), wav);
             count = fread_s(&wavefile1.listType, sizeof(wavefile1.listType), 1, sizeof(wavefile1.listType), wav);
-
+            PrintFilePos(wav);
             if(strncmp(wavefile1.listType, "INFO", CHUNK_ID_SIZE) == 0) {
-                count = fread_s(&wavefile1.infoID, sizeof(wavefile1.infoID), 1, sizeof(wavefile1.infoID), wav);
-                count = fread_s(&wavefile1.infoSize, sizeof(wavefile1.infoSize), 1, sizeof(wavefile1.infoSize), wav);
-                wavefile1.infoString = malloc(wavefile1.infoSize);
-                count = fread_s(&wavefile1.infoString, wavefile1.infoSize, 1, wavefile1.infoSize, wav);
+                info info;
+                do {
+                    PrintFilePos(wav);
+                    count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav);
+                    PrintFilePos(wav);
+                    fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
+                    PrintFilePos(wav);
+                    if(strncmp(chunk_id, "data", 4) != 0) {
+                        PrintFilePos(wav);
+                        count = fread_s(&info.infoID, sizeof(info.infoID), 1, sizeof(info.infoID), wav);
+                        count = fread_s(&info.infoSize, sizeof(info.infoSize), 1, sizeof(info.infoSize), wav);
+                        info.infoString = malloc(info.infoSize-1);
+                        count = fread_s(&info.infoString, info.infoSize, 1, info.infoSize, wav);
+                        printf("%s\n", &info.infoString);
+                        PrintFilePos(wav);
+                        fseek(wav, info.infoSize, SEEK_CUR);
+                        PrintFilePos(wav);
+                        wavefile1.numInfo++;
+                    }
+                    else {
+                        break;
+                    }
+                }
+                while(strncmp(chunk_id, "data", 4) != 0);
             }
         }
         //else if(strncmp(chunk_id, "data", 4) == 0) {
@@ -166,3 +194,4 @@ TêRİROR¬QçQrRİRJSlSS_R†Q¬Q•QÎP1PQàQ QzQ?Q¸PXQ†QçQ°S²TuT›TmUÃUdTİRRP0O(OQO@N¿
 ÿ*ÿ(ÿKÿÿçÿA\l¡¬¼ÿâÇnyGìÿËÿ¡ÿWÿÿş¢şgşQş:ş@ş8şşÕı¾ı¶ı›ı‰ıqıwı‡ını\ıSıuıƒıƒı‰ı‹ı´ıüıJşzşş•ş×ş+ÿyÿ¸ÿçÿ7NduŒ¥Ëææ1%)*òïîìö÷şóÊj]U:Äÿÿrÿ>ÿùşÉş¦şqş$şııáıÁı¹ı¨ı‘ı†ıı‡ıı‹ı¨ıÅıÉıÔıñı$şSşoş‚şşÈşåşşşÿ(ÿUÿrÿ‰ÿÿ¹ÿêÿ%X}„ˆŸ­±½Èâ÷óèØÒÃ¤„hN1÷ÿìÿÜÿĞÿ½ÿ¢ÿ†ÿxÿiÿUÿ>ÿ/ÿ*ÿ#ÿ$ÿ ÿÿ#ÿ*ÿ/ÿ5ÿ;ÿCÿKÿNÿRÿVÿZÿaÿeÿmÿxÿ€ÿˆÿ‘ÿ ÿ«ÿ°ÿ¸ÿÄÿĞÿÛÿçÿóÿüÿ#)/311
 
 */
+//freesound.org/people/s-cheremisinov/sounds/402183/
