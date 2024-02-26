@@ -77,16 +77,19 @@ int main(void) {
     wavefile1.file_size = ftell(wav);
     rewind(wav);
 
-    while(!feof(wav)) {
-        PrintFilePos(wav);
+    //while(!feof(wav)) 
+    {
+        //PrintFilePos(wav);
         count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav);
         fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
         if(strncmp(chunk_id, "RIFF", CHUNK_ID_SIZE) == 0) {
             count = fread_s(&wavefile1.RIFFID, sizeof(wavefile1.RIFFID), 1, sizeof(wavefile1.RIFFID), wav);
             count = fread_s(&wavefile1.RIFFSize, sizeof(wavefile1.RIFFSize), 1, sizeof(wavefile1.RIFFSize), wav);
             count = fread_s(&wavefile1.RIFFFormType, sizeof(wavefile1.RIFFFormType), 1, sizeof(wavefile1.RIFFFormType), wav);
-            PrintFilePos(wav);
+            //PrintFilePos(wav);
         }
+        count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav); // remove later
+        fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR); // remove later
         if(strncmp(chunk_id, "fmt ", CHUNK_ID_SIZE) == 0) {
             count = fread_s(&wavefile1.fmtID, sizeof(wavefile1.fmtID), 1, sizeof(wavefile1.fmtID), wav);
             count = fread_s(&wavefile1.fmtSize, sizeof(wavefile1.fmtSize), 1, sizeof(wavefile1.fmtSize), wav);
@@ -96,50 +99,52 @@ int main(void) {
             count = fread_s(&wavefile1.ByteRate, sizeof(wavefile1.ByteRate), 1, sizeof(wavefile1.ByteRate), wav);
             count = fread_s(&wavefile1.BlockAlign, sizeof(wavefile1.BlockAlign), 1, sizeof(wavefile1.BlockAlign), wav);
             count = fread_s(&wavefile1.BitsPerSample, sizeof(wavefile1.BitsPerSample), 1, sizeof(wavefile1.BitsPerSample), wav);
-            PrintFilePos(wav);
+            //PrintFilePos(wav);
         }
-        if(strncmp(chunk_id, "LIST", CHUNK_ID_SIZE) == 0) {
-            count = fread_s(&wavefile1.listID, sizeof(wavefile1.listID), 1, sizeof(wavefile1.listID), wav);
-            count = fread_s(&wavefile1.listSize, sizeof(wavefile1.listSize), 1, sizeof(wavefile1.listSize), wav);
-            count = fread_s(&wavefile1.listType, sizeof(wavefile1.listType), 1, sizeof(wavefile1.listType), wav);
-            PrintFilePos(wav);
-            if(strncmp(wavefile1.listType, "INFO", CHUNK_ID_SIZE) == 0) {
-                info info;
-                do {
-                    PrintFilePos(wav);
-                    count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav);
-                    PrintFilePos(wav);
-                    fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
-                    PrintFilePos(wav);
-                    if(strncmp(chunk_id, "data", 4) != 0) {
-                        PrintFilePos(wav);
-                        count = fread_s(&info.infoID, sizeof(info.infoID), 1, sizeof(info.infoID), wav);
-                        count = fread_s(&info.infoSize, sizeof(info.infoSize), 1, sizeof(info.infoSize), wav);
-                        info.infoString = malloc(info.infoSize-1);
-                        count = fread_s(&info.infoString, info.infoSize, 1, info.infoSize, wav);
-                        printf("%s\n", &info.infoString);
-                        PrintFilePos(wav);
-                        fseek(wav, info.infoSize, SEEK_CUR);
-                        PrintFilePos(wav);
-                        wavefile1.numInfo++;
-                    }
-                    else {
-                        break;
-                    }
-                }
-                while(strncmp(chunk_id, "data", 4) != 0);
-            }
-        }
+        //count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav); // remove later
+        //fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR); // remove later
+        //if(strncmp(chunk_id, "LIST", CHUNK_ID_SIZE) == 0) {
+        //    count = fread_s(&wavefile1.listID, sizeof(wavefile1.listID), 1, sizeof(wavefile1.listID), wav);
+        //    count = fread_s(&wavefile1.listSize, sizeof(wavefile1.listSize), 1, sizeof(wavefile1.listSize), wav);
+        //    count = fread_s(&wavefile1.listType, sizeof(wavefile1.listType), 1, sizeof(wavefile1.listType), wav);
+        //    PrintFilePos(wav);
+        //    if(strncmp(wavefile1.listType, "INFO", CHUNK_ID_SIZE) == 0) {
+        //        info info;
+        //        do {
+        //            PrintFilePos(wav);
+        //            count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav);
+        //            PrintFilePos(wav);
+        //            fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
+        //            PrintFilePos(wav);
+        //            if(strncmp(chunk_id, "data", 4) != 0) {
+        //                PrintFilePos(wav);
+        //                count = fread_s(&info.infoID, sizeof(info.infoID), 1, sizeof(info.infoID), wav);
+        //                count = fread_s(&info.infoSize, sizeof(info.infoSize), 1, sizeof(info.infoSize), wav);
+        //                info.infoString = malloc(info.infoSize);
+        //                count = fread_s(&info.infoString, info.infoSize, 1, info.infoSize, wav);
+        //                printf("%s %s\n", &info.infoID, &info.infoString);
+        //                PrintFilePos(wav);
+        //                fseek(wav, info.infoSize - 2, SEEK_CUR);
+        //                PrintFilePos(wav);
+        //                wavefile1.numInfo++;
+        //            }
+        //            else {
+        //                break;
+        //            }
+        //        }
+        //        while(strncmp(chunk_id, "data", 4) != 0);
+        //    }
+        //}
         //else if(strncmp(chunk_id, "data", 4) == 0) {
             // TODO: is this necessary?
             //fseek(wav, -4, SEEK_CUR); 
         //}
     }
 
-    printf("RIFFID: \t%s\n", &wavefile1.RIFFID);
+    printf("RIFFID: \t%.4s\n", &wavefile1.RIFFID);
     printf("RIFFSize: \t%u\n", wavefile1.RIFFSize);
-    printf("RIFFFormType: \t%s\n", &wavefile1.RIFFFormType);
-    printf("fmtID: \t\t%s\n", &wavefile1.fmtID);
+    printf("RIFFFormType: \t%.4s\n", &wavefile1.RIFFFormType);
+    printf("fmtID: \t\t%.4s\n", &wavefile1.fmtID);
     printf("fmtSize: \t%u\n", wavefile1.fmtSize);
     printf("AudioFormat: \t%u\n", wavefile1.AudioFormat);
     printf("NumChannels: \t%u\n", wavefile1.NumChannels);
@@ -147,9 +152,9 @@ int main(void) {
     printf("ByteRate: \t%u\n", wavefile1.ByteRate);
     printf("BlockAlign: \t%u\n", wavefile1.BlockAlign);
     printf("BitsPerSample: \t%u\n", wavefile1.BitsPerSample);
-    printf("listID: \t%s\n", &wavefile1.listID);
+    printf("listID: \t%.4s\n", &wavefile1.listID);
     printf("listSize: \t%u\n", wavefile1.listSize);
-    printf("listType: \t%s\n", &wavefile1.listType);
+    printf("listType: \t%.4s\n", &wavefile1.listType);
     printf("infoString: \t%s\n", &wavefile1.infoString);
 
 
