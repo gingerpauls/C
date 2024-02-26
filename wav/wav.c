@@ -29,15 +29,21 @@ typedef struct {
 } data;
 
 typedef struct {
+    int SubChunk3ID;
+    int SubChunk3Size;
+} junk;
+
+typedef struct {
     RIFF;
     fmt;
     data;
+    junk;
     unsigned long file_size;
 } WAVE;
 
 int main(void) {
     FILE *wav = NULL;
-    wav = fopen("swoosh.wav", "r+");
+    wav = fopen("sine.wav", "r+");
     WAVE wavefile1 = {0};
     wavefile1.Data = NULL;
 
@@ -78,24 +84,33 @@ int main(void) {
     fread(&wavefile1.BitsPerSample, 1, sizeof(wavefile1.BitsPerSample), wav);
     printf("BitsPerSample %u\n", wavefile1.BitsPerSample);
 
-    fclose(wav);
+    fread(&wavefile1.SubChunk2ID, 1, sizeof(wavefile1.SubChunk2ID), wav);
+    printf("SubChunk2ID %s\n", &wavefile1.SubChunk2ID);
 
-    wav = fopen("swoosh.raw", "r+");
-    fseek(wav, 0, SEEK_END);
-    wavefile1.file_size = ftell(wav);
-    rewind(wav);
+    fread(&wavefile1.SubChunk2Size, 1, sizeof(wavefile1.SubChunk2Size), wav);
+    printf("SubChunk2Size %u\n", wavefile1.SubChunk2Size);
+
+    fseek(wav, wavefile1.SubChunk2Size, SEEK_CUR);
+
+    fread(&wavefile1.SubChunk3ID, 1, sizeof(wavefile1.SubChunk3ID), wav);
+    printf("SubChunk3ID %s\n", &wavefile1.SubChunk3ID);
+
+    fread(&wavefile1.SubChunk3Size, 1, sizeof(wavefile1.SubChunk3Size), wav);
+    printf("SubChunk3Size %u\n", wavefile1.SubChunk3Size);
+
+    fseek(wav, 14, SEEK_CUR);
 
     wavefile1.Data = malloc(wavefile1.file_size);
     if(wavefile1.Data == NULL) {
         printf("wave1.data malloc failed\n");
     }
-
     int count = 0;
-    count = fread_s(wavefile1.Data, wavefile1.file_size, sizeof(*wavefile1.Data), (wavefile1.file_size / sizeof(*wavefile1.Data)), wav);
+    count = fread_s(wavefile1.Data, wavefile1.file_size, sizeof(*wavefile1.Data), (wavefile1.SubChunk3Size / sizeof(*wavefile1.Data)), wav);
     for(size_t i = 0; i < wavefile1.file_size / sizeof(*wavefile1.Data); i++) 
     {
         printf("Data %f\n", wavefile1.Data[i]);
     }
+
 
     printf("program success\n");
     return 0;

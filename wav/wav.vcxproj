@@ -130,6 +130,7 @@
     <ClCompile Include="wav.c" />
   </ItemGroup>
   <ItemGroup>
+    <Media Include="sine.wav" />
     <Media Include="swoosh.wav" />
   </ItemGroup>
   <ItemGroup>

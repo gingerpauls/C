@@ -23,6 +23,9 @@
     <Media Include="swoosh.wav">
       <Filter>Source Files</Filter>
     </Media>
+    <Media Include="sine.wav">
+      <Filter>Source Files</Filter>
+    </Media>
   </ItemGroup>
   <ItemGroup>
     <None Include="swoosh.raw">
