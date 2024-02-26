@@ -8,7 +8,7 @@
 typedef struct {
     unsigned char RIFFID[CHUNK_ID_SIZE];
     unsigned int RIFFSize;
-    unsigned char RIFFFormat[CHUNK_ID_SIZE];
+    unsigned char RIFFFormType[CHUNK_ID_SIZE];
 } RIFF;
 
 typedef struct {
@@ -25,13 +25,20 @@ typedef struct {
 typedef struct {
     unsigned char listID[CHUNK_ID_SIZE];
     unsigned int listSize;
-    char *listString;
+    unsigned char listType[CHUNK_ID_SIZE];
+    unsigned char *listString;
 } list;
+
+typedef struct {
+    unsigned char infoID[CHUNK_ID_SIZE];
+    unsigned int infoSize;
+    unsigned char *infoString;
+} info;
 
 typedef struct {
     unsigned char junkID[CHUNK_ID_SIZE];
     unsigned int junkSize;
-    char *junkString;
+    unsigned char *junkString;
 } junk;
 
 typedef struct {
@@ -44,6 +51,7 @@ typedef struct {
     RIFF;
     fmt;
     list;
+    info;
     junk;
     data;
     unsigned long file_size;
@@ -56,59 +64,71 @@ int main(void) {
     WAVE wavefile1 = {0};
     wavefile1.Data = NULL;
     unsigned char chunk_id[CHUNK_ID_SIZE];
-    int compare = 0;
+    int count = 0;
 
     fseek(wav, 0, SEEK_END);
     wavefile1.file_size = ftell(wav);
     rewind(wav);
 
     while(!feof(wav)) {
-        fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav);
-        if(strncmp(chunk_id, "RIFF", CHUNK_ID_SIZE) == 0) 
-        {
+        count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav);
+        if(strncmp(chunk_id, "RIFF", CHUNK_ID_SIZE) == 0) {
             fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
-            fread_s(&wavefile1.RIFFID, sizeof(wavefile1.RIFFID) * CHUNK_ID_SIZE, 1, sizeof(wavefile1.RIFFID), wav);
-            fread_s(&wavefile1.RIFFSize, sizeof(wavefile1.RIFFSize) * CHUNK_ID_SIZE, 1, sizeof(wavefile1.RIFFSize), wav);
-            fread_s(&wavefile1.RIFFFormat, sizeof(wavefile1.RIFFFormat) * CHUNK_ID_SIZE, 1, sizeof(wavefile1.RIFFFormat), wav);
+            count = fread_s(&wavefile1.RIFFID, sizeof(wavefile1.RIFFID) * CHUNK_ID_SIZE, 1, sizeof(wavefile1.RIFFID), wav);
+            count = fread_s(&wavefile1.RIFFSize, sizeof(wavefile1.RIFFSize) * CHUNK_ID_SIZE, 1, sizeof(wavefile1.RIFFSize), wav);
+            count = fread_s(&wavefile1.RIFFFormType, sizeof(wavefile1.RIFFFormType) * CHUNK_ID_SIZE, 1, sizeof(wavefile1.RIFFFormType), wav);
         }
         if(strncmp(chunk_id, "fmt ", CHUNK_ID_SIZE) == 0) {
             fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
-            fread_s(&wavefile1.fmtID, sizeof(wavefile1.fmtID), 1, sizeof(wavefile1.fmtID), wav);
-            fread_s(&wavefile1.fmtSize, sizeof(wavefile1.fmtSize), 1, sizeof(wavefile1.fmtSize), wav);
-            fread_s(&wavefile1.AudioFormat, sizeof(wavefile1.AudioFormat), 1, sizeof(wavefile1.AudioFormat), wav);
-            fread_s(&wavefile1.NumChannels, sizeof(wavefile1.NumChannels), 1, sizeof(wavefile1.NumChannels), wav);
-            fread_s(&wavefile1.SampleRate, sizeof(wavefile1.SampleRate), 1, sizeof(wavefile1.SampleRate), wav);
-            fread_s(&wavefile1.ByteRate, sizeof(wavefile1.ByteRate), 1, sizeof(wavefile1.ByteRate), wav);
-            fread_s(&wavefile1.BlockAlign, sizeof(wavefile1.BlockAlign), 1, sizeof(wavefile1.BlockAlign), wav);
-            fread_s(&wavefile1.BitsPerSample, sizeof(wavefile1.BitsPerSample), 1, sizeof(wavefile1.BitsPerSample), wav);
+            count = fread_s(&wavefile1.fmtID, sizeof(wavefile1.fmtID), 1, sizeof(wavefile1.fmtID), wav);
+            count = fread_s(&wavefile1.fmtSize, sizeof(wavefile1.fmtSize), 1, sizeof(wavefile1.fmtSize), wav);
+            count = fread_s(&wavefile1.AudioFormat, sizeof(wavefile1.AudioFormat), 1, sizeof(wavefile1.AudioFormat), wav);
+            count = fread_s(&wavefile1.NumChannels, sizeof(wavefile1.NumChannels), 1, sizeof(wavefile1.NumChannels), wav);
+            count = fread_s(&wavefile1.SampleRate, sizeof(wavefile1.SampleRate), 1, sizeof(wavefile1.SampleRate), wav);
+            count = fread_s(&wavefile1.ByteRate, sizeof(wavefile1.ByteRate), 1, sizeof(wavefile1.ByteRate), wav);
+            count = fread_s(&wavefile1.BlockAlign, sizeof(wavefile1.BlockAlign), 1, sizeof(wavefile1.BlockAlign), wav);
+            count = fread_s(&wavefile1.BitsPerSample, sizeof(wavefile1.BitsPerSample), 1, sizeof(wavefile1.BitsPerSample), wav);
         }
         if(strncmp(chunk_id, "LIST", CHUNK_ID_SIZE) == 0) {
             fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
-            fread_s(&wavefile1.listID,sizeof(wavefile1.listID),  1, sizeof(wavefile1.listID), wav);
-            fread_s(&wavefile1.listSize,sizeof(wavefile1.listSize),  1, sizeof(wavefile1.listSize), wav);
-            wavefile1.listString = malloc(wavefile1.listSize);
-            fread_s(&wavefile1.listString, wavefile1.listSize, 1, wavefile1.listSize, wav);
-        }
-        if(strncmp(chunk_id, "INFO", CHUNK_ID_SIZE) == 0) {
-            fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
-            fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav);
-            if(strncmp(chunk_id, "IART", CHUNK_ID_SIZE) == 0) {
-                fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
+            count = fread_s(&wavefile1.listID, sizeof(wavefile1.listID), 1, sizeof(wavefile1.listID), wav);
+            count = fread_s(&wavefile1.listSize, sizeof(wavefile1.listSize), 1, sizeof(wavefile1.listSize), wav);
+            count = fread_s(&wavefile1.listType, sizeof(wavefile1.listType), 1, sizeof(wavefile1.listType), wav);
 
+            if(strncmp(wavefile1.listType, "INFO", CHUNK_ID_SIZE) == 0) {
+                count = fread_s(&wavefile1.infoID, sizeof(wavefile1.infoID), 1, sizeof(wavefile1.infoID), wav);
+                count = fread_s(&wavefile1.infoSize, sizeof(wavefile1.infoSize), 1, sizeof(wavefile1.infoSize), wav);
+                wavefile1.infoString = malloc(wavefile1.infoSize);
+                count = fread_s(&wavefile1.infoString, wavefile1.infoSize, 1, wavefile1.infoSize, wav);
             }
         }
-        else if(strncmp(chunk_id, "data", 4) == 0) {
-            fseek(wav, -4, SEEK_CUR);
-
-        }
+        //else if(strncmp(chunk_id, "data", 4) == 0) {
+            // TODO: is this necessary?
+            //fseek(wav, -4, SEEK_CUR); 
+        //}
     }
 
+    printf("RIFFID: \t%s\n", &wavefile1.RIFFID);
+    printf("RIFFSize: \t%u\n", wavefile1.RIFFSize);
+    printf("RIFFFormType: \t%s\n", &wavefile1.RIFFFormType);
+    printf("fmtID: \t\t%s\n", &wavefile1.fmtID);
+    printf("fmtSize: \t%u\n", wavefile1.fmtSize);
+    printf("AudioFormat: \t%u\n", wavefile1.AudioFormat);
+    printf("NumChannels: \t%u\n", wavefile1.NumChannels);
+    printf("SampleRate: \t%u\n", wavefile1.SampleRate);
+    printf("ByteRate: \t%u\n", wavefile1.ByteRate);
+    printf("BlockAlign: \t%u\n", wavefile1.BlockAlign);
+    printf("BitsPerSample: \t%u\n", wavefile1.BitsPerSample);
+    printf("listID: \t%s\n", &wavefile1.listID);
+    printf("listSize: \t%u\n", wavefile1.listSize);
+    printf("listType: \t%s\n", &wavefile1.listType);
+    printf("infoString: \t%s\n", &wavefile1.infoString);
 
-    free(wavefile1.listSize);
+
+    free(wavefile1.infoString);
     printf("program success\n");
     return 0;
 }
-
 
 /*
 RIFFvWAVEfmt D¬ˆXLISTöINFOIART3freesound.org/people/s-cheremisinov/sounds/402183/ICMT(swoosh woosh transition sfx swish; 53msICOPGCC:0 / Public Domain http://creativecommons.org/publicdomain/zero/1.0/IGNRambientINAMswooshISFTLavf58.20.100dataTnýDýSý¢ýþÌýuýSýfýrý:ýý#ýæü:ýáýaþ{þ¨þóþWÿyÿßÿ;"ßÿòÿ°\}dd`”×«}Û*OÛ‰«`Ã·ÃÎ¿¬þ'Ê5¢ÿžÿÿŠþ_ýÍü0üµûµû‡ûDû9û&ûHûûoúúÜù¡ùNùùÛøÄøÓøüøÓø}øøÈøÀøÌøæø­øSø}øüøiùBúæúõú[ûVüÜüŠüVü¶ü}ýaþ¶þ¨þØþnÿâÿ)-)t!£¾Ÿ¨\ºr_«øiŸ”œo§+îÿÿwþ}ýIü-û”ú‰úú$úZù¹ø¼øÌø§ø2ø¿÷]÷SöØõóõ7õô»ôLôÍóÁóôô9ô“ô±ôõ÷õ}ö©öžö¼ö}öDöÈöV÷»÷IøJù ú…úÛúû"ûîúœúû­ûVü-ýrý¼ý²þ§ÿ6ÐÊæ{ü¡Ÿ×H	Z	ãò	«UXÀS-W6|øÿ
@@ -144,7 +164,5 @@ TêRÝROR¬QçQrRÝRJSlSS_R†Q¬Q•QÎP1PQàQ QzQ?Q¸PXQ†QçQ°S²TuT›TmUÃUdTÝRRžP0O(OQO@N¿
 ürû,ûIû7ûû9û®ûñûü;üWüüÆüØü
 ý[ýyý£ýþFþŽþ
 ÿ*ÿ(ÿKÿÿçÿA\l¡¬¼ÿâÇnyGìÿËÿ¡ÿWÿÿþ¢þgþQþ:þ@þ8þþÕý¾ý¶ý›ý‰ýqýwý‡ýný\ýSýuýƒýƒý‰ý‹ý´ýüýJþzþþ•þ×þ+ÿyÿ¸ÿçÿ7NduŒ¥Ëææ1%)*òïîìö÷þóÊj]U:Äÿÿrÿ>ÿùþÉþ¦þqþ$þýýáýÁý¹ý¨ý‘ý†ýý‡ýý‹ý¨ýÅýÉýÔýñý$þSþoþ‚þžþÈþåþþþÿ(ÿUÿrÿ‰ÿžÿ¹ÿêÿ%X}„ˆŸ­±½Èâ÷óèØÒÃ¤„hN1÷ÿìÿÜÿÐÿ½ÿ¢ÿ†ÿxÿiÿUÿ>ÿ/ÿ*ÿ#ÿ$ÿ ÿÿ#ÿ*ÿ/ÿ5ÿ;ÿCÿKÿNÿRÿVÿZÿaÿeÿmÿxÿ€ÿˆÿ‘ÿ ÿ«ÿ°ÿ¸ÿÄÿÐÿÛÿçÿóÿüÿ#)/311
-
-
 
 */
