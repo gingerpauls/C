@@ -74,9 +74,9 @@ int main(void) {
         count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav);
         if(strncmp(chunk_id, "RIFF", CHUNK_ID_SIZE) == 0) {
             fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
-            count = fread_s(&wavefile1.RIFFID, sizeof(wavefile1.RIFFID) * CHUNK_ID_SIZE, 1, sizeof(wavefile1.RIFFID), wav);
-            count = fread_s(&wavefile1.RIFFSize, sizeof(wavefile1.RIFFSize) * CHUNK_ID_SIZE, 1, sizeof(wavefile1.RIFFSize), wav);
-            count = fread_s(&wavefile1.RIFFFormType, sizeof(wavefile1.RIFFFormType) * CHUNK_ID_SIZE, 1, sizeof(wavefile1.RIFFFormType), wav);
+            count = fread_s(&wavefile1.RIFFID, sizeof(wavefile1.RIFFID), 1, sizeof(wavefile1.RIFFID), wav);
+            count = fread_s(&wavefile1.RIFFSize, sizeof(wavefile1.RIFFSize), 1, sizeof(wavefile1.RIFFSize), wav);
+            count = fread_s(&wavefile1.RIFFFormType, sizeof(wavefile1.RIFFFormType), 1, sizeof(wavefile1.RIFFFormType), wav);
         }
         if(strncmp(chunk_id, "fmt ", CHUNK_ID_SIZE) == 0) {
             fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
