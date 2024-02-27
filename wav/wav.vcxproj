@@ -132,6 +132,7 @@
   <ItemGroup>
     <Media Include="sounds\drop.wav" />
     <Media Include="sounds\sine.wav" />
+    <Media Include="sounds\sine2.wav" />
     <Media Include="sounds\swoosh.wav" />
   </ItemGroup>
   <ItemGroup>
