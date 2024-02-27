@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\sounds">
+      <UniqueIdentifier>{f011f949-b768-4f6a-ba1a-f82757e9a435}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="wav.c">
@@ -20,16 +23,19 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="swoosh.wav">
-      <Filter>Source Files</Filter>
+    <Media Include="sounds\drop.wav">
+      <Filter>Source Files\sounds</Filter>
     </Media>
-    <Media Include="sine.wav">
-      <Filter>Source Files</Filter>
+    <Media Include="sounds\sine.wav">
+      <Filter>Source Files\sounds</Filter>
+    </Media>
+    <Media Include="sounds\swoosh.wav">
+      <Filter>Source Files\sounds</Filter>
     </Media>
   </ItemGroup>
   <ItemGroup>
-    <None Include="swoosh.raw">
-      <Filter>Source Files</Filter>
+    <None Include="sounds\swoosh.raw">
+      <Filter>Source Files\sounds</Filter>
     </None>
   </ItemGroup>
 </Project>

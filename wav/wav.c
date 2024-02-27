@@ -3,6 +3,7 @@
 #include "assert.h"
 #include "string.h"
 #include "stdlib.h"
+#include "windows.h"
 
 #define CHUNK_ID_SIZE 4
 
@@ -67,83 +68,50 @@ void PrintFilePos(FILE *wav) {
 int main(void) {
     FILE *wav = NULL;
     errno_t err;
-    err = fopen_s(&wav, "swoosh.wav", "r");
+    err = fopen_s(&wav, "sounds/swoosh.wav", "r");
+    if(err != 0) {
+        perror("fopen");
+    }
+    
     WAVE wavefile1 = {0};
     wavefile1.Data = NULL;
     char chunk_id[CHUNK_ID_SIZE];
     int count = 0;
+    info info;
 
     fseek(wav, 0, SEEK_END);
     wavefile1.file_size = ftell(wav);
     rewind(wav);
 
-    //while(!feof(wav)) 
-    {
-        //PrintFilePos(wav);
-        count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav);
-        fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
-        if(strncmp(chunk_id, "RIFF", CHUNK_ID_SIZE) == 0) {
-            count = fread_s(&wavefile1.RIFFID, sizeof(wavefile1.RIFFID), 1, sizeof(wavefile1.RIFFID), wav);
-            count = fread_s(&wavefile1.RIFFSize, sizeof(wavefile1.RIFFSize), 1, sizeof(wavefile1.RIFFSize), wav);
-            count = fread_s(&wavefile1.RIFFFormType, sizeof(wavefile1.RIFFFormType), 1, sizeof(wavefile1.RIFFFormType), wav);
-            //PrintFilePos(wav);
-        }
-        count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav); // remove later
-        fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR); // remove later
-        if(strncmp(chunk_id, "fmt ", CHUNK_ID_SIZE) == 0) {
-            count = fread_s(&wavefile1.fmtID, sizeof(wavefile1.fmtID), 1, sizeof(wavefile1.fmtID), wav);
-            count = fread_s(&wavefile1.fmtSize, sizeof(wavefile1.fmtSize), 1, sizeof(wavefile1.fmtSize), wav);
-            count = fread_s(&wavefile1.AudioFormat, sizeof(wavefile1.AudioFormat), 1, sizeof(wavefile1.AudioFormat), wav);
-            count = fread_s(&wavefile1.NumChannels, sizeof(wavefile1.NumChannels), 1, sizeof(wavefile1.NumChannels), wav);
-            count = fread_s(&wavefile1.SampleRate, sizeof(wavefile1.SampleRate), 1, sizeof(wavefile1.SampleRate), wav);
-            count = fread_s(&wavefile1.ByteRate, sizeof(wavefile1.ByteRate), 1, sizeof(wavefile1.ByteRate), wav);
-            count = fread_s(&wavefile1.BlockAlign, sizeof(wavefile1.BlockAlign), 1, sizeof(wavefile1.BlockAlign), wav);
-            count = fread_s(&wavefile1.BitsPerSample, sizeof(wavefile1.BitsPerSample), 1, sizeof(wavefile1.BitsPerSample), wav);
-            //PrintFilePos(wav);
-        }
-        //count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav); // remove later
-        //fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR); // remove later
-        //if(strncmp(chunk_id, "LIST", CHUNK_ID_SIZE) == 0) {
-        //    count = fread_s(&wavefile1.listID, sizeof(wavefile1.listID), 1, sizeof(wavefile1.listID), wav);
-        //    count = fread_s(&wavefile1.listSize, sizeof(wavefile1.listSize), 1, sizeof(wavefile1.listSize), wav);
-        //    count = fread_s(&wavefile1.listType, sizeof(wavefile1.listType), 1, sizeof(wavefile1.listType), wav);
-        //    PrintFilePos(wav);
-        //    if(strncmp(wavefile1.listType, "INFO", CHUNK_ID_SIZE) == 0) {
-        //        info info;
-        //        do {
-        //            PrintFilePos(wav);
-        //            count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav);
-        //            PrintFilePos(wav);
-        //            fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
-        //            PrintFilePos(wav);
-        //            if(strncmp(chunk_id, "data", 4) != 0) {
-        //                PrintFilePos(wav);
-        //                count = fread_s(&info.infoID, sizeof(info.infoID), 1, sizeof(info.infoID), wav);
-        //                count = fread_s(&info.infoSize, sizeof(info.infoSize), 1, sizeof(info.infoSize), wav);
-        //                info.infoString = malloc(info.infoSize);
-        //                count = fread_s(&info.infoString, info.infoSize, 1, info.infoSize, wav);
-        //                printf("%s %s\n", &info.infoID, &info.infoString);
-        //                PrintFilePos(wav);
-        //                fseek(wav, info.infoSize - 2, SEEK_CUR);
-        //                PrintFilePos(wav);
-        //                wavefile1.numInfo++;
-        //            }
-        //            else {
-        //                break;
-        //            }
-        //        }
-        //        while(strncmp(chunk_id, "data", 4) != 0);
-        //    }
-        //}
-        //else if(strncmp(chunk_id, "data", 4) == 0) {
-            // TODO: is this necessary?
-            //fseek(wav, -4, SEEK_CUR); 
-        //}
+    //PrintFilePos(wav);
+    count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav); // remove later
+    //PrintFilePos(wav);
+    fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR); // remove later
+    //PrintFilePos(wav);
+    if(strncmp(chunk_id, "RIFF", CHUNK_ID_SIZE) == 0) {
+        count = fread_s(&wavefile1.RIFFID, sizeof(wavefile1.RIFFID), 1, sizeof(wavefile1.RIFFID), wav);
+        count = fread_s(&wavefile1.RIFFSize, sizeof(wavefile1.RIFFSize), 1, sizeof(wavefile1.RIFFSize), wav);
+        count = fread_s(&wavefile1.RIFFFormType, sizeof(wavefile1.RIFFFormType), 1, sizeof(wavefile1.RIFFFormType), wav);
     }
-
     printf("RIFFID: \t%.4s\n", &wavefile1.RIFFID);
     printf("RIFFSize: \t%u\n", wavefile1.RIFFSize);
     printf("RIFFFormType: \t%.4s\n", &wavefile1.RIFFFormType);
+
+    //PrintFilePos(wav);
+    count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav); // remove later
+    //PrintFilePos(wav);
+    fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR); // remove later
+    //PrintFilePos(wav);
+    if(strncmp(chunk_id, "fmt ", CHUNK_ID_SIZE) == 0) {
+        count = fread_s(&wavefile1.fmtID, sizeof(wavefile1.fmtID), 1, sizeof(wavefile1.fmtID), wav);
+        count = fread_s(&wavefile1.fmtSize, sizeof(wavefile1.fmtSize), 1, sizeof(wavefile1.fmtSize), wav);
+        count = fread_s(&wavefile1.AudioFormat, sizeof(wavefile1.AudioFormat), 1, sizeof(wavefile1.AudioFormat), wav);
+        count = fread_s(&wavefile1.NumChannels, sizeof(wavefile1.NumChannels), 1, sizeof(wavefile1.NumChannels), wav);
+        count = fread_s(&wavefile1.SampleRate, sizeof(wavefile1.SampleRate), 1, sizeof(wavefile1.SampleRate), wav);
+        count = fread_s(&wavefile1.ByteRate, sizeof(wavefile1.ByteRate), 1, sizeof(wavefile1.ByteRate), wav);
+        count = fread_s(&wavefile1.BlockAlign, sizeof(wavefile1.BlockAlign), 1, sizeof(wavefile1.BlockAlign), wav);
+        count = fread_s(&wavefile1.BitsPerSample, sizeof(wavefile1.BitsPerSample), 1, sizeof(wavefile1.BitsPerSample), wav);
+    }
     printf("fmtID: \t\t%.4s\n", &wavefile1.fmtID);
     printf("fmtSize: \t%u\n", wavefile1.fmtSize);
     printf("AudioFormat: \t%u\n", wavefile1.AudioFormat);
@@ -152,51 +120,145 @@ int main(void) {
     printf("ByteRate: \t%u\n", wavefile1.ByteRate);
     printf("BlockAlign: \t%u\n", wavefile1.BlockAlign);
     printf("BitsPerSample: \t%u\n", wavefile1.BitsPerSample);
-    printf("listID: \t%.4s\n", &wavefile1.listID);
-    printf("listSize: \t%u\n", wavefile1.listSize);
-    printf("listType: \t%.4s\n", &wavefile1.listType);
-    printf("infoString: \t%s\n", &wavefile1.infoString);
 
+    //PrintFilePos(wav);
+    count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav); // remove later
+    //PrintFilePos(wav);
+    fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR); // remove later
+    //PrintFilePos(wav);
 
-    free(wavefile1.infoString);
+    if(strncmp(chunk_id, "LIST", CHUNK_ID_SIZE) == 0) {
+        count = fread_s(&wavefile1.listID, sizeof(wavefile1.listID), 1, sizeof(wavefile1.listID), wav);
+        count = fread_s(&wavefile1.listSize, sizeof(wavefile1.listSize), 1, sizeof(wavefile1.listSize), wav);
+        count = fread_s(&wavefile1.listType, sizeof(wavefile1.listType), 1, sizeof(wavefile1.listType), wav);
+        printf("listID: \t%.4s\n", &wavefile1.listID);
+        printf("listSize: \t%u\n", wavefile1.listSize);
+        printf("listType: \t%.4s\n", &wavefile1.listType);
+
+        if(strncmp(wavefile1.listType, "INFO", CHUNK_ID_SIZE) == 0) {
+            do 
+            {
+                count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav);
+                fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
+                if(strncmp(chunk_id, "data", 4) != 0) {
+                    count = fread_s(&info.infoID, sizeof(info.infoID), 1, sizeof(info.infoID), wav);
+                    count = fread_s(&info.infoSize, sizeof(info.infoSize), 1, sizeof(info.infoSize), wav);
+                    info.infoString = malloc(info.infoSize);
+                    count = fread_s(&info.infoString, info.infoSize, 1, info.infoSize, wav);
+                    printf("%.4s \t\t%s\n", &info.infoID, &info.infoString);
+                    fseek(wav, 1, SEEK_CUR);
+                    wavefile1.numInfo++;
+                    //free(info.infoString);
+                }
+                count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav);
+                fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
+                if(strncmp(chunk_id, "data", 4) != 0) {
+                    count = fread_s(&info.infoID, sizeof(info.infoID), 1, sizeof(info.infoID), wav);
+                    count = fread_s(&info.infoSize, sizeof(info.infoSize), 1, sizeof(info.infoSize), wav);
+                    info.infoString = malloc(info.infoSize);
+                    count = fread_s(&info.infoString, info.infoSize, 1, info.infoSize, wav);
+                    printf("%.4s \t\t%s\n", &info.infoID, &info.infoString);
+                    fseek(wav, 0, SEEK_CUR);
+                    wavefile1.numInfo++;
+                    //free(info.infoString);
+                }
+            }
+            while(strncmp(chunk_id, "data", 4) != 0);
+        }
+    }
+    if(strncmp(chunk_id, "junk", CHUNK_ID_SIZE) == 0) {
+        count = fread_s(&wavefile1.junkID, sizeof(wavefile1.junkID), 1, sizeof(wavefile1.junkID), wav);
+        count = fread_s(&wavefile1.junkSize, sizeof(wavefile1.junkSize), 1, sizeof(wavefile1.junkSize), wav);
+        //wavefile1.junkString = malloc(wavefile1.junkSize);
+        //count = fread_s(&wavefile1.junkString, wavefile1.junkString, 1, wavefile1.junkString, wav);
+        printf("junkID: \t%.4s\n", &wavefile1.junkID);
+        printf("junkSize: \t%u\n", wavefile1.junkSize);
+        fseek(wav, wavefile1.junkSize, SEEK_CUR);
+        //printf("junkString: \t%s\n", &wavefile1.junkString);
+        //free(wavefile1.junkString);
+    }
+
+    count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav);
+    fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
+    if(strncmp(chunk_id, "data", 4) == 0) {
+        count = fread_s(&wavefile1.dataID, sizeof(wavefile1.dataID), 1, sizeof(wavefile1.dataID), wav);
+        count = fread_s(&wavefile1.dataSize, sizeof(wavefile1.dataSize), 1, sizeof(wavefile1.dataSize), wav);
+        wavefile1.Data = malloc(wavefile1.dataSize);
+        count = fread_s(&wavefile1.Data, wavefile1.dataSize, sizeof(*wavefile1.Data), wavefile1.dataSize / sizeof(*wavefile1.Data), wav);
+        printf("dataID: \t%.4s\n", &wavefile1.dataID);
+        printf("dataSize: \t%u\n", wavefile1.dataSize);
+        for(size_t i = 0; i < wavefile1.dataSize / sizeof(*wavefile1.Data); i++) {
+            printf("Data: \t%f\n", wavefile1.Data[i]);
+        }
+        free(wavefile1.Data);
+    }
+
+    free(info.infoString);
     printf("program success\n");
     return 0;
 }
 
 /*
-RIFFvWAVEfmt D¬ˆXLISTöINFOIART3freesound.org/people/s-cheremisinov/sounds/402183/ICMT(swoosh woosh transition sfx swish; 53msICOPGCC:0 / Public Domain http://creativecommons.org/publicdomain/zero/1.0/IGNRambientINAMswooshISFTLavf58.20.100dataTnıDıSı¢ışÌıuıSıfırı:ıı#ıæü:ıáıaş{ş¨şóşWÿyÿßÿ;"ßÿòÿ°\}dd`”×«}Û*OÛ‰«`Ã·ÃÎ¿¬ş'Ê5¢ÿÿÿŠş_ıÍü0üµûµû‡ûDû9û&ûHûûoúúÜù¡ùNùùÛøÄøÓøüøÓø}øøÈøÀøÌøæø­øSø}øüøiùBúæúõú[ûVüÜüŠüVü¶ü}ıaş¶ş¨şØşnÿâÿ)-)t!£¾Ÿ¨\ºr_«øiŸ”œo§+îÿÿwş}ıIü-û”ú‰úú$úZù¹ø¼øÌø§ø2ø¿÷]÷SöØõóõ7õô»ôLôÍóÁóôô9ô“ô±ôõ÷õ}ö©öö¼ö}öDöÈöV÷»÷IøJù ú…úÛúû"ûîúœúû­ûVü-ırı¼ı²ş§ÿ6ĞÊæ{ü¡Ÿ×H	Z	ãò	«UXÀS-W6|øÿ
-ÿ¼ısüµû_û*ûúæø£øø2ö‹ôêóóÏñ ğïÜîî9í‚ì[ë”ê`êÎé³éé.èÀèxéÎé÷éêë¬ëéë²ìÎí­ï†ğ·ğIñHòŸóµôŠõSöa÷ˆøBúÎûÚıcÿæÿ1ÖÑ‰+
-ß
-jZÂ:
-À
-Û
-à@1»"h
-¿	ÈÑØ…q¿óşòüùüšı#ıÓú5ù:øØ÷†÷0õáò…ñİï†îôí­íµíQìƒéé‘é¼èèóçOè2èèuè¹èƒéêê8ëì$ìíÖísî²îÑîùî¢ï~ğò¾ónöÜ÷Äø]ùiù”ú»ûÒûü¶ü…ıŠşÿş¦ıiş,şÖıåıÿ²ş©ıàş†øÿIÿÿÕşeşsş~şÌı0üòú,ú¤ù'øOö¾õ‘õ‹ôòšï¶îší~ì7ìøëpë®ê\ê-é2æpä‹ä
-ãáàUàbá@â`ã†åè2èèéÒéoêmë
-ìæìíÍî\ñ“ô7÷øÛúyıÀıÔü‹ı:ÿóÛÖøydY
-P¢€ó	IxZ+ošDyoş0úéöüôÄñ”ïéí›êİæ†ãáÙİÿÚÄØõÕ¿ÒoĞPÎ¬ËBÉÆ«ÄIÃ#ÃÇÃíÃïÄùÅ¯ÆÇÈlË)ÍfÍ³Í®ÎáÏÑãÒõÕT×²Ú/Şá,å5é<ëÚíğÒğŠó÷Oûíı•ÊÍW×x-µ”Íí	
-    Sùo#ÿ‚ü¿÷[ôò¤ğˆìÊæDâ2ßæÜaÛªÚàÙnØÔWÑêÎ¦Ì}ÊÊ^ÊíÇªÅ’ÆšÈ.ÈdÄ³Ä!ÆlÄìÁÁÀBÂ]Ä«ÄcÅÒÆcÅ)ÆlÆ@ÄWÁÂÂŒÃÙÁÄÃÄUÂ»ÂÇÁTÃïÂ*ÁÁÀ\¾¤½¸¼C½G½¯½½â¼š½%¿f¿Ğ¾E¼é¼Àì¿ïÂ@ÆhÆÈEÊèÊãËDÍ‰ÎjÑíÓ@ÔÊÖ	Ú°ÛÒÛ
-ÚÛİùÜõŞ@ßÉàùã¾åÒä åç§è
-ê§ê¤ëÅìõì)ë\ìæìkê§èæAãáTŞ?Ü¦Ó»Í%ËıÅ¤Â+¾ø¸G´W¯N©¦è¢Â Ÿ‚›ş–ş”“†’V–Œ0‹Ñ‰ß‡ç†¨†Dˆâ‰
-‰‚‰É‹.ŒnÇ‘”™Ó„¨¯:³·rºO¿ëÂ7Å‚ÉÍRĞ‡ÖxİÃäFçFéÜì¾îñLôøÊû-ıÿöï	`¶
-ã
-Çñ)­ıgú»ôÑî1ë ç âußtÛõ×·ÒĞPÎ\ÌfÊùÅÿÁ¸¼Û·±¥«C©£LŸŞšÓ—E•Í’ßÀÄû®‘’È•#šÒš¢œ¡£Ì¥ª¯m²¦¶'ºö»8¿
-Å«ÉkÎ%Ô%ÙnßcãÒæfíİòjø2’c¶û. "†¦ ì#Á$'Û(–%Â#î#c$
-$
-#$Š#˜ÂwÜP`ıq…‰R	|ªÊş[ûùMúŸúîøjøÅ÷@ù-ûôûXü¡ù;÷òø}úüšı€(‹|!ÄZoæÌº¹/{‰%Ë'›)ü+A0œ4è5f7T;?}BÅC©D¿E§FFD»E;H¥IJLTMıMÃNpPàQ™QÈRJSSDUåUõTSARyP²OğNOTOïLjKÔHîFŸDØC¿E?HîHRH]G.IKYLéN+R\TXÃ\^I__¼`,dsf~fe
-d±b¡a#`;__^´\¬\]6]¾]^Š]2]^Ÿ_d_[^:]a\^¿^!_P`“`®][ÀY`X¬XtZÀ[YçXÓYÅXWxWSY-\p^à_Abee;h	ihÕffgÄg¦i¿j‰i£kGm‰iÖg%hohŠj~mÂm×m4q‡sÒscuÑt»sËuvòt‹sÌrŠqVqsörZq»nVlãk\kágdf`´\úZÄYWòV9W‹UaU6TkQµP•QQØQîR=R·SdV§V)UnT°U­WLWdVŒVŸV£V6VaUßTëUùVŠVÖU·U¬UV‡WÚW‹U÷S'TuT
-TITÃU¤UTS[R%S`TÏTTâT
-VUêTDU
-TêRİROR¬QçQrRİRJSlSS_R†Q¬Q•QÎP1PQàQ QzQ?Q¸PXQ†QçQ°S²TuT›TmUÃUdTİRRP0O(OQO@N¿LÎL™L[KnIªFÒEËDå@S>—==ó<ó<B;Q86ß4’3l1%/..ú-~-‡,à**“)è' &c$ø"¦"3"!dœ8¸Šd?èD 	"$%£&,(K*J-ç/¨14G5"5V5Z5°5Y6‚6÷5Ç5d6*7i7õ7Ô6q5ä5;6.5w3ş1é0T0Q/M-Ş+w*Ù('G%<#ö!“ ,Öxöcû‰™å	ÉıÂyvÿŞı[ı4ü@ûrûmû“û²úÑúküÂü~ü§ü¾ü…ı¬şNOÉdøƒ¬Št»ådäğü¿;±ÿeş•şÅş-ı¢ûrû¶ú¨ù‡ùJùôø1ùù­øEø7÷fö[öùõönöö†õ±ô,óEñğïğ¹ï>ïéïëğ:ññ"ò¤òTóºópôö`ø®ú`üıùüSıüı•ş…ÿÃæÊ,(‚²ám§èCÿişbıCüSûëùİöô,óºñNğóîLíWëébè(çŸå»äaä£ãTã`ã®ã%ääìäÃäDäÅããŒãxä£ãÔâëâãÒâÆâ³ââˆá¼á#áğßŒßNà„á8âîãØåYçˆèléˆê‹ë ìCìâìëîÜğrñÈñîñ<òóõ±ônôRõönöŠ÷2øa÷"÷÷HöDö…öNõæóÙò¿òòàğ¶î^íìaë
-êAèØçØç¶çşçèáææ<æ–æÒæ]çèèüèCé‡éÆéïésêë‡ëáëÊëmëÙë§ì¶ì§ì›ìÁìLí0îCî©í(î²îÉîfïÏï–ï¦ïNğ•ğ‚ğ‚ğüïıî¨îîÔîØîºîÑîøízì´ëpëIêpéyèRçOæîåÍåTåå¿ä·ä,åÅåæKæyæÈæç¨ç6èuèËèîè¼è%é
-ê,êïé˜êxë¤ëéë£ì9í¼í~î>ï}ïéïğ?ğşğdñò
-óÛó¦ôºõµöG÷Søùêøøä÷üöjöïõkõÎô¢ô“ôµôƒô«óVò¶ñòñˆñ¬ğ–ïÑîwîÑîïï#ïçîXî,î3îüíıìQìzì²ìíÉìÖë×ê.êşéAê˜êëÄêAêäé;é5éÎé¿éJéäéäé³é÷éêê»éFéaé¿é éçé6êXêùê¨ëTìÏìíïşğò°ò«ó?õ¢ö»÷¹øxùûù¶úõúû9ûüöü“ı¦ı1ıŸükü‘ü¾ü~üŠü£üùüıòü§üéû1û²úú°ù]ùnøt÷¦ökõLôŠóƒòrñÒğağğuïÍîÅîóîïaîVîÖíDíjí‡ífí‡íÊí¼íğíîîaîÚí©íkî:ïÛï|ğñ&òŸóxôğôÔõ÷Š÷:øù)ùZùÇùyúiû·ûÃû±û“û‡û[ûûÄúgú6úú-û|ûÇûüü@ûwúú»ùÀø7÷äõFõ?õRõÊôfôô0õ•õ~õøôHôxôíôğôÇôáô†õDöyöLöfö×ö™÷›ørøÉ÷ë÷ë÷o÷”öçõ²õö[ööÛöÃ÷ŸøeùZù1ù¬ù
-úBúæúLûûiûû€û“û|ûaûÒûü,üı¼ı…ı+ıäüùü	ıÜü;ü[û&û¾ú(úÃùòøë÷~÷V÷V÷J÷_ö\õÎôxôjô×ówóoóÅófô‹ô¢ôéô¢ô†ó°ò9òÏñÈñºññÅğAñ#ñúğºñ)òˆññIñ£ñâñŸñ‚ğ­ï"ğ¬ğˆñ"ò&òòñòºñıñóEóÙò‚óxôåôJõSö‚÷ø"ù\úaûüûÃû­ûMüäüıPı>ı	ı#ı¢ıåıÒıåı,şwş{ş&şşíıSıÍüCüHûãúdúiùnøøx÷}ö`õpôêówóiò…ñ‘ğfï~î!îšíOíí»ìípí8í—ììñëì0ííŞìhííÔíî÷íWîéî3ï¡ïğxğ*ñÚñ=ò¨ò’óÙôö÷Qø5ùûùû0ü8ı@şÕşNÿ-1ÿ€[+€³.‚“!^îµ$Iy
-"°æÿìşş ı;ü(û>ú¡ùìøuøø(÷šöqöÈõ¶ôô¦óóò5ò›ñçğEğï.ïÅîÁî¢î½îïyïÀïÅï6ğ©ğÿğpñ%òÄòó.ó{óéóQô¢ôSõëõö‰öW÷ø³øŒùpúdûîûKü­ü>ıùı°şQÿôÿuB!‡úL2óÒ£-Ú°vÿ.ÿÕşişşLıgüüpûÆúIúÖù+ù«ø3ø÷2÷ÿöóö°ögöoöuö]ö…öÕö÷ ÷/÷÷,÷G÷e÷¬÷
-ø}øÌø=ù¼ùEúâúLûÁûwü)ı­ıOşCÿ˜½%· ®W®ìà³Šh"Æ‹@Ú]2ëÃ¥™ze"æÿ¢ÿiÿ/ÿ¡şBşçıwıı›ü‹üÑü¹ü–üüLü
-ürû,ûIû7ûû9û®ûñûü;üWüüÆüØü
-ı[ıyı£ışFşş
-ÿ*ÿ(ÿKÿÿçÿA\l¡¬¼ÿâÇnyGìÿËÿ¡ÿWÿÿş¢şgşQş:ş@ş8şşÕı¾ı¶ı›ı‰ıqıwı‡ını\ıSıuıƒıƒı‰ı‹ı´ıüıJşzşş•ş×ş+ÿyÿ¸ÿçÿ7NduŒ¥Ëææ1%)*òïîìö÷şóÊj]U:Äÿÿrÿ>ÿùşÉş¦şqş$şııáıÁı¹ı¨ı‘ı†ıı‡ıı‹ı¨ıÅıÉıÔıñı$şSşoş‚şşÈşåşşşÿ(ÿUÿrÿ‰ÿÿ¹ÿêÿ%X}„ˆŸ­±½Èâ÷óèØÒÃ¤„hN1÷ÿìÿÜÿĞÿ½ÿ¢ÿ†ÿxÿiÿUÿ>ÿ/ÿ*ÿ#ÿ$ÿ ÿÿ#ÿ*ÿ/ÿ5ÿ;ÿCÿKÿNÿRÿVÿZÿaÿeÿmÿxÿ€ÿˆÿ‘ÿ ÿ«ÿ°ÿ¸ÿÄÿĞÿÛÿçÿóÿüÿ#)/311
+RIFF@WAVEfmt D¬ˆXLISTöINFOIART1freesound.org/people/dayvonjersen/sounds/156295/ICMT,modulation frequency effect synthesis; 70msICOPGCC:0 / Public Domain http://creativecommons.org/publicdomain/zero/1.0/IGNRambientINAMdropISFTLavf58.20.100data¢ï-îøñ¨ú©l¸oG}:Ë€`úœööÖö÷õÔïuãó×jÏkÊºÏ?Ü÷èÑóôû¡ÿ=Ä
+y¼¾7"+0/İ+{))P%š¬—/Kş÷ì’àÛŠÚÔ×ÑÚÌ¸ÌúÏ’Ô¡Ø3ŞÃäzé¦î
+úVÄ
+"9Ï$Ø(°*õ-…1R2a0²-;*%•¼F`ÿ²ö<îUæ/ßÙÔ„Ğ]Î±ÍyÎÀĞ{Ô}Ù¨ßÊæ“îğöœÿ:–WD•%;+„.N/û0"1]/
+,&]`.şîÌ÷'ñ÷éÂáÿÚªÖmÓĞ˜Í6Î"Ò6Õ×\İ™åXîXö©ü²
+Cµ¼"*Ê-ä,¯-Ò/=0
+-b'- uŒ
+’|ıªóôêEâÛÿ×•ÕÕÒ“Ğ|ĞXÒ~ÕÒÙ#ßNå&ìšówû‰šr°,!²&
++.¬/é/­.,(ú"Ç½ Ìı©õÚíœæ+à­ÚYÖAÓ‰Ñ=ÑQÒĞÔ›ØİãgêİñÁùÍË	y p$Å(ä+¦-.-§*'2"Z©T˜¤şÄö/ïèÁáNÜñ×İÔ
+Ó†ÒDÓÕ:Ùİqã[êïğ7øÚ	k¯
+¢ ‡&è*3+)ä'›(ú&² è6´Ç	û„ò‡î9êÆãİFØÜÕ½Õ•×ÎÙ'Ü×ßåÇëÁócûMQ	#üÌ£!U&ç(p(¿&%'"˜¦ç«	;ÂúóÑì²æoáDİMÚ½Ø¡ØøÙÅÜŞàæQìDó¬úLÌ	ãXØ.!E$è%&¯$Ü!·iªü¯ôÀí„çXâdŞÂÛ¨ÚÛİbàåÚêƒñÈøOÕŒ/£¸"b$z$ş" ª#½—ù§ò
+ìñågádŞ­ÜÈÜŞ„ábåêñŞù	Ê¹ Ã!w!›!s Yñ
+m)ıüôHíöæGâ¥ßßYßpà
+ãÓæìóWûš~Öè–Ş4­ Æ ê4zŒ…GùÙğ?ê¹åúâ;áƒßùß¥ã8è)íãò¿ù!}M\)U”.Bêgıö²ï-êáåüâ¥áôáäãXç ìûñ•øœÿ£>
+&ÿzxØ®aï	³¸ûíôÔî¯éÓåuãºâ›ãæêVïõDü1ë	L>Á“Çn–Œ	R*ıöğGêæxãWãæäöæıéuï_÷ñş¸ï	Ê4˜ôWy†[êiûÿ>ùIòäìÓèå#ã5äçëİïõúú
+Ox_­ª,ãæ+«Îù`óùí‚é<æÈäZåçëÿï#öğüà—
+˜xäŸù¥µ¢
+Hıœö’ğ›ëüçøåÊåwçÀê„ïjõ
+üó§	¢ˆËÉû€‘	àüfõïæê¨ç&æyæ’èKìpñ‘÷Lş u9HöÖidÿ¾øò~í¼éçLçÄèëë‘ğ_öÒü}è	–]Ô…¡mL¹ÿ.ù4ó,î…êƒèGèÛéíÌñŒ÷ôı©
+!²„ƒÑŒ%
+îxı,÷ñ8íHêé°éìÅïÛô
+ûšäc
+İ(Ş£È°¾ÿJùóÂîeëÉéÛéëïôúU$¤Ø¦³°ìÿ
+UAÿ2ùšóöîÎë{êë+íµğjõ6û­Ï
+Lùó0Õ÷ßüáö¼ñ	îëëbë‘ìWïuó§ø®şéš
+%N
+0€ş
+ŠéşPùôïáìøëÍì5ïóøËı¡#	¿
+ öƒdÿ	°ÿtùôğ"îPí+î£ğƒôtùúş‘Â	€J^øk|ıøóğ#îĞí-ïòSögûãJÅ!ÕŞQq
+’,ÍúäõññYïWîûî6ñÜôŒùÒş3&	,
+ì+·«7­|,ü>÷)óRğïXïDñ¡ôù)şmTd5…?Qü
+šXüŠ÷’óÕğ˜ïğò]õÃù¾şÜ¥–$N<
+æ	uq_û¥öşòÒğğ»ğóïö­û½¸3
+˜
+‰éÀ!5‰—ş©ùcõUò°ğ¦ğWò^õ{ùLşBä¬1B×Üp	/`û÷•ójñçğ
+òôLøÛüĞQ
+
+{‚ãÄ	¡î,üĞ÷`ô5ò‰ñbòŸô,ø²üˆ»	cõ
+‚	d¸üñ÷©ô®ò!òóOõØø=ıâ@ö	£á
+€
+ƒDK£ûŠ÷dô³òòüó®öaú¸ş-Pz
+sG
+¦j
+âªEş
+útöüóöòsóZõvønüÈÆ|àÒIw­lüDøPõ¢ófóšô-÷¾úçş/
+÷nn	¦›`ı|ù`ögôÌó©ôßö+ú$şX5d	jW5	!ş$úúöğô;ôîô÷$úşıë
+¸ü
+êÌûğı2ú'÷?õ¥ôqõ‰÷¥úuşo	Ó
+La
+4ÿ6Jı¶ùíöPõõöaøŸûnÿC®E	±
+Ã
+	¼÷ÿ.üæøŒö`õõ÷´ù%ıìŠ™´	—
+
+o¨*‚şû9ø^öÄõlöXøYûîş‚®;À	å	¯kcğÿcüNù%÷-ödöÏ÷húı	„Z	œ	ø'Î{ıyúù÷‚öwöÄ÷ú"ı‚È‹u_		Z¿‚şäúyø ÷éöï÷ÿùÛü(ƒL8	¿.¯œOş-û¡øC÷÷ø9ú#ıMgÏZĞO-ŞıøúÒø‘÷Z÷jø£ú¥ıÊÊeÂû~”nı‘úŠø—÷ç÷=ùƒûmşl©ş875†…ÿ~üòù\øâ÷|ø)ú¥üÿ…â—9÷ $şlûSù4ø:øOù^ûşÜt½éœÿÄükúÜøSøóøŒúúüÏÿ£Ân—U—ÃıAûrùœø×øú8üáş¯7üŞ×<xşíûûùèøäøéùÓûZş¡ÃÜç¡çş`üdú;ùù÷ù¼û#şÌQP{©Ïµÿ–ü£úxùKùúØû/şÀ6.Nt¢é˜ÿ©üÀúªùùpú*üvşúR',5DDºşmüÁúİùÙù×ú“üÕş,Z÷Ó´Ö”SşCü»úú`ú‰ûmı·ÿúôUÙm$3ğÿ«ıÇû¢ú[úçú3ü&şs­ieƒÔd[ÿáüRû{úú…û)ı:ÿhYÅd R;ş4üäú~úûyüFş]q4„
+êşùüŒûàúûæûrıƒÿ·‡®˜p©¯ÿÌı'ü#ûıú»û1ı
+ÿı¸	É¨¾;F<şœü£ûFûû©üşqÕ”Úp•·şıèûeû­û¸üMş&x[‰ãšÖışPıüšûÑûÁü7şÑK3ná¯Pÿ¬ırüİûùûÄü"şÔÿ‹ó×ˆnà(ÿ“ıuüòû üûü\şşÿ¨ÓızJµÿ˜ı‰üü]üHı±şHÚÓà:tÖşrı†ü>ü¥üŸıÿœ8Ë«íª&˜şTıücüâüóı_ÿìJL´uŸTÕÿ_ş;ıšüü+ıFş²ÿ/wN–<Sş…ÿ.ş!ı§ü¾ümı—şpšQsü±DÿÿııµüíüµıèşE°FC»µ`ÿØııËüış=ÿÈ¾L?„n@ÿøı2ıæü<ı&şmÿ³ËŠãÊ8Fªş™ııı˜ışŸÿÔã‘Ù¯Ãÿş—ı*ıGıÚıÀşÜÿû¯ë± ÿoş£ı<ıNıéıÿ;Iµâi‡^8ÿ9ş…ıIı‹ıEşHÿirH·¥(ZIÿşzıaı¾ıvşpÿ–ªk¤lè	ñşş…ısıãı±ş±ÿ°™iÀt©¿Òÿİşùı„ıışÛş×ÿåÅhšI‹ÿ¦şş¬ı»ı6şüşıÿßfzYPIÿuşïı»ıêı}şHÿ6)ñE7Ú.2,ÿkşùıÜışşcÿzsú- ´ïöÿÿşJşàıËışÏşÂÿ¶qı7|²Ãÿ×ş%şÔıéıRşÿèÿÆ‘3Û4hÿ»ş(şêış}ş3ÿé¨»?\ÿ†şúıÊıüı‚şEÿ+³¼5bÿ«ş2şşJşÑş—ÿl6Ëï‰Ú:ÿş'şş_şîş°ÿ„;½éËUÔÿÿsşş'şwşÿÖÿ¡N¾à©"q©ÿíşfş'ş6şšş<ÿıÿ½X¿ËˆüD}ÿÒş`ş1şUşÄşfÿ#İl¶´gÏcÿÁşYş@şrşêşÿKùp¨Ÿ@ªFÿ®şUşNşşÿ¼ÿp€ ˆİÿ;ÿ´şoşhş©ş+ÿÏÿ„d…ZÑjÿ÷ş¥şqşşãşoÿÀ]¶·vğA”ÿúş™şrş›şÿ ÿHÙDˆ‘E¼{ÿñşšştş£şÿ²ÿOãWƒp.·şÿ8ÿºşƒşşÊş=ÿÓÿqìBhSûvàÿJÿÇşyş~şÊşUÿîÿ{øVOÕE±ÿ%ÿ¼şşŸşçş^ÿôÿ‰_k,´*—ÿÿ¼şŒşªşÿ¤ÿ7®B6öŠ„ÿÿÊşÃşğş;ÿ£ÿ¨[Fàhïÿjÿïş©ş¹şışYÿÊÿOÑ-A Ñ[ÒÿQÿûş·ş­şış|ÿÿÿƒó-)³D¿ÿ8ÿÙş¾şáş.ÿÿ”ôœÿ!ÿØşÑş
+ÿ[ÿ¹ÿ- Şê|úÿ|ÿÿñşğşÿ_ÿÃÿ$—B(ÃD×ÿyÿ"ÿáşÒşÿkÿòÿmÍú£7Äÿ_ÿÿéş÷ş%ÿzÿúÿuÌ
+é•!¤ÿIÿÿşşış4ÿ ÿyÏ	ûÃt¡ÿ:ÿışış"ÿZÿ²ÿjÊüÉkùÿ‰ÿ:ÿÿÿ5ÿ|ÿæÿI¦æúì¬IÚÿtÿ+ÿùş÷şÿgÿÌÿ7•ÓàÈˆ)Ìÿhÿÿÿÿ>ÿ‹ÿôÿP§ßèÉ~%»ÿdÿ$ÿÿ!ÿWÿ¦ÿg³İß¹n¶ÿhÿ+ÿÿ.ÿgÿºÿs²ÔÕ±dµÿgÿ1ÿ*ÿ9ÿpÿ¾ÿo®ÌË§i»ÿpÿ9ÿ*ÿ=ÿuÿ»ÿ`¦ÌÈ¨gÃÿwÿDÿ.ÿDÿkÿ²ÿW”¾»¦}3ãÿ‹ÿEÿFÿuÿÿÇÿg£ÆÆ¯uÀÿqÿ,ÿ
+ÿÿ?ÿ–ÿñÿB‘¿Â±„Cîÿ’ÿ:ÿÿÿAÿ’ÿØÿa®ÚÎ£fÂÿpÿ;ÿ#ÿ/ÿRÿ”ÿf›³ÉÍ CßÿÿlÿEÿ+ÿ5ÿxÿÚÿ0pªÏ¼—b2èÿ‹ÿSÿ@ÿHÿiÿ‘ÿÜÿAœÈÑ¿•U´ÿ€ÿgÿKÿJÿsÿ·ÿ\ÇÉ±~@õÿ±ÿvÿPÿJÿkÿ‘ÿĞÿo¨Á¸—p6éÿ£ÿ}ÿoÿnÿmÿŠÿĞÿ$m ´®—i2ıÿ½ÿsÿFÿTÿzÿªÿÛÿYŒ¯¼¢h.÷ÿÅÿ™ÿpÿYÿhÿÿÌÿ>}®½²^Ëÿ˜ÿuÿiÿbÿ|ÿ©ÿŞÿ"g µ°›u5÷ÿ§ÿfÿNÿWÿnÿ‰ÿ»ÿşÿIˆ®»§†_ Úÿ¢ÿ|ÿdÿbÿrÿÿßÿPƒ¨®¦ƒDşÿÂÿÿ}ÿ{ÿ{ÿtÿ’ÿäÿEˆ¡£švMÁÿ‡ÿdÿfÿ„ÿªÿÊÿíÿ+vŸ¦£‘l;Õÿÿ‚ÿyÿ~ÿ™ÿÅÿüÿ2e“¬©›€M	Èÿ ÿ‰ÿxÿfÿƒÿÍÿIn|š¸¿Uàÿ­ÿwÿZÿ]ÿwÿ¦ÿßÿMƒ¹Í¼›x<õÿµÿŠÿfÿYÿnÿœÿÈÿñÿ,s§Â»­^Íÿÿÿnÿoÿ}ÿŸÿÇÿıÿ9~ÁÎ³“{Uãÿ«ÿwÿYÿZÿ†ÿ¸ÿŞÿPˆ©¶«‘j@×ÿšÿÿxÿtÿ‘ÿ­ÿÒÿM€µÁ¬s8Öÿ¥ÿ{ÿ`ÿqÿ–ÿ¬ÿÁÿöÿ3fŠ˜˜„XôÿÇÿ”ÿ„ÿ˜ÿ£ÿ‘ÿ·ÿ1?]ˆŸ›zL*åÿ´ÿÿÿ‡ÿ«ÿËÿåÿûÿ)c…ˆ|vjDñÿÅÿ©ÿ“ÿÿ ÿ¯ÿÈÿòÿ9Jb…|I+	ŞÿÇÿ³ÿ–ÿzÿŠÿ·ÿÛÿıÿ;W}‰|aW<Æÿÿ™ÿ–ÿ’ÿŠÿ¢ÿÍÿúÿIkuont_1Ğÿ§ÿÿ„ÿyÿƒÿ©ÿËÿçÿGo‰‘ŠrNşÿïÿÅÿÿpÿqÿŒÿªÿÂÿåÿ"Fjy†‚i.şÿİÿºÿ–ÿÿÿÿ¥ÿÃÿäÿ)QhvpcQ7õÿÈÿ¦ÿ˜ÿ’ÿÿ‰ÿ¢ÿÇÿæÿ3SouYH:"ãÿ¾ÿÿ’ÿšÿ’ÿ™ÿµÿØÿèÿüÿ;IMY^G)üÿßÿ¸ÿ¥ÿÿ›ÿšÿ¦ÿ¶ÿÙÿ2TacS1
+ôÿĞÿ²ÿ£ÿ–ÿšÿ¨ÿ·ÿÂÿØÿ÷ÿ2CIIHP8ùÿçÿÓÿ¾ÿ´ÿ¦ÿŸÿ›ÿ©ÿÁÿÎÿéÿ0KORM@*êÿÏÿ¬ÿ™ÿ£ÿ¦ÿ¢ÿ£ÿ±ÿàÿóÿ&ACMQI?(
+éÿÏÿºÿ±ÿ›ÿ“ÿ˜ÿªÿ»ÿÊÿÙÿùÿ7FGAB7%ìÿÕÿÀÿ¯ÿ¤ÿ ÿ¦ÿŸÿ›ÿ²ÿØÿïÿÿÿ,3:?@?-îÿ
 
 */
-//freesound.org/people/s-cheremisinov/sounds/402183/
