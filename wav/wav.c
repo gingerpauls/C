@@ -68,7 +68,8 @@ void PrintFilePos(FILE *wav) {
 int main(void) {
     FILE *wav = NULL;
     errno_t err;
-    err = fopen_s(&wav, "sounds/swoosh.wav", "rb");
+    //err = fopen_s(&wav, "sounds/sine_44k_16b_1ch.wav", "rb");
+    err = fopen_s(&wav, "sounds/sine_192k_32b_2ch.wav", "rb");
     if(err != 0) {
         perror("fopen\n");
     }
@@ -187,7 +188,7 @@ int main(void) {
             total_count += count;
         }
         free(wavefile1.Data);
-        printf("total_count: %hi\n", total_count);
+        printf("total_count: %i\n", total_count);
     }
     fclose(wav);
     
