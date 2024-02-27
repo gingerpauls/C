@@ -130,11 +130,12 @@
     <ClCompile Include="wav.c" />
   </ItemGroup>
   <ItemGroup>
-    <Media Include="sine.wav" />
-    <Media Include="swoosh.wav" />
+    <Media Include="sounds\drop.wav" />
+    <Media Include="sounds\sine.wav" />
+    <Media Include="sounds\swoosh.wav" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="swoosh.raw" />
+    <None Include="sounds\swoosh.raw" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
