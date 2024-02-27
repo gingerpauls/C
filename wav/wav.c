@@ -69,9 +69,10 @@ int main(void) {
     FILE *wav = NULL;
     errno_t err;
     //err = fopen_s(&wav, "sounds/sine_44k_16b_1ch.wav", "rb");
-    err = fopen_s(&wav, "sounds/ambient-swoosh.wav", "rb");
+    //err = fopen_s(&wav, "sounds/ambient-swoosh.wav", "rb");
     //err = fopen_s(&wav, "sounds/ambient-drop.wav", "rb");
     //err = fopen_s(&wav, "sounds/sine_192k_32b_2ch.wav", "rb");
+    err = fopen_s(&wav, "sounds/message.wav", "rb");
     if(err != 0) {
         perror("fopen\n");
     }
