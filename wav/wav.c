@@ -47,7 +47,7 @@ typedef struct {
 typedef struct {
     char dataID[CHUNK_ID_SIZE];
     unsigned int dataSize;
-    float *Data;
+    short *Data;
 } data;
 
 typedef struct {
@@ -178,22 +178,32 @@ int main(void) {
         //free(wavefile1.junkString);
     }
 
+    PrintFilePos(wav);
     count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav);
     fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
+    PrintFilePos(wav);
     if(strncmp(chunk_id, "data", 4) == 0) {
         count = fread_s(&wavefile1.dataID, sizeof(wavefile1.dataID), 1, sizeof(wavefile1.dataID), wav);
+        PrintFilePos(wav);
         count = fread_s(&wavefile1.dataSize, sizeof(wavefile1.dataSize), 1, sizeof(wavefile1.dataSize), wav);
-        wavefile1.Data = malloc(wavefile1.dataSize);
-        count = fread_s(&wavefile1.Data, wavefile1.dataSize, sizeof(*wavefile1.Data), wavefile1.dataSize / sizeof(*wavefile1.Data), wav);
+        PrintFilePos(wav);
         printf("dataID: \t%.4s\n", &wavefile1.dataID);
         printf("dataSize: \t%u\n", wavefile1.dataSize);
-        for(size_t i = 0; i < wavefile1.dataSize / sizeof(*wavefile1.Data); i++) {
-            printf("Data: \t%f\n", wavefile1.Data[i]);
-        }
-        free(wavefile1.Data);
-    }
+        wavefile1.Data = malloc(wavefile1.dataSize);
 
-    free(info.infoString);
+        //count = fread_s(&wavefile1.Data, wavefile1.dataSize, sizeof(wavefile1.Data[0]), wavefile1.dataSize / sizeof(wavefile1.Data[0]), wav);
+        
+        PrintFilePos(wav);
+        int count2 = 0;
+        //for(size_t i = 0; i < (wavefile1.dataSize / sizeof(wavefile1.Data[0])); i++) {
+        for(size_t i = 0; i < wavefile1.dataSize / sizeof(wavefile1.Data[0]); i++) {
+            count = fread_s(&wavefile1.Data[i], wavefile1.dataSize, sizeof(wavefile1.Data[0]), 1, wav);
+            printf("Data: \t%i\n", wavefile1.Data[i]);
+            count2 += count;
+        }
+        printf("count2: %i", count2);
+    }
+    //free(info.infoString);
     printf("program success\n");
     return 0;
 }
