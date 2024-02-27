@@ -70,7 +70,7 @@ int main(void) {
     errno_t err;
     err = fopen_s(&wav, "sounds/swoosh.wav", "rb");
     if(err != 0) {
-        perror("fopen");
+        perror("fopen\n");
     }
 
     WAVE wavefile1 = {0};
@@ -83,14 +83,11 @@ int main(void) {
     wavefile1.file_size = ftell(wav);
     rewind(wav);
 
-    PrintFilePos(wav);
-    count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav); // remove later
+    count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav);
     if(ferror(wav)) {
         perror("read error\n");
     }
-    PrintFilePos(wav);
-    fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR); // remove later
-    PrintFilePos(wav);
+    fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
     if(strncmp(chunk_id, "RIFF", CHUNK_ID_SIZE) == 0) {
         count = fread_s(&wavefile1.RIFFID, sizeof(wavefile1.RIFFID), 1, sizeof(wavefile1.RIFFID), wav);
         count = fread_s(&wavefile1.RIFFSize, sizeof(wavefile1.RIFFSize), 1, sizeof(wavefile1.RIFFSize), wav);
@@ -100,8 +97,8 @@ int main(void) {
     printf("RIFFSize: \t%u\n", wavefile1.RIFFSize);
     printf("RIFFFormType: \t%.4s\n", &wavefile1.RIFFFormType);
 
-    count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav); // remove later
-    fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR); // remove later
+    count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav);
+    fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
     if(strncmp(chunk_id, "fmt ", CHUNK_ID_SIZE) == 0) {
         count = fread_s(&wavefile1.fmtID, sizeof(wavefile1.fmtID), 1, sizeof(wavefile1.fmtID), wav);
         count = fread_s(&wavefile1.fmtSize, sizeof(wavefile1.fmtSize), 1, sizeof(wavefile1.fmtSize), wav);
@@ -121,8 +118,9 @@ int main(void) {
     printf("BlockAlign: \t%u\n", wavefile1.BlockAlign);
     printf("BitsPerSample: \t%u\n", wavefile1.BitsPerSample);
 
-    count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav); // remove later
-    fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR); // remove later
+    // TODO turn all of this into a loop
+    count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav);
+    fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
     if(strncmp(chunk_id, "LIST", CHUNK_ID_SIZE) == 0) {
         count = fread_s(&wavefile1.listID, sizeof(wavefile1.listID), 1, sizeof(wavefile1.listID), wav);
         count = fread_s(&wavefile1.listSize, sizeof(wavefile1.listSize), 1, sizeof(wavefile1.listSize), wav);
@@ -139,11 +137,10 @@ int main(void) {
                     count = fread_s(&info.infoID, sizeof(info.infoID), 1, sizeof(info.infoID), wav);
                     count = fread_s(&info.infoSize, sizeof(info.infoSize), 1, sizeof(info.infoSize), wav);
                     info.infoString = malloc(info.infoSize);
-                    count = fread_s(&info.infoString, info.infoSize, 1, info.infoSize, wav);
-                    printf("%.4s \t\t%s\n", &info.infoID, &info.infoString);
-                    fseek(wav, 1, SEEK_CUR);
-                    wavefile1.numInfo++;
-                    //free(info.infoString);
+                    count = fread_s(info.infoString, info.infoSize, 1, info.infoSize, wav);
+                    printf("%.4s \t\t%s\n", &info.infoID, info.infoString);
+                    free(info.infoString);
+                    fseek(wav, 1, SEEK_CUR); // TODO why is this needed?
                 }
                 count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav);
                 fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
@@ -151,16 +148,16 @@ int main(void) {
                     count = fread_s(&info.infoID, sizeof(info.infoID), 1, sizeof(info.infoID), wav);
                     count = fread_s(&info.infoSize, sizeof(info.infoSize), 1, sizeof(info.infoSize), wav);
                     info.infoString = malloc(info.infoSize);
-                    count = fread_s(&info.infoString, info.infoSize, 1, info.infoSize, wav);
-                    printf("%.4s \t\t%s\n", &info.infoID, &info.infoString);
-                    fseek(wav, 0, SEEK_CUR);
-                    wavefile1.numInfo++;
-                    //free(info.infoString);
+                    count = fread_s(info.infoString, info.infoSize, 1, info.infoSize, wav);
+                    printf("%.4s \t\t%s\n", &info.infoID, info.infoString);
+                    free(info.infoString);
+                    //fseek(wav, 0, SEEK_CUR); // TODO and this is not?
                 }
             }
             while(strncmp(chunk_id, "data", 4) != 0);
         }
     }
+    // TODO finish junk chunk
     if(strncmp(chunk_id, "junk", CHUNK_ID_SIZE) == 0) {
         count = fread_s(&wavefile1.junkID, sizeof(wavefile1.junkID), 1, sizeof(wavefile1.junkID), wav);
         count = fread_s(&wavefile1.junkSize, sizeof(wavefile1.junkSize), 1, sizeof(wavefile1.junkSize), wav);
@@ -173,29 +170,27 @@ int main(void) {
         //free(wavefile1.junkString);
     }
 
-    PrintFilePos(wav);
     count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav);
     fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
-    PrintFilePos(wav);
     if(strncmp(chunk_id, "data", 4) == 0) {
         count = fread_s(&wavefile1.dataID, sizeof(wavefile1.dataID), 1, sizeof(wavefile1.dataID), wav);
-        PrintFilePos(wav);
         count = fread_s(&wavefile1.dataSize, sizeof(wavefile1.dataSize), 1, sizeof(wavefile1.dataSize), wav);
-        PrintFilePos(wav);
         printf("dataID: \t%.4s\n", &wavefile1.dataID);
         printf("dataSize: \t%u\n", wavefile1.dataSize);
         wavefile1.Data = malloc(wavefile1.dataSize);
-
+        //TODO why does this cause printf to cause exception
         //count = fread_s(&wavefile1.Data, wavefile1.dataSize, 1, wavefile1.dataSize / sizeof(*wavefile1.Data), wav);
         int total_count = 0;
         for(size_t i = 0; i < wavefile1.dataSize / sizeof(*wavefile1.Data); i++) {
             count = fread_s(&wavefile1.Data[i], wavefile1.dataSize, sizeof(*wavefile1.Data), 1, wav);
-            printf("Data: \t%hi\n", wavefile1.Data[i]);
+            printf("Data[%i]: \t%hi\n", i, wavefile1.Data[i]);
             total_count += count;
         }
-        printf("total_count: %hi", total_count);
+        free(wavefile1.Data);
+        printf("total_count: %hi\n", total_count);
     }
-    //free(info.infoString);
+    fclose(wav);
+    
     printf("program success\n");
     return 0;
 }
