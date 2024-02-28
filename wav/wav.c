@@ -155,7 +155,7 @@ int main(void) {
             continue;
         }
 
-        // TODO finish junk chunk
+        // TODO finish junk chunk - sometimes has data in junk??
         if((strncmp(chunk_id, "JUNK", CHUNK_ID_SIZE) == 0) || (strncmp(chunk_id, "junk", CHUNK_ID_SIZE) == 0)) {
             count = fread_s(&wav1.JUNK.ID, sizeof(wav1.JUNK.ID), 1, sizeof(wav1.JUNK.ID), wav);
             count = fread_s(&wav1.JUNK.Size, sizeof(wav1.JUNK.Size), 1, sizeof(wav1.JUNK.Size), wav);
