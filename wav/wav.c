@@ -73,7 +73,8 @@ int main(void) {
     //err = fopen_s(&wav, "sounds/ambient-drop.wav", "rb");
     //err = fopen_s(&wav, "sounds/sine_192k_32b_2ch.wav", "rb");
     //err = fopen_s(&wav, "sounds/message.wav", "rb");
-    err = fopen_s(&wav, "sounds/Bombtrack.wav", "rb");
+    //err = fopen_s(&wav, "sounds/Bombtrack.wav", "rb");
+    err = fopen_s(&wav, "sounds/resonant-organ.wav", "rb");
     if(err != 0) {
         perror("fopen\n");
     }
@@ -145,7 +146,9 @@ int main(void) {
                     count = fread_s(info.infoString, info.infoSize, 1, info.infoSize, wav);
                     printf("%.4s \t\t%s\n", &info.infoID, info.infoString);
                     free(info.infoString);
-                    fseek(wav, 1, SEEK_CUR); // TODO why is this needed?
+                    if(info.infoSize % 2) {
+                        fseek(wav, 1, SEEK_CUR); // TODO why is this needed?
+                    }
                 }
                 count = fread_s(&chunk_id, CHUNK_ID_SIZE, 1, CHUNK_ID_SIZE, wav);
                 fseek(wav, -CHUNK_ID_SIZE, SEEK_CUR);
@@ -156,7 +159,9 @@ int main(void) {
                     count = fread_s(info.infoString, info.infoSize, 1, info.infoSize, wav);
                     printf("%.4s \t\t%s\n", &info.infoID, info.infoString);
                     free(info.infoString);
-                    //fseek(wav, 0, SEEK_CUR); // TODO and this is not?
+                    if(info.infoSize % 2) {
+                        fseek(wav, 1, SEEK_CUR); // TODO why is this needed?
+                    }
                 }
             }
             while(strncmp(chunk_id, "data", 4) != 0);
@@ -188,7 +193,7 @@ int main(void) {
         int total_count = 0;
         for(size_t i = 0; i < wavefile1.dataSize / sizeof(*wavefile1.Data); i++) {
             count = fread_s(&wavefile1.Data[i], wavefile1.dataSize, sizeof(*wavefile1.Data), 1, wav);
-            printf("Data[%i]: \t%hi\n", i, wavefile1.Data[i]);
+            //printf("Data[%i]: \t%hi\n", i, wavefile1.Data[i]);
             total_count += count;
         }
         free(wavefile1.Data);
